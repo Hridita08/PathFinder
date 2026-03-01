@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Profile | PATHFINDER</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+<div class="login-container">
+    <h2>Student <span>Profile</span></h2>
+
+    <form onsubmit="submitForm(event)">
+        <input type="text" placeholder="Student Name" required>
+        <input type="text" placeholder="Student ID" required>
+        <input type="text" placeholder="Department" required>
+        <input type="text" placeholder="Batch (overall)" required>
+        <input type="email" placeholder="Student Email" required>
+        <input type="text" placeholder="Phone Number" required>
+        <input type="password" placeholder="Password" required>
+        
+        <button class="login-btn">Create Profile</button>
+    </form>
+</div>
+
+<script>
+function submitForm(e) {
+    e.preventDefault();
+    window.location.href = "home.html";
+}
+</script>
+
+</body>
+</html>
