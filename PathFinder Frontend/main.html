@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PATHFINDER | Dashboard</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Top Navbar -->
+<header class="topbar">
+
+    <!-- Hamburger + Title -->
+    <div class="menu-section">
+        <i class="fa fa-bars menu-icon" onclick="goDashboard()"></i>
+        <span class="title-text">Pathfinder</span>
+    </div>
+
+    <div class="search-box">
+        <i class="fa fa-search"></i>
+        <input type="text" placeholder="Search...">
+    </div>
+
+    <div class="top-icons">
+        <i class="fa fa-bell"></i>
+        <i class="fa fa-envelope"></i>
+        <span id="userDisplay"></span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</header>
+
+<div>
+
+    <!-- Main Content -->
+    <main class="content">
+
+        <!-- Post Box -->
+        <div class="post-box">
+            <img src="../PathFinder Frontend/icons/profile.png">
+            <input type="text" id="postInput" placeholder="What's on your mind?">
+            <button onclick="addPost()">Post</button>
+        </div>
+
+        <!-- Feed -->
+        <div id="feedArea"></div>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+const username = localStorage.getItem("username");
+if(!username){ window.location.href="login.html"; }
+document.getElementById("userDisplay").innerText=username;
+
+function goDashboard(){
+    window.location.href="dashboard.html";   
+}
+</script>
+</body>
+</html>
