@@ -1,0 +1,16 @@
+-Initial project file structure and folder organization ✅
+- Design and implement a professional Navbar with logo ✅
+- Build the **Hero Section** with a welcoming call-to-action ✅
+- Develop the **Home,About,Registration** UI on the Home page ✅
+- Create a clean and functional **Login Page** interface ✅
+- Design the **Dashboard** with search, post, and interaction features ✅
+- Successfully link main pages (home.html, login.html, dashboard.html) ✅
+- Set up documentation files (README.md and TO-DO.md) ✅
+- Working on the "Post" functionality in the Dashboard to display user thoughts 🔄 In Progress
+- Ensuring the website is fully responsive for Desktop and Mobile devices 🔄 In Progress
+- Connect the frontend to a MySQL database for real user data 🔄 In Progress
+- Implement the **Student Registration** flow (register-student.html) ❌
+- Develop the **AI-based Career Suggestion** logic using Python ❌
+- Add "Comment" and "Share" functionality to the Dashboard posts ❌
+- Add "Notification" and "Message" functionality to the Dashboard posts ❌
+- Secure the Login system with proper authentication ❌ 
