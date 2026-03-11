@@ -41,27 +41,28 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 60px;
-    background: white;
+    padding: 11px 65px;
+    background: #020e21;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap:1px;
     font-weight: bold;
+    font-size:20px;
     color: #2e7d32;
 }
 
 .logo img {
-    width: 40px;
+    width: 50px;
 }
 
 nav a {
-    margin-left: 25px;
+    margin-left: 20px;
     text-decoration: none;
-    color: #333;
+    color: #ffffff;
     font-weight: 500;
 }
 
@@ -75,7 +76,7 @@ nav a {
 /*  HERO */
 
 .hero {
-    height: calc(100vh - 80px);
+    height: calc(110vh - 60px);
     background: url("students.jpg") center/cover no-repeat;
     position: relative;
 }
