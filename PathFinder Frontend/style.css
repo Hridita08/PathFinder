@@ -12,7 +12,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: white;
+    background: #020e21;
 }
 
 .splash {
@@ -28,11 +28,11 @@
 
 .splash h1 {
     font-size: 36px;
-    color: #0f4c75;
+    color: #2e7d32;
 }
 
 .splash p {
-    color: #555;
+    color: white;
 }
 
 /* NAVBAR */
