@@ -8,7 +8,7 @@
 - [X] Design the **Dashboard** with search, post, and interaction features
 - [X] Successfully link main pages (home.html, login.html, dashboard.html)
 - [X] Set up documentation files (README.md and TO-DO.md)
-- [-] Working on the "Post" functionality in the Dashboard to display user thoughts
+- [x] Working on the "Post" functionality in the Dashboard to display user thoughts
 - [-] Ensuring the website is fully responsive for Desktop and Mobile devices
 - [-] Connect the frontend to a MySQL database for real user data
 - [ ] Implement the **Student Registration** flow (register-student.html)
