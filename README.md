@@ -17,8 +17,9 @@ This is a web-based application that helps students choose suitable career paths
 - MySQL
 
 ## Future Improvements
--AI-based career recommendation system
--Career aptitude test integration
--Resume analysis feature
--Email notification system
--Real-time job market data integration
+- AI-based career recommendation system
+- Career aptitude test integration
+- Resume analysis feature
+- Email notification system
+- Real-time job market data integration
+- Personalized skill development roadmap
