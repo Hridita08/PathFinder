@@ -618,6 +618,203 @@ body{
     }
 
 }
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+}
+
+.login-body{
+
+min-height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:linear-gradient(135deg,#dfe9f3,#bbc3d1);
+
+}
+
+/* CARD */
+
+.profile-card{
+
+display:flex;
+width:900px;
+height:600px;
+
+background:white;
+
+border-radius:15px;
+
+overflow:hidden;
+
+box-shadow:0 20px 40px rgba(0,0,0,0.15);
+
+}
+
+/* IMAGE */
+
+.profile-image{
+flex:1;
+}
+
+.profile-image img{
+
+width:100%;
+height:100%;
+
+object-fit:cover;
+
+}
+
+/* FORM */
+
+.profile-form{
+
+flex:1;
+
+padding:40px;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+
+}
+
+.profile-form h2{
+
+margin-bottom:25px;
+
+font-size:28px;
+
+}
+
+.profile-form span{
+color:#2e7d32;
+}
+
+/* INPUT BOX */
+
+.input-box{
+
+position:relative;
+
+margin-bottom:15px;
+
+}
+
+.input-box i:first-child{
+
+position:absolute;
+
+left:10px;
+top:12px;
+
+color:#777;
+
+}
+
+.input-box input,
+.input-box select{
+
+width:100%;
+
+padding:12px 12px 12px 35px;
+
+border-radius:8px;
+
+border:1px solid #ccc;
+
+font-size:14px;
+
+transition:0.3s;
+
+}
+
+.input-box input:focus,
+.input-box select:focus{
+
+border-color:#2e7d32;
+
+outline:none;
+
+box-shadow:0 0 5px rgba(46,125,50,0.3);
+
+}
+
+/* PASSWORD EYE */
+
+.toggle-password{
+
+position:absolute;
+
+right:10px;
+top:12px;
+
+cursor:pointer;
+
+color:#777;
+
+}
+
+/* BUTTON */
+
+.login-btn{
+
+margin-top:10px;
+
+padding:12px;
+
+border:none;
+
+border-radius:25px;
+
+background:linear-gradient(90deg,#2e7d32,#66bb6a);
+
+color:white;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:0.3s;
+
+}
+
+.login-btn:hover{
+
+transform:scale(1.03);
+
+background:linear-gradient(90deg,#1b5e20,#43a047);
+
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+.profile-card{
+
+flex-direction:column;
+
+height:auto;
+
+}
+
+.profile-image{
+
+height:250px;
+
+}
+
+}
+/* Hide browser default password eye */
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+display:none;
+}
 
 /* FORM */
 

@@ -2,6 +2,7 @@ function loginUser(event) {
     event.preventDefault();
     window.location.href = "home.html";
 }
+
 function addPost(){
     const input=document.getElementById("postInput");
     const feed=document.getElementById("feedArea");
