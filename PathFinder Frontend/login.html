@@ -1,232 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | PATHFINDER</title>
 
-<style>
+<title>PathFinder Login</title>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Segoe UI, sans-serif;
-}
-.logo img{
-width:60px;
-margin-bottom:15px;
-}
-/* Background */
+<link rel="stylesheet" href="style.css">
 
-body{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#1b4fdde6,#2ed750dd);
-overflow:hidden;
-}
+<!-- ICON LIBRARY -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-/* Floating shapes */
-
-body::before,
-body::after{
-content:"";
-position:absolute;
-width:500px;
-height:500px;
-background:rgba(255,255,255,0.08);
-border-radius:50%;
-}
-
-body::before{
-top:-200px;
-left:-150px;
-}
-
-body::after{
-bottom:-200px;
-right:-150px;
-}
-
-/* Login Card */
-
-.login-container{
-width:360px;
-padding:40px;
-border-radius:15px;
-background:rgb(255, 255, 255);
-backdrop-filter:blur(12px);
-box-shadow:0 10px 30px rgba(0, 0, 0, 0.637);
-text-align:center;
-color:rgb(23, 3, 63);
-}
-
-/* Logo */
-
-.logo{
-font-size:45px;
-margin-bottom:10px;
-}
-
-h2{
-margin-bottom:25px;
-font-weight:500;
-}
-
-/* Inputs */
-
-.input-group{
-position:relative;
-margin-bottom:15px;
-}
-
-input{
-width:100%;
-padding:12px 40px 12px 12px;
-border:none;
-border-radius:8px;
-background:rgba(255, 255, 255, 0.377);
-color:white;
-font-size:14px;
-}
-
-input::placeholder{
-color:#120101;
-}
-
-input:focus{
-outline:none;
-background:rgba(255, 255, 255, 0.461);
-}
-
-/* Button */
-
-button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:8px;
-background:rgb(13, 19, 103);
-color:#ffff;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-}
-
-button:hover{
-background:#2d973b;
-transform:scale(1.03);
-}
-
-/* Error */
-
-.error{
-color:#ffdddd;
-font-size:14px;
-margin-bottom:10px;
-}
-
-/* Forgot */
-
-.forgot{
-margin-top:10px;
-font-size:13px;
-opacity:0.8;
-cursor:pointer;
-}
-
-.forgot:hover{
-text-decoration:underline;
-}
-
-/* Responsive */
-
-@media(max-width:420px){
-
-.login-container{
-width:90%;
-padding:30px;
-}
-
-}
-
-</style>
 </head>
 
 <body>
 
-<div class="login-container">
+<div class="pf-login-page">
 
-<div class="logo">
-<img src="logo.png" alt="Pathfinder Logo">
+<div class="pf-login-container">
+
+<div class="pf-logo">
+    <img src="logo.png" alt="logo">
+    <span class="pf-brand">PATHFINDER</span>
 </div>
 
-<h2><b>PATHFINDER</b> Login</h2>
+<h2>Login</h2>
 
-<div id="errorMsg" class="error"></div>
+<form>
 
-<form onsubmit="loginUser(event)">
+<!-- NAME -->
 
-<div class="input-group">
-<input type="text" id="name" placeholder="Full Name">
+<div class="pf-input-group">
+
+<i class="fa-solid fa-user"></i>
+
+<input 
+type="text"
+placeholder="Full Name"
+name="name"
+autocomplete="name"
+required>
+
 </div>
 
-<div class="input-group">
-<input type="email" id="email" placeholder="Email Address">
+
+<!-- EMAIL -->
+
+<div class="pf-input-group">
+
+<i class="fa-solid fa-envelope"></i>
+
+<input
+type="email"
+placeholder="Email Address"
+name="email"
+autocomplete="email"
+required>
+
 </div>
 
-<div class="input-group">
-<input type="password" id="password" placeholder="Password">
+
+<!-- PASSWORD -->
+
+<div class="pf-input-group">
+
+<i class="fa-solid fa-lock"></i>
+
+<input
+type="password"
+id="password"
+placeholder="Password"
+name="password"
+autocomplete="current-password"
+required>
+
+<i class="fa-solid fa-eye toggle-pass"
+onclick="togglePassword()"></i>
+
 </div>
+
 
 <button type="submit">Login</button>
 
-<div class="forgot">Forgot password?</div>
+<div class="pf-forgot">
+Forgot password?
+</div>
 
 </form>
 
 </div>
-
-<script>
-
-function loginUser(e){
-
-e.preventDefault();
-
-let name = document.getElementById("name").value.trim();
-let email = document.getElementById("email").value.trim();
-let password = document.getElementById("password").value.trim();
-let error = document.getElementById("errorMsg");
-
-error.innerHTML="";
-
-if(name==="" || email==="" || password===""){
-error.innerHTML="All fields are required!";
-return;
-}
-
-let emailPattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-
-if(!email.match(emailPattern)){
-error.innerHTML="Please enter a valid email!";
-return;
-}
-
-if(password.length<6){
-error.innerHTML="Password must be at least 6 characters!";
-return;
-}
-
-localStorage.setItem("username",name);
-
-window.location.href="main.html";
-
-}
-
-</script>
-
+</div>
+<script src="script.js"></script>
 </body>
 </html>

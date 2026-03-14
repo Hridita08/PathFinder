@@ -95,20 +95,23 @@ nav a {
 }
 
 .hero-content h1 {
-    font-size: 55px;
+    font-size: 40px;
     color: #0f4c75;
 }
 
 .hero-content h1 span {
+    font-size: 50px;
     color: #2e7d32;
 }
 
 .hero-content h3 {
+    font-size: 20px;
     margin: 15px 0;
     color: #2e7d32;
 }
 
 .hero-content p {
+    font-size: 16px;
     color: #444;
     line-height: 1.6;
     margin-bottom: 30px;
@@ -947,7 +950,6 @@ background-color:#ffffff !important;
         transform: translateX(0);
     }
 }
-
 /* =========================== RESPONSIVE =========================== */
 @media (max-width: 768px) {
     .guide-card {
@@ -969,6 +971,167 @@ background-color:#ffffff !important;
     .guide-form {
         padding: 30px 20px;
     }
+}
+
+/* ================= PATHFINDER LOGIN ================= */
+
+/* Login Page Background */
+.pf-login-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1b4fdde6, #2ed750dd);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Floating Shapes */
+.pf-login-page::before,
+.pf-login-page::after {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+}
+
+.pf-login-page::before {
+    top: -200px;
+    left: -150px;
+}
+
+.pf-login-page::after {
+    bottom: -200px;
+    right: -150px;
+}
+
+/* Login Card + Animation */
+.pf-login-container {
+    width: 360px;
+    padding: 40px;
+    border-radius: 15px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    color: #17033f;
+    z-index: 2;
+
+    /* Animation */
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.6s ease-out;
+}
+
+.pf-login-container.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Logo + Brand */
+.pf-logo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    max-width: 100%;
+    flex-wrap: wrap;
+}
+
+.pf-logo img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.pf-logo .pf-brand {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0d6723;
+}
+
+/* Heading */
+.pf-login-container h2 {
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+/* Input Groups */
+.pf-input-group {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.pf-input-group i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    font-size: 14px;
+}
+
+.pf-input-group input {
+    width: 100%;
+    padding: 12px 40px;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background: transparent;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.pf-input-group input:focus {
+    border-bottom: 2px solid #1b4fdd;
+}
+
+/* Password toggle icon */
+.toggle-pass {
+    position: absolute;
+    right: -220px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+}
+
+/* Button */
+.pf-login-container button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #0d1367;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.pf-login-container button:hover {
+    background: #2d973b;
+    transform: scale(1.03);
+}
+
+/* Error Message */
+.pf-error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Forgot Password */
+.pf-forgot {
+    margin-top: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.pf-forgot:hover {
+    text-decoration: underline;
 }
 
 
