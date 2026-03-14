@@ -60,6 +60,7 @@ window.addEventListener("DOMContentLoaded", () => {
         container.classList.add("show");
     }, 100); // small delay for smoother effect
 });
+// Forget password
 
 
 function addPost(){

@@ -1134,7 +1134,75 @@ background-color:#ffffff !important;
     text-decoration: underline;
 }
 
+/* Forgot-password page */
+/* Forgot Password Page – Side Illustration */
+.pf-side-illustration {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.pf-side-illustration img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Adjust login card for side layout */
+.pf-login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.pf-login-container {
+    flex: 1;
+    max-width: 400px;
+}
+
+/* Optional description styling */
+.pf-login-container p.pf-description {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+/* ================= FORGOT PASSWORD PAGE ================= */
+
+.pf-forgot-page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#2ed750dd,#1b4fdde6);
+overflow:hidden;
+position:relative;
+}
+
+/* floating shapes similar to login but different position */
+
+.pf-forgot-page::before,
+.pf-forgot-page::after{
+content:"";
+position:absolute;
+width:450px;
+height:450px;
+background:rgba(255,255,255,0.08);
+border-radius:50%;
+}
+
+.pf-forgot-page::before{
+top:-150px;
+right:-120px;
+}
+
+.pf-forgot-page::after{
+bottom:-150px;
+left:-120px;
+}
 /* FORM */
 
 .login-container input {
