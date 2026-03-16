@@ -60,44 +60,45 @@ window.addEventListener("DOMContentLoaded", () => {
         container.classList.add("show");
     }, 100); // small delay for smoother effect
 });
-// Forget password
+function loginUser(event){
 
+event.preventDefault(); // page reload stop
 
-function addPost(){
-    const input=document.getElementById("postInput");
-    const feed=document.getElementById("feedArea");
-    const username=localStorage.getItem("username");
+const name = document.querySelector('input[name="name"]').value;
 
-    if(input.value.trim()==="") return;
+const email = document.querySelector('input[name="email"]').value;
 
-    const post=document.createElement("div");
-    post.className="post";
-    post.innerHTML=`
-        <strong>${username}</strong>
-        <p>${input.value}</p>
-        <div style="margin-top:10px;color:#555">
-            <i class="fa fa-comment"></i> Comment
-            &nbsp;&nbsp;
-            <i class="fa fa-share"></i> Share
-        </div>
-    `;
-    feed.prepend(post);
-    input.value="";
+const password = document.getElementById("password").value;
+
+if(name && email && password){
+
+localStorage.setItem("username", name);
+
+/* login success → main page */
+
+window.location.href = "main.html";
+
 }
 
-function logout(){
-    localStorage.removeItem("username");
-    window.location.href="login.html";
+else{
+
+alert("Please fill all fields");
+
 }
 
-function setActive(element){
-    document.querySelectorAll(".sidebar li").forEach(li=>{
-        li.classList.remove("active");
-    });
-    element.classList.add("active");
+}const username = localStorage.getItem("username");
+
+if(!username){
+
+window.location.href="login.html";
+
 }
 
-function toggleDropdown(){
-    const dropdown=document.getElementById("careerDropdown");
-    dropdown.style.display = dropdown.style.display==="block" ? "none" : "block";
+document.getElementById("userDisplay").innerText=username;
+// if already logged in → go to main page
+
+if(localStorage.getItem("username")){
+window.location.href="main.html";
 }
+
+// ========Main page=========
