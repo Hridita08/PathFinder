@@ -8,10 +8,8 @@
 </head>
 <body>
 
-<!-- Top Navbar -->
 <header class="topbar">
 
-    <!-- Hamburger + Title -->
     <div class="menu-section">
         <i class="fa fa-bars menu-icon" onclick="goDashboard()"></i>
         <span class="title-text">Pathfinder</span>
@@ -32,14 +30,13 @@
 
 <div class="layout">
 
-    <!-- Sidebar -->
     <aside class="sidebar">
         <ul>
-            <li class="active" onclick="setActive(this)">
+            <li class="active" onclick="setActive(this); window.location.href='home.html'">
                 <i class="fa fa-home"></i> Home
             </li>
 
-            <li onclick="setActive(this)">
+            <li onclick="setActive(this); window.location.href='profile.html'">
                 <i class="fa fa-user"></i> Profile
             </li>
 
@@ -51,26 +48,22 @@
             <ul class="dropdown" id="careerDropdown">
                 <li>Technical</li>
                 <li>Non-Technical</li>
-              
             </ul>
 
-        <li onclick="setActive(this)">
+            <li onclick="setActive(this); window.location.href='settings.html'">
                 <i class="fa fa-cog"></i> Settings
             </li>
         </ul>
     </aside>
 
-    <!-- Main Content -->
     <main class="content">
 
-        <!-- Post Box -->
         <div class="post-box">
-            <img src="../PathFinder Frontend/icons/profile.png">
+            <img src="icons/profile.png">
             <input type="text" id="postInput" placeholder="What's on your mind?">
             <button onclick="addPost()">Post</button>
         </div>
 
-        <!-- Feed -->
         <div id="feedArea"></div>
 
     </main>
