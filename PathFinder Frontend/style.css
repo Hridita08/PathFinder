@@ -282,7 +282,7 @@ nav a {
 }
 
 .about-title {
-    color: white;
+    color: rgb(228, 232, 228);
     font-size: 42px;
     margin-bottom: 50px;
     animation: fadeSlide 1s ease;
@@ -319,18 +319,18 @@ nav a {
 
 .about-features {
     padding: 80px 100px;
-    background: #f6f9fc;
+    background: #fcfcfc;
     text-align: center;
 }
 
 .about-features h2 {
     font-size: 40px;
-    color: #0f4c75;
+    color: #06314d;
     margin-bottom: 12px;
 }
 
 .about-features .subtitle {
-    color: #555;
+    color: #444444;
     font-size: 20px;
     max-width: 700px;
     margin: 0 auto 60px;
@@ -347,13 +347,13 @@ nav a {
     background: white;
     padding: 35px 25px;
     border-radius: 18px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 15px 35px rgba(25, 141, 50, 0.231);
     transition: 0.4s;
 }
 
 .feature-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 25px 50px rgba(46, 125, 50, 0.25);
+    box-shadow: 0 25px 50px rgba(18, 144, 24, 0.075);
 }
 
 .feature-card img {
@@ -378,7 +378,7 @@ nav a {
 
 .helpline-section {
     padding: 90px 60px;
-    background: #f6f9fc;
+    background: #f9fefb;
     /* clean light background */
 }
 
@@ -390,7 +390,7 @@ nav a {
 
 .helpline-container h2 {
     font-size: 40px;
-    color: #0f4c75;
+    color: #01090f;
     margin-bottom: 15px;
 }
 
@@ -399,7 +399,7 @@ nav a {
     margin: 0 auto 50px;
     font-size: 20px;
     line-height: 1.7;
-    color: #555;
+    color: #5e5e5e;
 }
 
 .helpline-cards {
@@ -409,7 +409,7 @@ nav a {
 }
 
 .helpline-card {
-    background: rgb(197, 197, 225);
+    background: rgba(25, 144, 9, 0.151);
     padding: 10px 5px;
     border-radius: 18px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
@@ -478,30 +478,57 @@ body {
 }
 
 
-/* ===== Role Page Layout ===== */
-
+/* ===== Role Page Layout with Smooth Animated Background ===== */
 .role-page {
-
     min-height: 100vh;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
-    background: #bbc3d1;
-
+    background: linear-gradient(270deg, #021b03, #041e07, #e7f0e7, #72a875ae);
+    background-size: 600% 600%;
+    animation: smoothBG 12s ease infinite;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Floating circles for depth effect */
+.role-page::before,
+.role-page::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(7, 89, 16, 0.267);
+    animation: floatCircle 20s linear infinite;
+}
 
-/* ===== Container ===== */
+.role-page::before {
+    width: 500px;
+    height: 500px;
+    top: -150px;
+    right: -100px;
+}
 
+.role-page::after {
+    width: 350px;
+    height: 350px;
+    bottom: -100px;
+    left: -150px;
+}
+
+/* Floating animation */
+@keyframes floatCircle {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(50px) rotate(180deg); }
+    100% { transform: translateY(0) rotate(360deg); }
+}
+
+/* Container & Card Styling stays the same */
 .role-container {
-
     max-width: 1000px;
     width: 100%;
-
     text-align: center;
-
+    z-index: 2; /* ensure above floating circles */
+    position: relative;
 }
 
 
@@ -512,8 +539,7 @@ body {
     font-size: 32px;
     font-weight: 600;
 
-    color: #fff;
-    background: #2e7d32;
+    color: #07471c;
 
     padding: 12px 30px;
 
@@ -646,7 +672,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg,#7e8c84,#c2e9fb);
+  background: linear-gradient(135deg,#27a630bd,#c2e9fb);
   font-family: 'Poppins', sans-serif;
   position: relative;
   overflow: hidden;
@@ -672,7 +698,7 @@ body {
 
 .profile-card{
   display:flex;
-  width:1100px;
+  width:900px;
   max-width:95%;
   background:rgba(255,255,255,0.95);
   border-radius:25px;
@@ -690,6 +716,13 @@ body {
   width:55%;
   padding:35px;
   animation:slideRight 1s ease;
+}
+.profile-form h2 {
+    color: #333;
+}
+
+.profile-form h2 span {
+    color: #2e7d32;
 }
 
 /* INPUTS */
@@ -756,7 +789,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #7e8c84, #c2e9fb);
+    background: linear-gradient(135deg,#27a630bd,#c2e9fb);
     font-family: 'Poppins', sans-serif;
     position: relative;
     overflow: hidden;
