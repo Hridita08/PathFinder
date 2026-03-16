@@ -15,12 +15,12 @@ font-family:Arial;
 }
 
 .tech-container{
-max-width:900px;
+max-width:1000px;
 margin:40px auto;
 }
 
 .tech-title{
-font-size:28px;
+font-size:30px;
 margin-bottom:30px;
 }
 
@@ -49,7 +49,7 @@ color:#555;
 .tech-card button{
 margin-top:15px;
 padding:8px 16px;
-background:#2563eb;
+background:#4f7cdc;
 border:none;
 color:white;
 border-radius:6px;
@@ -66,6 +66,33 @@ border-radius:6px;
 cursor:pointer;
 }
 
+/* Career Details */
+
+.career-details{
+margin-top:40px;
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+display:none;
+}
+
+.career-details h2{
+margin-bottom:15px;
+}
+
+.section{
+margin-top:15px;
+}
+
+.section h4{
+margin-bottom:5px;
+}
+
+ul{
+margin-left:20px;
+}
+
 </style>
 
 </head>
@@ -74,39 +101,162 @@ cursor:pointer;
 
 <div class="tech-container">
 
-<button class="back-btn" onclick="window.location.href='main.html'">← Back to Dashboard</button>
+<button class="back-btn" onclick="window.location.href='main.html'">
+ Back to Dashboard
+</button>
 
 <h1 class="tech-title">Technical Career Paths</h1>
 
 <div class="tech-grid">
 
 <div class="tech-card">
+<h3>Software Developer</h3>
+<p>Create software applications and systems.</p>
+<button onclick="showCareer('software')">Learn More</button>
+</div>
+
+<div class="tech-card">
 <h3>Web Developer</h3>
-<p>Build modern websites using HTML, CSS, JavaScript.</p>
-<button>Learn More</button>
+<p>Build modern websites and web applications.</p>
+<button onclick="showCareer('web')">Learn More</button>
 </div>
 
 <div class="tech-card">
 <h3>Data Scientist</h3>
-<p>Analyze large datasets using Python and machine learning.</p>
-<button>Learn More</button>
+<p>Analyze large datasets using machine learning.</p>
+<button onclick="showCareer('data')">Learn More</button>
 </div>
 
 <div class="tech-card">
-<h3>Cyber Security</h3>
-<p>Protect networks and systems from cyber attacks.</p>
-<button>Learn More</button>
+<h3>Cyber Security Specialist</h3>
+<p>Protect systems and networks from cyber attacks.</p>
+<button onclick="showCareer('cyber')">Learn More</button>
 </div>
 
 <div class="tech-card">
-<h3>AI Engineer</h3>
-<p>Develop intelligent systems using machine learning.</p>
-<button>Learn More</button>
+<h3>AI / Machine Learning Engineer</h3>
+<p>Develop intelligent systems using AI technologies.</p>
+<button onclick="showCareer('ai')">Learn More</button>
+</div>
+
+<div class="tech-card">
+<h3>Network Engineer</h3>
+<p>Design and manage computer networks.</p>
+<button onclick="showCareer('network')">Learn More</button>
+</div>
+
+<div class="tech-card">
+<h3>Cloud Engineer</h3>
+<p>Work with cloud platforms like AWS and Azure.</p>
+<button onclick="showCareer('cloud')">Learn More</button>
+</div>
+
+<div class="tech-card">
+<h3>Mobile App Developer</h3>
+<p>Create mobile applications for Android and iOS.</p>
+<button onclick="showCareer('mobile')">Learn More</button>
 </div>
 
 </div>
 
+<!-- Career Details -->
+
+<div id="careerDetails" class="career-details"></div>
+
 </div>
+
+<script>
+
+function showCareer(type){
+
+let content="";
+
+if(type==="web"){
+content=`
+<h2>Web Developer</h2>
+
+<div class="section">
+<h4>Career Overview</h4>
+<p>Web developers build and maintain websites and web applications.</p>
+</div>
+
+<div class="section">
+<h4>Required Skills</h4>
+<ul>
+<li>HTML, CSS, JavaScript</li>
+<li>Problem Solving</li>
+<li>Database</li>
+<li>Web Frameworks</li>
+</ul>
+</div>
+
+<div class="section">
+<h4>Recommended Courses</h4>
+<ul>
+<li>Coursera Web Development</li>
+<li>Udemy JavaScript Course</li>
+<li>edX Frontend Development</li>
+</ul>
+</div>
+
+<div class="section">
+<h4>Career Path</h4>
+<p>Student → Learn Programming → Internship → Junior Developer → Senior Developer</p>
+</div>
+
+<div class="section">
+<h4>Salary / Job Opportunity</h4>
+<p>High demand worldwide with competitive salaries.</p>
+</div>
+`;
+}
+
+if(type==="data"){
+content=`
+<h2>Data Scientist</h2>
+
+<div class="section">
+<h4>Career Overview</h4>
+<p>Data scientists analyze complex data to help organizations make decisions.</p>
+</div>
+
+<div class="section">
+<h4>Required Skills</h4>
+<ul>
+<li>Python</li>
+<li>Statistics</li>
+<li>Machine Learning</li>
+<li>Data Visualization</li>
+</ul>
+</div>
+
+<div class="section">
+<h4>Recommended Courses</h4>
+<ul>
+<li>Coursera Data Science</li>
+<li>Udemy Python for Data Science</li>
+<li>edX Machine Learning</li>
+</ul>
+</div>
+
+<div class="section">
+<h4>Career Path</h4>
+<p>Student → Data Analysis → Internship → Data Analyst → Data Scientist</p>
+</div>
+
+<div class="section">
+<h4>Salary / Job Opportunity</h4>
+<p>Very high demand in tech companies.</p>
+</div>
+`;
+}
+
+document.getElementById("careerDetails").style.display="block";
+document.getElementById("careerDetails").innerHTML=content;
+
+}
+
+</script>
 
 </body>
 </html>
