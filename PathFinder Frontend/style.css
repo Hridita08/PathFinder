@@ -1203,6 +1203,78 @@ right:-120px;
 bottom:-150px;
 left:-120px;
 }
+
+/* ================= RESET SENT / OTP PAGE ================= */
+
+.pf-code-page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#4f46e5,#06b6d4);
+overflow:hidden;
+position:relative;
+}
+
+/* floating shapes */
+
+.pf-code-page::before,
+.pf-code-page::after{
+content:"";
+position:absolute;
+width:450px;
+height:450px;
+background:rgba(255,255,255,0.08);
+border-radius:50%;
+}
+
+.pf-code-page::before{
+top:-150px;
+right:-120px;
+}
+
+.pf-code-page::after{
+bottom:-150px;
+left:-120px;
+}
+
+/* OTP input boxes */
+
+.pf-otp-box{
+display:flex;
+justify-content:center;
+gap:12px;
+margin:20px 0;
+}
+
+.pf-otp-box input{
+width:55px;
+height:55px;
+font-size:22px;
+text-align:center;
+border-radius:8px;
+border:2px solid #ddd;
+outline:none;
+transition:0.3s;
+}
+
+.pf-otp-box input:focus{
+border-color:#1b4fdd;
+box-shadow:0 0 5px rgba(27,79,221,0.4);
+}
+
+/* resend text */
+
+.pf-resend{
+margin-top:15px;
+font-size:14px;
+color:#555;
+}
+
+.pf-resend span{
+font-weight:bold;
+color:#0d1367;
+}
 /* FORM */
 
 .login-container input {

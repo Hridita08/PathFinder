@@ -1,207 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reset Password | PATHFINDER</title>
+<title>Verify Code | PATHFINDER</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<style>
-/* PAGE BACKGROUND */
-.reset-page {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg,#0d1367,#2ed750);
-  font-family: Arial, Helvetica, sans-serif;
-  position: relative;
-  overflow: hidden;
-}
-
-/* FLOATING SHAPES */
-.reset-page::before,
-.reset-page::after {
-  content:"";
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 50%;
-}
-.reset-page::before { top: -150px; left: -120px; }
-.reset-page::after { bottom: -150px; right: -120px; }
-
-/* CARD */
-.reset-card {
-  width: 360px;
-  background: #fff;
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  text-align: center;
-  opacity: 0;
-  transform: translateY(50px);
-  transition: all 0.6s ease-out;
-}
-
-/* show card */
-.reset-card.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* LOGO */
-.reset-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.reset-logo img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-.reset-brand {
-  font-size: 22px;
-  font-weight: bold;
-  color: #0d1367;
-}
-
-/* HEADING */
-.reset-card h2 {
-  margin-bottom: 10px;
-}
-
-/* TEXT */
-.reset-card p {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-/* INPUT */
-.reset-input {
-  position: relative;
-  margin-bottom: 18px;
-}
-.reset-input i {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #777;
-  font-size: 14px;
-}
-.reset-input input {
-  width: 100%;
-  padding: 12px 40px;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  outline: none;
-  font-size: 14px;
-  transition: 0.3s;
-}
-.reset-input input:focus {
-  border-bottom: 2px solid #1b4fdd;
-}
-
-/* BUTTON */
-.reset-card button {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  background: #0d1367;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.reset-card button:hover {
-  background: #2d973b;
-}
-
-/* LINK BACK */
-.reset-back {
-  margin-top: 15px;
-  font-size: 13px;
-}
-.reset-back a {
-  color: #0d1367;
-  text-decoration: none;
-}
-.reset-back a:hover {
-  text-decoration: underline;
-}
-
-</style>
 </head>
 
 <body>
 
-<div class="reset-page">
+<div class="pf-code-page">
 
-<div class="reset-card">
+<div class="pf-login-container">
 
-<div class="reset-logo">
-<img src="logo.png" alt="logo">
-<span class="reset-brand">PATHFINDER</span>
+<div class="pf-logo">
+<img src="logo.png">
+<span class="pf-brand">PATHFINDER</span>
 </div>
 
-<h2>Password Reset</h2>
+<h2>Email Verification</h2>
 
-<p>A reset code has been sent to your email. Enter the code and create a new password.</p>
+<p class="pf-description">
+Enter the 4 digit verification code sent to your email
+</p>
 
-<form onsubmit="changePassword(event)">
+<form action="new-password.html">
 
-<div class="reset-input">
-<i class="fa-solid fa-key"></i>
-<input type="text" id="resetCode" placeholder="Enter Reset Code" required>
+<div class="pf-otp-box">
+
+<input type="text" maxlength="1" class="otp">
+<input type="text" maxlength="1" class="otp">
+<input type="text" maxlength="1" class="otp">
+<input type="text" maxlength="1" class="otp">
+
 </div>
 
-<div class="reset-input">
-<i class="fa-solid fa-lock"></i>
-<input type="password" id="newPass" placeholder="New Password" required>
-</div>
+<button type="submit">Verify Code</button>
 
-<div class="reset-input">
-<i class="fa-solid fa-lock"></i>
-<input type="password" id="confirmPass" placeholder="Confirm Password" required>
+<div class="pf-resend">
+Resend code in <span id="timer">30</span>s
 </div>
-
-<button type="submit">Change Password</button>
 
 </form>
 
-<div class="reset-back">
-<a href="login.html">Back to Login</a>
 </div>
 
-</div>
 </div>
 
 <script>
-window.addEventListener("DOMContentLoaded", () => {
-  document.querySelector(".reset-card").classList.add("show");
-});
 
-// Simple JS to check password match
-function changePassword(e){
-  e.preventDefault();
-  let newPass = document.getElementById("newPass").value;
-  let confirmPass = document.getElementById("confirmPass").value;
-  if(newPass !== confirmPass){
-    alert("Passwords do not match!");
-    return;
-  }
-  alert("Password changed successfully!");
-  window.location.href="login.html";
+/* show animation */
+
+window.addEventListener("DOMContentLoaded", () => {
+const container = document.querySelector(".pf-login-container")
+
+setTimeout(()=>{
+container.classList.add("show")
+},100)
+
+})
+
+const inputs = document.querySelectorAll(".otp")
+
+inputs.forEach((input,index)=>{
+
+input.addEventListener("input",()=>{
+
+if(input.value.length==1 && index<3){
+inputs[index+1].focus()
 }
+
+})
+
+input.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace" && input.value=="" && index>0){
+inputs[index-1].focus()
+}
+
+})
+
+})
+
+let time = 30
+const timer = document.getElementById("timer")
+
+setInterval(()=>{
+
+if(time>0){
+time--
+timer.textContent = time
+}
+
+},1000)
+
 </script>
 
 </body>
