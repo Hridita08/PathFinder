@@ -733,3 +733,84 @@ body {
     font-size:18px;
     font-weight:bold;
 }
+
+body{
+font-family: Arial, sans-serif;
+background: linear-gradient(135deg,#5f9cff,#8fd3f4);
+margin:0;
+padding:0;
+text-align:left;
+}
+
+h1{
+color:white;
+margin-top:60px;
+}
+
+.title{
+text-align:center;
+margin-top:20px;
+}
+
+.career-container{
+display:flex;
+gap:60px;
+justify-content:center;
+margin-top:30px;
+flex-wrap:wrap;
+}
+
+.career-card{
+background:#fff;
+padding:20px;
+width:250px;
+border-radius:8px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+transition:0.3s;
+text-align:center;
+}
+
+.career-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 10px 25px rgba(184, 100, 100, 0.3);
+     transform: scale(1.05);
+    transition: 0.3s;
+}
+
+.career-card button{
+background:#3b6ff5;
+color:white;
+border:none;
+padding:8px 15px;
+margin-top:10px;
+cursor:pointer;
+border-radius:5px;
+}
+button:hover{
+    background:#3a66a3;
+}
+
+.details-box{
+margin:40px auto;
+width:30%;
+background:#fffbfb;
+padding:20px;
+border-radius:8px;
+box-shadow:0 5px 15px rgba(146, 77, 77, 0.2) ;
+text-align:center;
+}
+
+input {
+    padding: 10px;
+    width: 200px;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+button {
+    padding: 10px;
+    background-color: rgb(88, 88, 192);
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
