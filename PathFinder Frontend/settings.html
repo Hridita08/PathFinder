@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PATHFINDER | Settings</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    /* Layout and Sidebar Fixes */
+    .layout { display: flex; min-height: calc(100vh - 60px); background: #f1f5f9; }
+    .sidebar { width: 260px; background: white; border-right: 1px solid #e2e8f0; padding-top: 20px; }
+    .content { flex: 1; padding: 40px; display: flex; justify-content: center; overflow-y: auto; }
+
+    /* Main Container */
+    .settings-container { width: 100%; max-width: 750px; background: white; border-radius: 16px; padding: 35px; box-shadow: 0 4px 25px rgba(0,0,0,0.05); height: fit-content; }
+    .settings-header { margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
+    .settings-header h2 { color: #1e293b; font-size: 24px; display: flex; align-items: center; gap: 10px; }
+
+    /* Settings Cards */
+    .settings-card { background: #ffffff; border: 1px solid #e2e8f0; padding: 25px; border-radius: 12px; margin-bottom: 20px; transition: 0.3s; }
+    .settings-card:hover { border-color: #cbd5e1; }
+    .settings-card h3 { font-size: 16px; color: #334155; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+
+    /* Form Elements */
+    .settings-group { margin-bottom: 15px; }
+    .settings-group label { display: block; font-size: 12px; font-weight: bold; color: #64748b; margin-bottom: 6px; text-transform: uppercase; }
+    .settings-input, select { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+    .settings-input:focus { border-color: #2e7d32; outline: none; }
+
+    /* Switch and Buttons */
+    .flex-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .update-btn { background: #2e7d32; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; transition: 0.3s; }
+    .update-btn:hover { background: #1b5e20; }
+    .danger-btn { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+    .danger-btn:hover { background: #ef4444; color: white; }
+
+    /* Custom Switch CSS (Optional for better look) */
+    .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #2e7d32; }
+    input:checked + .slider:before { transform: translateX(20px); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="menu-section">
+        <i class="fa fa-bars menu-icon" onclick="window.location.href='dashboard.html'"></i>
+        <span class="title-text">Pathfinder</span>
+    </div>
+    <div class="top-icons">
+        <span id="userDisplay" style="font-weight:bold;"></span>
+        <button onclick="logout()" style="margin-left:15px; background:#2e7d32; color:white; border:none; padding:6px 15px; border-radius:20px; cursor:pointer;">Logout</button>
+    </div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <ul>
+            <li onclick="window.location.href='dashboard.html'"><i class="fa fa-home"></i> Home</li>
+            <li onclick="window.location.href='profile.html'"><i class="fa fa-user"></i> Profile</li>
+            <li class="active"><i class="fa fa-cog"></i> Settings</li>
+        </ul>
+    </aside>
+
+    <main class="content">
+        <div class="settings-container">
+            <div class="settings-header">
+                <h2><i class="fa fa-sliders"></i> Account Settings</h2>
+            </div>
+
+            <div class="settings-card">
+                <h3><i class="fa fa-lock"></i> Security</h3>
+                <div class="settings-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPass" class="settings-input" placeholder="Min. 6 characters">
+                </div>
+                <div class="settings-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirmPass" class="settings-input" placeholder="Repeat new password">
+                </div>
+                <button class="update-btn" onclick="updatePassword()">Update Password</button>
+            </div>
+
+            <div class="settings-card">
+                <h3><i class="fa fa-palette"></i> Preferences</h3>
+                <div class="flex-row">
+                    <span>Email Notifications</span>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="settings-group">
+                    <label>App Theme</label>
+                    <select id="themeSelect">
+                        <option value="light">Light Mode (Default)</option>
+                        <option value="dark">Dark Mode</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3><i class="fa fa-shield-halved"></i> Privacy</h3>
+                <div class="flex-row">
+                    <span>Public Profile Visibility</span>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="flex-row">
+                    <span>Show ID to Recruiters</span>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-card" style="border-color: #fecaca; background: #fffafb;">
+                <h3 style="color: #dc2626;"><i class="fa fa-triangle-exclamation"></i> Danger Zone</h3>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Deactivating your account will remove your data from the system.</p>
+                <button class="danger-btn" onclick="deleteAccount()">Delete My Account</button>
+            </div>
+            
+            <p id="statusMsg" style="text-align:center; font-weight:bold; font-size:14px; margin-top:10px;"></p>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Load Username from LocalStorage
+    document.getElementById("userDisplay").innerText = localStorage.getItem("username") || "User";
+
+    function updatePassword() {
+        const p1 = document.getElementById("newPass").value;
+        const p2 = document.getElementById("confirmPass").value;
+        const status = document.getElementById("statusMsg");
+
+        if(p1.length < 6) {
+            status.style.color = "#dc2626";
+            status.innerText = "Password must be at least 6 characters!";
+            return;
+        }
+        if(p1 !== p2) {
+            status.style.color = "#dc2626";
+            status.innerText = "Passwords do not match!";
+            return;
+        }
+
+        localStorage.setItem("userPassword", p1);
+        status.style.color = "#16a34a";
+        status.innerText = "Password updated successfully!";
+        document.getElementById("newPass").value = "";
+        document.getElementById("confirmPass").value = "";
+    }
+
+    function deleteAccount() {
+        if(confirm("Are you absolutely sure? This action is permanent!")) {
+            localStorage.clear();
+            alert("Account data cleared. Redirecting...");
+            window.location.href = "login.html";
+        }
+    }
+
+    function logout() {
+        if(confirm("Do you want to logout?")) {
+            window.location.href = "login.html";
+        }
+    }
+</script>
+</body>
+</html>
