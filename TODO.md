@@ -19,9 +19,9 @@ Intelligent Career Guidance System for BAUET
 - [-] Create Main Page and design UI
 - [x] Dynamic post box
 - [x] Student Dashboard UI
-- [ ] Create profile page
+- [X] Create profile page
 - [ ] Design Settings Page
-- [ ] Career Suggestion Page
+- [-] Career Suggestion Page
 - [ ] Make responsive design
 - [x] Make the logout button rssponsive
 ## Backend (Python)
