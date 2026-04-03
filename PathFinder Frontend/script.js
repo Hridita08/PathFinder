@@ -86,19 +86,22 @@ alert("Please fill all fields");
 
 }
 
-}const username = localStorage.getItem("username");
-
-if(!username){
-
-window.location.href="login.html";
-
 }
+const username = localStorage.getItem("username");
 
+if(username){
+    const userEl = document.getElementById("userDisplay");
+    if(userEl){
+        userEl.innerText = username;
+    }
+}
 document.getElementById("userDisplay").innerText=username;
 // if already logged in → go to main page
 
-if(localStorage.getItem("username")){
-window.location.href="main.html";
-}
+window.addEventListener("DOMContentLoaded", () => {
+    if(localStorage.getItem("username")){
+        window.location.href="main.html";
+    }
+});
 
 // ========Main page=========
