@@ -1,124 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | PATHFINDER</title>
 
-<style>
-body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#f4f6f9;   /* white soft background */
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-}
+<title>PathFinder Login</title>
 
-.login-container{
-    background:white;
-    padding:40px;
-    width:350px;
-    border-radius:10px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.1);
-}
+<link rel="stylesheet" href="style.css">
 
-.login-container h2{
-    text-align:center;
-    margin-bottom:25px;
-}
+<!-- ICON LIBRARY -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-input{
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border:1px solid #ccc;
-    border-radius:6px;
-    font-size:14px;
-}
-
-input:focus{
-    border-color:#1e3c72;
-    outline:none;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    background:#1e3c72;
-    color:white;
-    border:none;
-    border-radius:6px;
-    font-size:15px;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#16325c;
-}
-
-.error{
-    color:red;
-    font-size:14px;
-    margin-bottom:10px;
-}
-
-/* Responsive */
-@media(max-width:400px){
-    .login-container{
-        width:90%;
-    }
-}
-</style>
 </head>
 
 <body>
 
-<div class="login-container">
-    <h2>Login to PATHFINDER</h2>
+<div class="pf-login-page">
 
-    <div id="errorMsg" class="error"></div>
+<div class="pf-login-container">
 
-    <form onsubmit="loginUser(event)">
-        <input type="text" id="name" placeholder="Full Name">
-        <input type="email" id="email" placeholder="Email Address">
-        <input type="password" id="password" placeholder="Password">
-        <button type="submit">Login</button>
-    </form>
+<div class="pf-logo">
+    <img src="logo.png" alt="logo">
+    <span class="pf-brand">PATHFINDER</span>
 </div>
 
-<script>
-function loginUser(e){
-    e.preventDefault();
+<h2>Login</h2>
 
-    let name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let password = document.getElementById("password").value.trim();
-    let error = document.getElementById("errorMsg");
+<form onsubmit="loginUser(event)">
 
-    error.innerHTML = "";
+<!-- NAME -->
 
-    if(name === "" || email === "" || password === ""){
-        error.innerHTML = "All fields are required!";
-        return;
-    }
+<div class="pf-input-group">
 
-    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    if(!email.match(emailPattern)){
-        error.innerHTML = "Please enter a valid email address!";
-        return;
-    }
+<i class="fa-solid fa-user"></i>
 
-    if(password.length < 6){
-        error.innerHTML = "Password must be at least 6 characters!";
-        return;
-    }
+<input 
+type="text"
+placeholder="Full Name"
+name="name"
+autocomplete="name"
+required>
 
-    localStorage.setItem("username", name);
-    window.location.href = "main.html";
-}
-</script>
+</div>
 
+
+<!-- EMAIL -->
+
+<div class="pf-input-group">
+
+<i class="fa-solid fa-envelope"></i>
+
+<input
+type="email"
+placeholder="Email Address"
+name="email"
+autocomplete="email"
+required>
+
+</div>
+
+
+<!-- PASSWORD -->
+
+<div class="pf-input-group">
+
+<i class="fa-solid fa-lock"></i>
+
+<input
+type="password"
+id="password"
+placeholder="Password"
+name="password"
+autocomplete="current-password"
+required>
+
+<i class="fa-solid fa-eye toggle-pass"
+onclick="togglePassword()"></i>
+
+</div>
+
+
+<button type="submit">Login</button>
+
+<div class="pf-forgot">
+    <a href="forget-password.html" style="text-decoration:none; color:#0d1367;">Forgot password?</a>
+</div>
+
+</form>
+
+</div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
