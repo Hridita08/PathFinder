@@ -1,5 +1,6 @@
 import mysql.connector
 
+# 1️⃣ Connect once
 conn = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -8,21 +9,10 @@ conn = mysql.connector.connect(
 )
 
 cursor = conn.cursor()
-print("Database connected successfully!")
-cursor.execute("SHOW TABLES;")
-for table in cursor.fetchall():
-    print(table)
-    import mysql.connector
 
-conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="YOUR_PASSWORD",
-    database="pathfinder_db"
-)
-cursor = conn.cursor()
+print("✅ Database connected successfully!")
 
-# Table create example
+# 2️⃣ Create table
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS students (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -31,9 +21,29 @@ CREATE TABLE IF NOT EXISTS students (
     email VARCHAR(100)
 )
 """)
+
 conn.commit()
-print("Table 'students' created successfully!")
-with open("pathfinderdb.session.sql", "w") as f:
-    cursor.execute("SHOW TABLES;")
-    for table in cursor.fetchall():
-        f.write(str(table) + "\n")
+print("✅ Table 'students' created successfully!")
+
+# 3️⃣ Show tables
+cursor.execute("SHOW TABLES;")
+
+print("\n📌 Tables in database:")
+for table in cursor.fetchall():
+    print(table)
+
+# 4️⃣ Insert test data (optional)
+cursor.execute("""
+INSERT INTO students (name, age, email)
+VALUES ('Toumi', 20, 'toumi@gmail.com')
+""")
+
+conn.commit()
+print("✅ Sample data inserted!")
+
+# 5️⃣ Show data
+cursor.execute("SELECT * FROM students")
+
+print("\n📌 Students data:")
+for row in cursor.fetchall():
+    print(row)
