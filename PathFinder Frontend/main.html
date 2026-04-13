@@ -2,62 +2,208 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>PATHFINDER | Dashboard</title>
+<title>PATHFINDER | Home</title>
+
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
+
 <body>
 
-<!-- Top Navbar -->
-<header class="topbar">
+<!-- SIDEBAR -->
 
-    <!-- Hamburger + Title -->
-    <div class="menu-section">
-        <i class="fa fa-bars menu-icon" onclick="goDashboard()"></i>
-        <span class="title-text">Pathfinder</span>
-    </div>
+<div class="sidebar" id="sidebar">
 
-    <div class="search-box">
-        <i class="fa fa-search"></i>
-        <input type="text" placeholder="Search...">
-    </div>
+<ul>
 
-    <div class="top-icons">
-        <i class="fa fa-bell"></i>
-        <i class="fa fa-envelope"></i>
-        <span id="userDisplay"></span>
-        <button onclick="logout()">Logout</button>
-    </div>
-</header>
+<li class="active">
+<i class="fa fa-home"></i> Home
+</li>
 
-<div>
+<li onclick="toggleCareer()">
+<i class="fa fa-graduation-cap"></i> Career Path
+</li>
 
-    <!-- Main Content -->
-    <main class="content">
+<ul class="career-dropdown" id="careerDropdown">
+<li>Technical</li>
+<li>Non-Technical</li>
+</ul>
 
-        <!-- Post Box -->
-        <div class="post-box">
-            <img src="../PathFinder Frontend/icons/profile.png">
-            <input type="text" id="postInput" placeholder="What's on your mind?">
-            <button onclick="addPost()">Post</button>
-        </div>
+<li onclick="location.href='settings.html'">
+<i class="fa fa-cog"></i> Settings
+</li>
 
-        <!-- Feed -->
-        <div id="feedArea"></div>
+<li class="logout" onclick="logout()">
+<i class="fa fa-sign-out-alt"></i> Logout
+</li>
 
-    </main>
+</ul>
+
 </div>
 
-<script src="script.js"></script>
+<!-- TOPBAR -->
+
+<header class="topbar">
+
+<div class="menu-section">
+
+<i class="fa fa-bars menu-icon" onclick="toggleSidebar()"></i>
+
+<span class="title-text">Pathfinder</span>
+
+</div>
+
+
+<div class="search-box">
+
+<input type="text" placeholder="Search...">
+
+<i class="fa fa-search"></i>
+
+</div>
+
+
+<div class="top-right">
+
+<div class="icon-badge">
+
+<i class="fa fa-bell"></i>
+
+<span class="badge">3</span>
+
+</div>
+
+<div class="icon-badge">
+
+<i class="fa fa-envelope"></i>
+
+<span class="badge">2</span>
+
+</div>
+
+<div class="user-info" onclick="goProfile()">
+
+<img src="icons/profile.png" class="user-pic">
+
+<span id="userDisplay"></span>
+
+</div>
+
+</div>
+
+</header>
+
+
+<!-- MAIN CONTENT -->
+
+<main class="content">
+
+<div class="post-box">
+
+<img src="icons/profile.png">
+
+<input type="text" id="postInput" placeholder="What's on your mind?">
+
+<button onclick="addPost()">Post</button>
+
+</div>
+
+<div id="feedArea"></div>
+
+</main>
+
 
 <script>
+
 const username = localStorage.getItem("username");
-if(!username){ window.location.href="login.html"; }
+
+if(!username){
+
+window.location.href="login.html";
+
+}
+
 document.getElementById("userDisplay").innerText=username;
 
-function goDashboard(){
-    window.location.href="dashboard.html";   
+
+/* SIDEBAR */
+
+function toggleSidebar(){
+
+document.getElementById("sidebar").classList.toggle("active");
+
+}
+
+
+/* CAREER DROPDOWN */
+
+function toggleCareer() {
+    let menu = document.getElementById("careerDropdown");
+    menu.classList.toggle("show");
+}
+
+
+/* PROFILE PAGE */
+
+function goProfile(){
+
+window.location.href="profile.html";
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+localStorage.removeItem("username");
+
+window.location.href="login.html";
+
+}
+
+
+/* ADD POST */
+
+function addPost(){
+    let text = document.getElementById("postInput").value.trim();
+    if(!text) return;
+
+    let post = document.createElement("div");
+    post.className = "post-card";
+
+    post.innerHTML = `
+    <div class="post-header">
+        <div class="post-user">
+            <img src="icons/profile.png" class="post-pic">
+            <div class="post-user-info">
+                <b>${username}</b>
+                <span class="time">Just now</span>
+            </div>
+        </div>
+        <div class="three-dot">
+            <i class="fa fa-ellipsis-h"></i>
+        </div>
+    </div>
+
+    <div class="post-body">
+        <p>${text}</p>
+    </div>
+
+    <div class="post-actions">
+        <span><i class="fa fa-thumbs-up"></i> Like</span>
+        <span><i class="fa fa-comment"></i> Comment</span>
+        <span><i class="fa fa-share"></i> Share</span>
+    </div>
+    `;
+
+    document.getElementById("feedArea").prepend(post);
+    document.getElementById("postInput").value="";
 }
 </script>
+
 </body>
 </html>
