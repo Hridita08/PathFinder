@@ -104,4 +104,82 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ========Main page=========
+// Technical page
+function goHome(){
+window.location.href="main.html";
+}
+function goTechnical(){
+    window.location.href = "technical.html";
+}
+function showCareer(btn,type){
+
+let card = btn.closest(".tech-card");
+let box = card.querySelector(".career-details");
+
+/* toggle */
+if(box.style.display === "block"){
+    box.style.display = "none";
+    box.innerHTML = "";
+    return;
+}
+
+let content = "";
+
+switch(type){
+
+case "software":
+content = `
+<p><b>Software Developer</b></p>
+<p>Builds software and applications.</p>
+<p>Skills: Java, Python, C++</p>`;
+break;
+
+case "web":
+content = `
+<p><b>Web Developer</b></p>
+<p>Builds websites and web apps.</p>
+<p>Skills: HTML, CSS, JavaScript</p>`;
+break;
+
+case "data":
+content = `
+<p><b>Data Scientist</b></p>
+<p>Works with data and machine learning.</p>
+<p>Skills: Python, ML, Statistics</p>`;
+break;
+
+case "cyber":
+content = `
+<p><b>Cyber Security Specialist</b></p>
+<p>Protects systems from cyber attacks.</p>`;
+break;
+
+case "ai":
+content = `
+<p><b>AI / ML Engineer</b></p>
+<p>Builds intelligent systems.</p>`;
+break;
+
+case "network":
+content = `
+<p><b>Network Engineer</b></p>
+<p>Design and manage computer networks.</p>`;
+break;
+
+case "cloud":
+content = `
+<p><b>Cloud Engineer</b></p>
+<p>Works with AWS & Azure cloud platforms.</p>`;
+break;
+
+case "mobile":
+content = `
+<p><b>Mobile App Developer</b></p>
+<p>Builds Android & iOS apps.</p>`;
+break;
+
+}
+
+box.innerHTML = content;
+box.style.display = "block";
+}
