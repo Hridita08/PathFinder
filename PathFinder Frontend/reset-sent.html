@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Code | PATHFINDER</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="pf-code-page">
+
+<div class="pf-login-container">
+
+<div class="pf-logo">
+<img src="logo.png">
+<span class="pf-brand">PATHFINDER</span>
+</div>
+
+<h2>Email Verification</h2>
+
+<p class="pf-description">
+Enter the 4 digit verification code sent to your email
+</p>
+
+<form action="new-password.html">
+
+<div class="pf-otp-box">
+
+<input type="text" maxlength="1" class="otp">
+<input type="text" maxlength="1" class="otp">
+<input type="text" maxlength="1" class="otp">
+<input type="text" maxlength="1" class="otp">
+
+</div>
+
+<button type="submit">Verify Code</button>
+
+<div class="pf-resend">
+Resend code in <span id="timer">30</span>s
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<script>
+
+/* show animation */
+
+window.addEventListener("DOMContentLoaded", () => {
+const container = document.querySelector(".pf-login-container")
+
+setTimeout(()=>{
+container.classList.add("show")
+},100)
+
+})
+
+const inputs = document.querySelectorAll(".otp")
+
+inputs.forEach((input,index)=>{
+
+input.addEventListener("input",()=>{
+
+if(input.value.length==1 && index<3){
+inputs[index+1].focus()
+}
+
+})
+
+input.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace" && input.value=="" && index>0){
+inputs[index-1].focus()
+}
+
+})
+
+})
+
+let time = 30
+const timer = document.getElementById("timer")
+
+setInterval(()=>{
+
+if(time>0){
+time--
+timer.textContent = time
+}
+
+},1000)
+
+</script>
+
+</body>
+</html>
