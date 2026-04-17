@@ -104,4 +104,5 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// ========Main page=========
+// ========profile page=========
+
