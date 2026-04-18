@@ -30,5 +30,14 @@ mysql = MySQL(app)
 def home():
     return "Connected successfully!"
 
+ @app.route('/users') 
+def get_users():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM users")
+    data = cur.fetchall()
+    return str(data) 
+
 if __name__ == '__main__':
     app.run(debug=True)
+    
+   
