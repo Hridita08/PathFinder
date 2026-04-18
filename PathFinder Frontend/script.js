@@ -95,4 +95,31 @@ function suggestCareer() {
     }
 }
 
+function verifyCode() {
+    let otp = 
+        document.getElementById("d1").value +
+        document.getElementById("d2").value +
+        document.getElementById("d3").value +
+        document.getElementById("d4").value;
+
+    fetch('http://127.0.0.1:5000/verify', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: "test@gmail.com",  // আগের page থেকে আসা email
+            otp: otp
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert("Verified ✅");
+        } else {
+            alert("Wrong OTP ❌");
+        }
+    });
+}
+
 }
