@@ -2,6 +2,9 @@ import mysql.connector
 from flask import Flask
 from flask_mysqldb import MySQL
 
+from flask import request, jsonify
+import random
+
 # DB connection (optional print check)
 db = mysql.connector.connect(
     host="localhost",
@@ -41,6 +44,35 @@ def get_users():
     data = cur.fetchall()
     return str(data)
 
+otp_storage = {}
+def generate_otp():
+    return str(random.randint(1000, 9999))
+
+@app.route('/send-otp', methods=['POST'])
+def send_otp():
+    data = request.json
+    email = data['email']
+
+    otp = generate_otp()
+    otp_storage[email] = otp
+
+    print(f"OTP for {email}: {otp}")  # এখন email না পাঠিয়ে console এ দেখাবে
+
+    return jsonify({"message": "OTP sent"})
+@app.route('/verify', methods=['POST'])
+def verify():
+    data = request.json
+    email = data['email']
+    otp = data['otp']
+
+    if otp_storage.get(email) == otp:
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "fail"})
+    
+
 # Run server
 if __name__ == '__main__':
     app.run(debug=True)
+
+    
