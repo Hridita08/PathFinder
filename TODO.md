@@ -9,17 +9,18 @@ Intelligent Career Guidance System for BAUET
 ## Frontend (HTML, CSS, JS)
 - [x] Create Registration Page
 - [X] Create profile page
-- [-] Design Settings Page
-- [-] Make responsive design
+- [X] Design Settings Page
+- [X] Make responsive design
 
 ## Backend (Python)
-- [ ] Setup Python environment
+- [X] Setup Python environment
 - [ ] Create backend server
 - [ ] User authentication system
 - [ ] Career recommendation logic
-
+- [-] Login page
+- [ ] First page in forget password
 ## Database (MySQL)
-- [ ] Design database schema
+- [-] Design database schema
 - [ ] Create student table
 - [ ] Create career/skills table
 - [ ] Connect database with backend
@@ -31,7 +32,3 @@ Intelligent Career Guidance System for BAUET
 
 ## Testing
 - [ ] Fix bugs and errors
-
-## Submission
-- [ ] Push to branch
-- [ ] Create Pull Request (PR)
