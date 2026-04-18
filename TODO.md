@@ -13,6 +13,11 @@ Intelligent Career Guidance System for BAUET
 - [x] Dynamic post box
 - [x] Student Dashboard UI
 - [x] Make the logout button rssponsive
+- [x] Connect technical page with main
+- [x] Connect own_profile page with main 
+- [ ] Connect settings with main
+- [ ] Connect non-technical page to main
+- [-] Merge all to devlopement branch
 ## Backend (Python)
 - [ ] Setup Python environment
 - [ ] Create backend server
