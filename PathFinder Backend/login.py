@@ -1,70 +1,43 @@
+from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 
-# 1️⃣ Connect to database
-conn = mysql.connector.connect(
+app = Flask(__name__)
+
+# ডাটাবেজ কানেকশন
+db = mysql.connector.connect(
     host="localhost",
     user="root",
     password="1234",
     database="pathfinder_db"
 )
 
-cursor = conn.cursor()
+@app.route('/')
+def home():
+    return render_template('login.html')
 
-print("✅ Connected to database")
-
-# -------------------------
-# 2️⃣ Register function
-# -------------------------
-def register():
-    username = input("Enter username: ")
-    password = input("Enter password: ")
-
-    try:
-        cursor.execute(
-            "INSERT INTO users (username, password) VALUES (%s, %s)",
-            (username, password)
-        )
-        conn.commit()
-        print("✅ Registration successful!")
-    except:
-        print("❌ Username already exists!")
-
-# -------------------------
-# 3️⃣ Login function
-# -------------------------
+@app.route('/login', methods=['POST'])
 def login():
-    username = input("Enter username: ")
-    password = input("Enter password: ")
-
-    cursor.execute(
-        "SELECT * FROM users WHERE username=%s AND password=%s",
-        (username, password)
-    )
-
+    # HTML ফর্ম থেকে আসা ডেটা
+    email_input = request.form.get('email')
+    password_input = request.form.get('password')
+    
+    cursor = db.cursor()
+    
+    # তোমার ডাটাবেজে কলামের নাম 'username', তাই এখানে 'username' ব্যবহার করা হয়েছে
+    query = "SELECT * FROM users WHERE username=%s AND password=%s"
+    cursor.execute(query, (email_input, password_input))
+    
     user = cursor.fetchone()
 
     if user:
-        print("🎉 Login successful! Welcome", username)
+        return f"Login successful! Welcome {email_input}"
     else:
-        print("❌ Invalid username or password")
+        # ভুল পাসওয়ার্ড বা ইমেইল দিলে এই মেসেজ দেখাবে
+        return "Invalid email or password. Please try again."
 
-# -------------------------
-# 4️⃣ Menu system
-# -------------------------
-while True:
-    print("\n===== LOGIN SYSTEM =====")
-    print("1. Register")
-    print("2. Login")
-    print("3. Exit")
+@app.route('/forgot-password')
+def forgot_password():
+    return render_template('forgot_password.html')
 
-    choice = input("Choose: ")
-
-    if choice == "1":
-        register()
-    elif choice == "2":
-        login()
-    elif choice == "3":
-        print("👋 Bye!")
-        break
-    else:
-        print("❌ Invalid choice")
+if __name__ == '__main__':
+    app.run(debug=True)
