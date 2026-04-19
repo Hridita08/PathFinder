@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Non Technical Careers</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+   <div>
+        <input type="text" id="interest" placeholder="Enter your interest">
+<button onclick="suggestCareer()">Suggest Career</button>
+
+<p id="result"></p>
+    </div>
+
+
+<h2 class="title">Non-Technical Career Paths</h2>
+
+<div class="career-container">
+
+<div class="career-card">
+<h3>Marketing</h3>
+<p>Promote products and build brand strategies.</p>
+<button onclick="showDetails('marketing')">Learn More</button>
+</div>
+
+<div class="career-card">
+<h3>Human Resource</h3>
+<p>Manage employees and workplace culture.</p>
+<button onclick="showDetails('hr')">Learn More</button>
+</div>
+
+<div class="career-card">
+<h3>Teaching</h3>
+<p>Educate students and build future generations.</p>
+<button onclick="showDetails('teaching')">Learn More</button>
+</div>
+
+<div class="career-card">
+<h3>Journalism</h3>
+<p>Report news and share information with society.</p>
+<button onclick="showDetails('journalism')">Learn More</button>
+</div>
+
+</div>
+
+<div id="careerDetails" class="details-box">
+<h3>Career Details</h3>
+<p>Select a career to see details.</p>
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
