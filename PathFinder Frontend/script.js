@@ -105,6 +105,12 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // ========non-technical page=========
+function setActive(element){
+    document.querySelectorAll(".sidebar li").forEach(li=>{
+        li.classList.remove("active");
+    });
+    element.classList.add("active");
+}
 function toggleDropdown(){
     const dropdown=document.getElementById("careerDropdown");
     dropdown.style.display = dropdown.style.display==="block" ? "none" : "block";
