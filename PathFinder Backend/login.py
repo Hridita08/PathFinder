@@ -3,7 +3,6 @@ import mysql.connector
 
 app = Flask(__name__)
 
-# ডাটাবেজ কানেকশন
 db = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -17,23 +16,17 @@ def home():
 
 @app.route('/login', methods=['POST'])
 def login():
-    # HTML ফর্ম থেকে আসা ডেটা
-    email_input = request.form.get('email')
-    password_input = request.form.get('password')
+    input_user = request.form.get('email')
+    input_password = request.form.get('password')
     
     cursor = db.cursor()
-    
-    # তোমার ডাটাবেজে কলামের নাম 'username', তাই এখানে 'username' ব্যবহার করা হয়েছে
-    query = "SELECT * FROM users WHERE username=%s AND password=%s"
-    cursor.execute(query, (email_input, password_input))
-    
+    cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (input_user, input_password))
     user = cursor.fetchone()
 
     if user:
-        return f"Login successful! Welcome {email_input}"
+        return f"Success! Welcome {input_user} to PathFinder Dashboard."
     else:
-        # ভুল পাসওয়ার্ড বা ইমেইল দিলে এই মেসেজ দেখাবে
-        return "Invalid email or password. Please try again."
+        return "Invalid Credentials! Try again."
 
 @app.route('/forgot-password')
 def forgot_password():
