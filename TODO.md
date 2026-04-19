@@ -1,18 +1,37 @@
-# TODO
+# PathFinder - To Do List
+Intelligent Career Guidance System for BAUET
 
-- [X] Initial project file structure and folder organization
-- [X] Design and implement a professional Navbar with logo
-- [X] Build the **Hero Section** with a welcoming call-to-action
-- [X] Develop the **Home,About,Registration** UI on the Home page
-- [X] Create a clean and functional **Login Page** interface
-- [X] Design the **Dashboard** with search, post, and interaction features
-- [X] Successfully link main pages (home.html, login.html, dashboard.html)
-- [X] Set up documentation files (README.md and TO-DO.md)
-- [-] Working on the "Post" functionality in the Dashboard to display user thoughts
-- [-] Ensuring the website is fully responsive for Desktop and Mobile devices
-- [-] Connect the frontend to a MySQL database for real user data
-- [ ] Implement the **Student Registration** flow (register-student.html)
-- [ ] Develop the **AI-based Career Suggestion** logic using Python
-- [ ] Add "Comment" and "Share" functionality to the Dashboard posts
-- [ ] Add "Notification" and "Message" functionality to the Dashboard posts
-- [ ] Secure the Login system with proper authentication
+## Project Setup
+- [x] Create GitHub repository
+- [x] Connect project with VS Code
+- [x] Create project folder structure
+
+## Frontend (HTML, CSS, JS)
+- [x] Create Registration Page
+- [X] Create profile page
+- [-] Design Settings Page
+- [-] Make responsive design
+
+## Backend (Python)
+- [ ] Setup Python environment
+- [ ] Create backend server
+- [ ] User authentication system
+- [ ] Career recommendation logic
+
+## Database (MySQL)
+- [ ] Design database schema
+- [ ] Create student table
+- [ ] Create career/skills table
+- [ ] Connect database with backend
+
+## Integration
+- [ ] Connect frontend with backend
+- [ ] Store form data in database
+- [ ] Fetch career suggestions from database
+
+## Testing
+- [ ] Fix bugs and errors
+
+## Submission
+- [ ] Push to branch
+- [ ] Create Pull Request (PR)
