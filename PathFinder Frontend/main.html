@@ -28,8 +28,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 </li>
 
 <ul class="career-dropdown" id="careerDropdown">
-<li>Technical</li>
-<li>Non-Technical</li>
+<li onclick="goTechnical()">Technical</li>
+<li onclick="goNonTechnical()">Non-Technical</li>
 </ul>
 
 <li onclick="location.href='settings.html'">
@@ -164,7 +164,13 @@ localStorage.removeItem("username");
 window.location.href="login.html";
 
 }
+function goTechnical(){
+    window.location.href = "technical.html";
+}
 
+function goNonTechnical(){
+    window.location.href = "non-technical.html";
+}
 
 /* ADD POST */
 
