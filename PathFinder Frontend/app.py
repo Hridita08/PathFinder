@@ -1,25 +1,11 @@
-import mysql.connector
+
 from flask import Flask
 from flask_mysqldb import MySQL
 
 from flask import request, jsonify
 import random
 
-# DB connection (optional print check)
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="#Project18#",
-    database="pathfinder"
-)
 
-print("Connected successfully!")
-
-cursor = db.cursor()
-cursor.execute("SELECT * FROM users")
-
-for row in cursor:
-    print(row)
 
 # Flask app
 app = Flask(__name__)
