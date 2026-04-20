@@ -95,31 +95,36 @@ function suggestCareer() {
     }
 }
 
-function verifyCode() {
-    let otp = 
-        document.getElementById("d1").value +
-        document.getElementById("d2").value +
-        document.getElementById("d3").value +
-        document.getElementById("d4").value;
 
-    fetch('http://127.0.0.1:5000/verify', {
-        method: 'POST',
+async function verifyOTP() //verification er code
+{
+    const inputs = document.querySelectorAll("input");
+    let otp = "";
+
+    inputs.forEach(input => {
+        otp += input.value;
+    });
+
+    const email = new URLSearchParams(window.location.search).get("email");
+
+    const res = await fetch("http://127.0.0.1:5000/verify", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            email: "test@gmail.com",  // আগের page থেকে আসা email
+            email: email,
             otp: otp
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "success") {
-            alert("Verified ✅");
-        } else {
-            alert("Wrong OTP ❌");
-        }
     });
-}
 
+    const data = await res.json();
+
+    if (data.status === "success") {
+        alert("OTP Verified ✅");
+        window.location.href = "reset-password.html"; // next page
+    } else {
+        alert("Wrong OTP ❌");
+    }
+}
 }
