@@ -96,9 +96,10 @@ function suggestCareer() {
 }
 
 
-async function verifyOTP() //verification er code
-{
-    const inputs = document.querySelectorAll("input");
+async function verifyOTP(event) {
+    event.preventDefault(); // form reload bondho
+
+    const inputs = document.querySelectorAll(".otp");
     let otp = "";
 
     inputs.forEach(input => {
@@ -122,7 +123,7 @@ async function verifyOTP() //verification er code
 
     if (data.status === "success") {
         alert("OTP Verified ✅");
-        window.location.href = "reset-password.html"; // next page
+        window.location.href = "new-password.html"; // now redirect
     } else {
         alert("Wrong OTP ❌");
     }
