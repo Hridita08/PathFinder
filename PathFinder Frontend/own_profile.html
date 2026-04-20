@@ -34,9 +34,9 @@
         <li onclick="location.href='dashboard.html'"><i class="fa fa-home"></i> Home</li>
         <li onclick="toggleCareer()"><i class="fa fa-graduation-cap"></i> Career Path</li>
         <ul class="career-dropdown" id="careerDropdown">
-            <li>Technical</li>
-            <li>Non-Technical</li>
-        </ul>
+<li onclick="goTechnical()">Technical</li>
+<li onclick="goNonTechnical()">Non-Technical</li>
+</ul>
         <li onclick="location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
         <li class="logout" onclick="logout()"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
@@ -184,7 +184,13 @@
         loadData();
         closeModal();
     }
+    function goTechnical(){
+    window.location.href = "technical.html";
+}
 
+function goNonTechnical(){
+    window.location.href = "non-technical.html";
+}
     function logout() { localStorage.removeItem("username"); window.location.href = "login.html"; }
     window.onload = loadData;
 </script>
