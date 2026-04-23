@@ -1,9 +1,11 @@
-from flask import Flask
+from flask import Flask, request, render_template
 import mysql.connector
 
 app = Flask(__name__)
 
+# ==============================
 # 🔹 DATABASE CONNECTION
+# ==============================
 db = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -13,65 +15,23 @@ db = mysql.connector.connect(
 
 cursor = db.cursor()
 
-# 🔹 TEST ROUTE
+# ==============================
+# 🔹 HOME ROUTE
+# ==============================
 @app.route('/')
 def home():
-    return "Flask + MySQL Connected Successfully ✅"
+    return "Flask Running ✅ | Go to /register-student or /register-guide"
 
-# 🔹 TEST DATABASE ROUTE
-@app.route('/testdb')
-def test_db():
-    cursor.execute("SHOW TABLES")
-    tables = cursor.fetchall()
-    return str(tables)
+# ==============================
+# 🔹 STUDENT SECTION
+# ==============================
 
-if __name__ == "__main__":
-    app.run(debug=True)
-    from flask import Flask, request, render_template, redirect, url_for
-import mysql.connector
-
-app = Flask(__name__)
-
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="#Project18#",
-    database="Pathfinderdb"
-)
-
-cursor = db.cursor()
-
-# 🔹 Home Route
-@app.route('/')
-def home():
-    return "Flask Running ✅"
-
-# 🔹 Registration Page (GET)
-@app.route('/register')
-def register():
-    return render_template("register.html")
-
-# 🔹 Registration Data Save (POST)
-@app.route('/register', methods=['POST'])
-def register_user():
-    name = request.form['name']
-    email = request.form['email']
-    password = request.form['password']
-
-    sql = "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)"
-    val = (name, email, password)
-
-    cursor.execute(sql, val)
-    db.commit()
-
-    return "Registration Successful ✅"
-# 🔹 GET → page show 
+# 👉 Student Form Show
 @app.route('/register-student')
 def register_student():
     return render_template("register-student.html")
 
-
-# 🔹 POST → form data database 
+# 👉 Student Data Save
 @app.route('/register-student', methods=['POST'])
 def register_student_post():
     name = request.form['name']
@@ -93,3 +53,48 @@ def register_student_post():
     db.commit()
 
     return "Student Profile Created ✅"
+
+# ==============================
+# 🔹 GUIDE SECTION
+# ==============================
+
+# 👉 Guide Form Show
+@app.route('/register-guide')
+def register_guide():
+    return render_template("register-guide.html")
+
+# 👉 Guide Data Save
+@app.route('/register-guide', methods=['POST'])
+def register_guide_post():
+    name = request.form['name']
+    qualification = request.form['qualification']
+    sector = request.form['sector']
+    email = request.form['email']
+    password = request.form['password']
+
+    sql = """
+    INSERT INTO guides (name, qualification, sector, email, password)
+    VALUES (%s, %s, %s, %s, %s)
+    """
+
+    val = (name, qualification, sector, email, password)
+
+    cursor.execute(sql, val)
+    db.commit()
+
+    return "Guide Profile Created ✅"
+
+# ==============================
+# 🔹 TEST DATABASE
+# ==============================
+@app.route('/testdb')
+def test_db():
+    cursor.execute("SHOW TABLES")
+    tables = cursor.fetchall()
+    return str(tables)
+
+# ==============================
+# 🔹 RUN SERVER
+# ==============================
+if __name__ == "__main__":
+    app.run(debug=True)
