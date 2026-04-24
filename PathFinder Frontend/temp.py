@@ -2,29 +2,30 @@ from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 import os
 
-# 1️⃣ Automatic Path Setup: Eita dile TemplateNotFound error hobe na
-# Program jekhanei thakuk, eita current folder-ke template folder hisebe dhorbe
+# ✅ Path setup (Template error avoid)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-app = Flask(__name__, 
-            template_folder=current_dir, 
+app = Flask(__name__,
+            template_folder=current_dir,
             static_folder=current_dir,
             static_url_path='')
 
-# 2️⃣ Database Connection
+# ✅ Database Connection
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="1234",
-        database="pathfinder_db"
+        password="#Project18#",
+        database="pathfinderdb"
     )
 
-# 3️⃣ Database Setup (Auto table creation)
+# ✅ Database Setup (Student + Guide tables)
 def setup_database():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
+
+        # Student Table
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS students (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,53 +38,129 @@ def setup_database():
             password VARCHAR(100)
         )
         """)
+
+        # Guide Table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS guides (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100),
+            qualification VARCHAR(100),
+            sector VARCHAR(100),
+            email VARCHAR(100),
+            password VARCHAR(100)
+        )
+        """)
+
         conn.commit()
         cursor.close()
         conn.close()
+
         print("✅ Database & Tables are ready!")
+
     except Exception as e:
         print(f"❌ DB Setup Error: {e}")
 
-# 4️⃣ Web Route: Show Registration Form
+# =========================
+# 🔵 STUDENT ROUTES
+# =========================
+
+# Show student form
 @app.route('/')
-def index():
-    # Eita ekhon temp.py er pashe thaka register-student.html khujbe
+def student_form():
     return render_template('register-student.html')
 
-# 5️⃣ Web Route: Handle Form Submission
+# Handle student form
 @app.route('/create-profile', methods=['POST'])
 def create_profile():
+    data = (
+        request.form.get('name'),
+        request.form.get('student_id'),
+        request.form.get('dept'),
+        request.form.get('batch'),
+        request.form.get('email'),
+        request.form.get('phone'),
+        request.form.get('password')
+    )
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        sql = """
+        INSERT INTO students (name, student_id, department, batch, email, phone, password)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+
+        cursor.execute(sql, data)
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        print(f"✅ Student Registered: {data[0]}")
+        return redirect(url_for('home'))
+
+    except mysql.connector.Error as err:
+        return f"❌ Database Error: {err}"
+
+
+# =========================
+# 🟢 GUIDE ROUTES
+# =========================
+
+# Show guide form + handle submit
+@app.route('/register-guide', methods=['GET', 'POST'])
+def register_guide():
+
     if request.method == 'POST':
         data = (
             request.form.get('name'),
-            request.form.get('student_id'),
-            request.form.get('dept'),
-            request.form.get('batch'),
+            request.form.get('qualification'),
+            request.form.get('sector'),
             request.form.get('email'),
-            request.form.get('phone'),
             request.form.get('password')
         )
 
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
+
             sql = """
-            INSERT INTO students (name, student_id, department, batch, email, phone, password) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO guides (name, qualification, sector, email, password)
+            VALUES (%s, %s, %s, %s, %s)
             """
+
             cursor.execute(sql, data)
             conn.commit()
+
             cursor.close()
             conn.close()
-            
-            print(f"✅ Web Registration Successful for: {data[0]}")
+
+            print(f"✅ Guide Registered: {data[0]}")
             return redirect(url_for('home'))
+
         except mysql.connector.Error as err:
             return f"❌ Database Error: {err}"
 
+    return render_template('register-guide.html')
+
+
+# =========================
+# 🏠 HOME PAGE
+# =========================
+
 @app.route('/home')
 def home():
-    return "<h1>🎉 Student Profile Created Successfully!</h1><a href='/'>Back to Register</a>"
+    return """
+    <h1>🎉 Profile Created Successfully!</h1>
+    <a href='/'>Student Register</a><br><br>
+    <a href='/register-guide'>Guide Register</a>
+    """
+
+
+# =========================
+# 🚀 RUN APP
+# =========================
 
 if __name__ == '__main__':
     setup_database()
