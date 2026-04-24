@@ -12,11 +12,11 @@
         --page-bg: #f0f2f5;
         --topbar-bg: #ffffff;
         --hover-light: #e4e6eb;
+        --danger-red: #fc8686e4; 
     }
 
     body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); overflow-x: hidden; }
     
-    /* TOPBAR */
     .topbar {
         background: var(--topbar-bg); height: 60px; padding: 0 20px;
         display: flex; justify-content: space-between; align-items: center;
@@ -28,16 +28,12 @@
     .menu-icon:hover { background: var(--hover-light); color: var(--sidebar-green); }
     .title-text { font-size: 22px; font-weight: bold; color: var(--sidebar-green); }
 
-    /* SEARCH BOX HOVER EFFECT */
     .search-box { 
         background: #f0f2f5; padding: 8px 15px; border-radius: 20px; 
         display: flex; align-items: center; width: 350px; 
         transition: 0.3s ease; border: 1px solid transparent;
     }
-    .search-box:hover { 
-        background: #ffffff; border-color: var(--sidebar-green); 
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
-    }
+    .search-box:hover { background: #ffffff; border-color: var(--sidebar-green); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .search-box input { border: none; background: transparent; outline: none; padding-left: 10px; width: 100%; }
 
     .top-right { display: flex; align-items: center; gap: 15px; }
@@ -49,7 +45,19 @@
     .icon-btn:hover { background: var(--sidebar-green); color: white; transform: scale(1.1); }
     .badge { position: absolute; top: -2px; right: -2px; background: #e41e3f; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
 
-    /* SIDEBAR */
+    /* Profile Icon Color & Hover Change */
+    .profile-img { 
+        width:35px; height:35px; border-radius:50%; margin-left:10px; cursor:pointer; 
+        transition: 0.3s; border: 2px solid var(--sidebar-green); /* Base color red */
+    }
+    .profile-img:hover { 
+        border-color: #299b51; 
+        box-shadow: 0 0 12px rgba(27, 92, 34, 0.6); 
+        transform: rotate(5deg);
+    }
+
+    .user-display-name { font-weight: 600; color: #333; font-size: 14px; }
+
     .sidebar {
         width: 280px; background: var(--sidebar-green); color: white; height: 100vh;
         position: fixed; top: 0; left: -280px; transition: 0.3s ease; padding-top: 80px; z-index: 1000;
@@ -58,53 +66,32 @@
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
     .sidebar ul li:hover { background: rgba(255,255,255,0.1); padding-left: 35px; color: var(--accent-green); }
+    
+    .logout-btn { color: #fc8686e4 !important; transition: all 0.3s ease !important; }
+    .logout-btn:hover { color: #ff4d4d !important; padding-left: 35px !important; background: rgba(252, 134, 134, 0.1) !important; }
 
-    /* MAIN CONTENT */
     .content-wrapper { transition: margin-left 0.3s ease; display: flex; flex-direction: column; align-items: center; padding-top: 80px; width: 100%; }
     .content-wrapper.shifted { margin-left: 280px; width: calc(100% - 280px); }
     .post-container { width: 95%; max-width: 700px; }
     
-    /* POST BOX HOVER */
-    .post-box {
-        background: white; padding: 20px; border-radius: 12px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; 
-        border: 1px solid #ddd; transition: 0.3s;
-    }
-    .post-box:hover { border-color: var(--sidebar-green); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .post-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; transition: 0.3s; }
+    #postInput { width: 100%; border: none; border-radius: 8px; padding: 12px; resize: none; min-height: 60px; outline: none; background: #f0f2f5; font-size: 16px; font-family: inherit; }
+    .post-btn { background: var(--sidebar-green); color: white; border: none; padding: 8px 30px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    .post-btn:hover { background: #163a2c; transform: translateY(-2px); }
+
+    .post-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #ddd; transition: 0.3s; position: relative; }
+    .three-dot { cursor: pointer; color: #65676b; padding: 8px; border-radius: 50%; transition: 0.3s; }
+    .three-dot:hover { color: #fc8686e4; background: #f2f2f2; }
     
-    #postInput {
-        width: 100%; border: none; border-radius: 8px; padding: 12px;
-        resize: none; min-height: 60px; outline: none; background: #f0f2f5; 
-        font-size: 16px; font-family: inherit; transition: 0.3s;
-    }
-    #postInput:hover { background: #e4e6eb; }
-    #postInput:focus { background: #ffffff; border: 1px solid #ddd; }
-
-    .post-btn { 
-        background: var(--sidebar-green); color: white; border: none; 
-        padding: 8px 30px; border-radius: 6px; font-weight: 600; cursor: pointer; 
-        transition: 0.3s; 
-    }
-    .post-btn:hover { background: #163a2c; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-
-    /* POST CARD & OPTION HOVERS */
-    .post-card {
-        background: white; padding: 20px; border-radius: 12px;
-        margin-bottom: 20px; border: 1px solid #ddd; transition: 0.3s;
-    }
-    .post-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .dropdown { display: none; position: absolute; right: 0; top: 35px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; min-width: 120px; border: 1px solid #eee;}
+    .dropdown.active { display: block; }
+    .dropdown div { padding: 10px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
+    .dropdown div:last-child { border-bottom: none; }
+    .dropdown div:hover { background: #f8fafc; color: #fc8686e4; }
 
     .post-card-actions { border-top: 1px solid #e4e6eb; padding-top: 10px; display: flex; margin-top: 15px; }
-    
-    /* Hover on Comment/Share/Message options */
-    .action-item { 
-        flex: 1; text-align: center; padding: 10px; cursor: pointer; 
-        border-radius: 8px; color: #65676b; font-weight: 600; 
-        transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; 
-    }
-    .action-item:hover { 
-        background: #f2f2f2; color: var(--sidebar-green); transform: scale(1.05); 
-    }
+    .action-item { flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 8px; color: #65676b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .action-item:hover { background: #f2f2f2; color: var(--sidebar-green); transform: scale(1.05); }
 </style>
 </head>
 
@@ -122,7 +109,8 @@
     <div class="top-right">
         <div class="icon-btn"><i class="fa fa-bell"></i><span class="badge">3</span></div>
         <div class="icon-btn"><i class="fa fa-envelope"></i><span class="badge">2</span></div>
-        <img src="icons/profile.png" style="width:35px; height:35px; border-radius:50%; margin-left:10px; cursor:pointer;" onclick="location.href='own_profile.html'">
+        <span class="user-display-name" id="displayUserName">Guest User</span>
+        <img src="icons/profile.png" class="profile-img" onclick="location.href='own_profile.html'">
     </div>
 </header>
 
@@ -131,7 +119,7 @@
         <li onclick="location.href='index.html'"><i class="fa fa-home"></i> Home</li>
         <li><i class="fa fa-graduation-cap"></i> Career Path</li>
         <li onclick="location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
-        <li onclick="logout()"><i class="fa fa-sign-out-alt"></i> Logout</li>
+        <li onclick="logout()" class="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
 </div>
 
@@ -143,8 +131,9 @@
                 <textarea id="postInput" placeholder="What's on your mind?"></textarea>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <label style="color:#65676b; cursor:pointer; font-weight:600; font-size:14px; padding:8px; border-radius:8px; transition:0.3s;" onmouseover="this.style.background='#f2f2f2'" onmouseout="this.style.background='transparent'">
+                <label style="color:#65676b; cursor:pointer; font-weight:600; font-size:14px;">
                     <i class="fa fa-image" style="color:#45bd62;"></i> Add Photo
+                    <input type="file" id="imageUpload" style="display:none;" accept="image/*">
                 </label>
                 <button class="post-btn" onclick="addNewPost()">Post</button>
             </div>
@@ -152,11 +141,19 @@
 
         <div id="feed">
             <div class="post-card">
-                <div style="display:flex; gap:12px; align-items:center; margin-bottom:15px;">
-                    <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
-                    <div><b>System Admin</b><br><small style="color:gray">Just now</small></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
+                        <div><b>System Admin</b><br><small style="color:gray">Just now</small></div>
+                    </div>
+                    <div style="position:relative;">
+                        <i class="fa fa-ellipsis-v three-dot" onclick="this.nextElementSibling.classList.toggle('active')"></i>
+                        <div class="dropdown">
+                            <div onclick="alert('Post saved!')">Save Post</div>
+                        </div>
+                    </div>
                 </div>
-                <div style="font-size:16px;">Hover over the search bar, post box, or the options below to see the interactive effects!</div>
+                <div class="post-text">Guidelines are here for your career success.</div>
                 <div class="post-card-actions">
                     <div class="action-item"><i class="fa fa-comment"></i> Comment</div>
                     <div class="action-item"><i class="fa fa-share"></i> Share</div>
@@ -168,6 +165,16 @@
 </div>
 
 <script>
+    // 1. Page load hobar shomoy topbar-er nam update korar jonno
+    window.onload = function() {
+        const storedName = localStorage.getItem("username");
+        if (storedName) {
+            // Jey element-er moddhe nam thake (e.g., id="displayUserName")
+            const topName = document.getElementById("displayUserName");
+            if(topName) topName.innerText = storedName;
+        }
+    };
+
     function toggleSidebar() {
         document.getElementById("sidebar").classList.toggle("active");
         document.getElementById("mainContent").classList.toggle("shifted");
@@ -176,13 +183,26 @@
     function addNewPost() {
         const text = document.getElementById("postInput").value.trim();
         if(!text) return;
+
+        // 2. Ekhane localStorage theke namti ana hoyeche
+        const currentUserName = localStorage.getItem("userName") || "Guest User";
+        
         const postHTML = `
             <div class="post-card">
-                <div style="display:flex; gap:12px; align-items:center; margin-bottom:15px;">
-                    <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
-                    <div><b>User</b><br><small style="color:gray">Just now</small></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
+                        <div><b>${currentUserName}</b><br><small style="color:gray">Just now</small></div>
+                    </div>
+                    <div style="position:relative;">
+                        <i class="fa fa-ellipsis-v three-dot" onclick="this.nextElementSibling.classList.toggle('active')"></i>
+                        <div class="dropdown">
+                            <div onclick="editPost(this)">Edit</div>
+                            <div onclick="this.closest('.post-card').remove()">Delete</div>
+                        </div>
+                    </div>
                 </div>
-                <div style="font-size:16px;">${text}</div>
+                <div class="post-text">${text}</div>
                 <div class="post-card-actions">
                     <div class="action-item"><i class="fa fa-comment"></i> Comment</div>
                     <div class="action-item"><i class="fa fa-share"></i> Share</div>
@@ -192,6 +212,22 @@
         `;
         document.getElementById("feed").insertAdjacentHTML('afterbegin', postHTML);
         document.getElementById("postInput").value = "";
+    }
+
+    function editPost(el) {
+        const postCard = el.closest('.post-card');
+        const textDiv = postCard.querySelector('.post-text');
+        const newText = prompt("Edit your post:", textDiv.innerText);
+        if (newText !== null && newText.trim() !== "") {
+            textDiv.innerText = newText;
+        }
+        el.parentElement.classList.remove('active');
+    }
+
+    window.onclick = function(e) {
+        if (!e.target.matches('.three-dot')) {
+            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+        }
     }
 </script>
 
