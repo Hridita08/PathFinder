@@ -63,16 +63,8 @@ else if(career==="journalism"){
 details.innerHTML=
 "<h3>Journalism</h3><p>Required Degree: Journalism / Media</p><p>Skills: Writing, Research</p><p>Jobs: Reporter, News Editor</p>";
 }
-function showDetails(career) {
-    const details = {
-        marketing: "Marketing involves promoting products, digital marketing, branding, and sales strategies.",
-        hr: "Human Resource deals with recruitment, employee management, and workplace development.",
-        teaching: "Teaching involves educating students, lesson planning, and guiding future generations.",
-        journalism: "Journalism focuses on news reporting, media writing, and communication."
-    };
-
-    document.getElementById("careerDetails").innerText = details[career];
 }
+
 
 function suggestCareer() {
     let interest = document.getElementById("interestInput").value.toLowerCase();
@@ -95,6 +87,7 @@ function suggestCareer() {
     }
 }
 
+// otp verify er code
 
 async function verifyOTP(event) {
     event.preventDefault(); // form reload bondho
@@ -128,4 +121,4 @@ async function verifyOTP(event) {
         alert("Wrong OTP ❌");
     }
 }
-}
+
