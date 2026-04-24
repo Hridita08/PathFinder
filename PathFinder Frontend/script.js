@@ -1,7 +1,9 @@
-function loginUser(event) {
+ console.log("JS LOADED");
+ function loginUser(event) {
     event.preventDefault();
     window.location.href = "home.html";
 }
+ 
 function addPost(){
     const input=document.getElementById("postInput");
     const feed=document.getElementById("feedArea");
@@ -99,6 +101,11 @@ async function verifyOTP(event) {
         otp += input.value;
     });
 
+    if (otp.length !== 4) {
+    alert("Enter 4 digit OTP");
+    return;
+}
+
     const email = new URLSearchParams(window.location.search).get("email");
 
     const res = await fetch("http://127.0.0.1:5000/verify", {
@@ -116,9 +123,33 @@ async function verifyOTP(event) {
 
     if (data.status === "success") {
         alert("OTP Verified ✅");
-        window.location.href = "new-password.html"; // now redirect
+        console.log("redirecting...");
+        window.location.href = "./new-password.html"; // now redirect
     } else {
         alert("Wrong OTP ❌");
     }
+}
+async function sendResetEmail(event) {
+    event.preventDefault();
+
+    const email = document.querySelector('input[name="email"]').value;
+    console.log("EMAIL:", email); 
+    const res = await fetch("http://127.0.0.1:5000/send-otp", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+    });
+
+    const data = await res.text();
+console.log("RESPONSE:", data);
+
+if (data.includes("OTP")) {
+    window.location.href = "reset-sent.html?email=" + email;
+} else {
+    alert("Failed to send OTP ❌");
+}
+  
 }
 
