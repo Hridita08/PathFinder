@@ -23,6 +23,27 @@
             position: fixed; width: 100%; top: 0; z-index: 1100;
             box-shadow: 0 2px 4px rgba(0,0,0,0.08); box-sizing: border-box;
         }
+        /* Sidebar Career Dropdown Style */
+.career-dropdown {
+    display: none;
+    background: rgba(0, 0, 0, 0.2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.career-dropdown li {
+    padding: 10px 25px 10px 60px !important;
+    font-size: 14px;
+    color: #ccc;
+    transition: 0.3s;
+}
+.career-dropdown li:hover {
+    color: var(--accent-green) !important;
+    background: transparent !important;
+}
+.fa-chevron-down {
+    transition: transform 0.3s ease;
+}
         .menu-section { display: flex; align-items: center; gap: 15px; }
         .menu-icon { font-size: 20px; cursor: pointer; color: #333; padding: 8px; border-radius: 50%; transition: 0.3s; }
         .menu-icon:hover { background: var(--hover-light); color: var(--sidebar-green); }
@@ -99,9 +120,21 @@
 <div class="sidebar" id="sidebar">
     <ul>
         <li onclick="location.href='main.html'"><i class="fa fa-home"></i> Home</li>
-        <li onclick="location.href='technical.html'"><i class="fa fa-graduation-cap"></i> Career Path</li>
+        
+        <li onclick="toggleCareerDropdown()" style="justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fa fa-graduation-cap"></i> Career Path
+            </div>
+            <i class="fa fa-chevron-down" id="dropIcon" style="font-size: 10px;"></i>
+        </li>
+        
+        <ul class="career-dropdown" id="careerDropdown">
+            <li onclick="location.href='technical.html'"><i class="fa fa-code"></i> Technical</li>
+            <li onclick="location.href='non-technical.html'"><i class="fa fa-briefcase"></i> Non-Technical</li>
+        </ul>
+
         <li onclick="location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
-        <li class="logout-btn" onclick="logout()"><i class="fa fa-sign-out-alt"></i> Logout</li>
+        <li onclick="logout()" class="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
 </div>
 
@@ -137,9 +170,13 @@
     <div class="modal-content">
         <h3 id="modalTitle" style="margin-top:0; color:var(--sidebar-green);">Update Information</h3>
         <div id="imageSection" class="edit-group hidden">
-            <label>Upload New Profile Picture</label>
-            <input type="file" id="imageInput" accept="image/*">
-        </div>
+    <label>Upload New Profile Picture</label>
+    <input type="file" id="imageInput" accept="image/*">
+    <button onclick="removeProfilePic()" style="margin-top: 15px; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 8px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 600;">
+        <i class="fa fa-trash"></i> Remove Current Photo
+    </button>
+</div>
+        
         <div id="infoSection" class="hidden">
             <div class="edit-group"><label>Full Name</label><input type="text" id="editName"></div>
             <div class="edit-group"><label>Student ID</label><input type="text" id="editID"></div>
@@ -157,9 +194,20 @@
         document.getElementById("mainContent").classList.toggle("shifted");
     }
 
+    function toggleCareerDropdown() {
+        const dropdown = document.getElementById("careerDropdown");
+        const icon = document.getElementById("dropIcon");
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block";
+            icon.style.transform = "rotate(180deg)";
+        } else {
+            dropdown.style.display = "none";
+            icon.style.transform = "rotate(0deg)";
+        }
+    }
+
     function loadData() {
-        // 'userName' (N boro hater) use kora hoyeche Main er sathe mil rekhe
-        const name = localStorage.getItem("username") || "Guest User";
+        const name = localStorage.getItem("userName") || "Guest User";
         const email = localStorage.getItem("userEmail") || "Not Provided";
         const id = localStorage.getItem("userID") || "Not Set";
         const dept = localStorage.getItem("userDept") || "CSE";
@@ -171,9 +219,19 @@
         document.getElementById("profileID").innerText = id;
         document.getElementById("profileDept").innerText = dept + " | BAUET";
         
-        if(pic) {
-            document.getElementById("mainProfilePic").src = pic;
-            document.getElementById("topNavPic").src = pic;
+        // Jodi picture thake tobe sheta dekhabe, na thakle default icon
+        const defaultPic = "icons/profile.png"; 
+        document.getElementById("mainProfilePic").src = pic ? pic : defaultPic;
+        document.getElementById("topNavPic").src = pic ? pic : defaultPic;
+    }
+
+    // --- Profile Pic Remove Logic ---
+    function removeProfilePic() {
+        if(confirm("Are you sure you want to remove your profile picture?")) {
+            localStorage.removeItem("profilePic"); // LocalStorage theke delete
+            loadData(); // UI refresh
+            closeModal();
+            alert("Profile picture removed.");
         }
     }
 
@@ -183,10 +241,11 @@
         if(mode === 'image') {
             document.getElementById("imageSection").classList.remove("hidden");
             document.getElementById("infoSection").classList.add("hidden");
+            document.getElementById("modalTitle").innerText = "Update Profile Picture";
         } else {
             document.getElementById("imageSection").classList.add("hidden");
             document.getElementById("infoSection").classList.remove("hidden");
-            // Fill current data
+            document.getElementById("modalTitle").innerText = "Update Information";
             document.getElementById("editName").value = localStorage.getItem("userName") || "";
             document.getElementById("editID").value = localStorage.getItem("userID") || "";
             document.getElementById("editEmail").value = localStorage.getItem("userEmail") || "";
@@ -197,34 +256,31 @@
     function closeModal() { document.getElementById("editModal").style.display = "none"; }
 
     function saveChanges() {
-        const n = document.getElementById("editName").value;
-        const i = document.getElementById("editID").value;
-        const e = document.getElementById("editEmail").value;
-        const d = document.getElementById("editDept").value;
-        const img = document.getElementById("imageInput");
-
         if(!document.getElementById("infoSection").classList.contains("hidden")) {
-            localStorage.setItem("userName", n);
-            localStorage.setItem("userID", i);
-            localStorage.setItem("userEmail", e);
-            localStorage.setItem("userDept", d);
+            localStorage.setItem("userName", document.getElementById("editName").value);
+            localStorage.setItem("userID", document.getElementById("editID").value);
+            localStorage.setItem("userEmail", document.getElementById("editEmail").value);
+            localStorage.setItem("userDept", document.getElementById("editDept").value);
         }
 
-        if (!document.getElementById("imageSection").classList.contains("hidden") && img.files && img.files[0]) {
+        const imgInput = document.getElementById("imageInput");
+        if (!document.getElementById("imageSection").classList.contains("hidden") && imgInput.files && imgInput.files[0]) {
             const reader = new FileReader();
             reader.onload = function(ex) {
                 localStorage.setItem("profilePic", ex.target.result);
                 loadData();
             };
-            reader.readAsDataURL(img.files[0]);
+            reader.readAsDataURL(imgInput.files[0]);
         }
         loadData();
         closeModal();
     }
 
     function logout() {
-        localStorage.removeItem("userName");
-        window.location.href = "login.html";
+        if(confirm("Logout korben?")) {
+            localStorage.removeItem("userName");
+            window.location.href = "login.html";
+        }
     }
 
     window.onload = loadData;
