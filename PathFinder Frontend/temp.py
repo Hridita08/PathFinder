@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 import os
 
-# ✅ Path setup (Template error avoid)
+# ✅ Path setup
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__,
@@ -19,13 +19,12 @@ def get_db_connection():
         database="pathfinderdb"
     )
 
-# ✅ Database Setup (Student + Guide tables)
+# ✅ Database Setup (Only Student Table)
 def setup_database():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Student Table
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS students (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,26 +38,15 @@ def setup_database():
         )
         """)
 
-        # Guide Table
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS guides (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(100),
-            qualification VARCHAR(100),
-            sector VARCHAR(100),
-            email VARCHAR(100),
-            password VARCHAR(100)
-        )
-        """)
-
         conn.commit()
         cursor.close()
         conn.close()
 
-        print("✅ Database & Tables are ready!")
+        print("✅ Student Table Ready!")
 
     except Exception as e:
         print(f"❌ DB Setup Error: {e}")
+
 
 # =========================
 # 🔵 STUDENT ROUTES
@@ -68,6 +56,7 @@ def setup_database():
 @app.route('/')
 def student_form():
     return render_template('register-student.html')
+
 
 # Handle student form
 @app.route('/create-profile', methods=['POST'])
@@ -105,56 +94,14 @@ def create_profile():
 
 
 # =========================
-# 🟢 GUIDE ROUTES
-# =========================
-
-# Show guide form + handle submit
-@app.route('/register-guide', methods=['GET', 'POST'])
-def register_guide():
-
-    if request.method == 'POST':
-        data = (
-            request.form.get('name'),
-            request.form.get('qualification'),
-            request.form.get('sector'),
-            request.form.get('email'),
-            request.form.get('password')
-        )
-
-        try:
-            conn = get_db_connection()
-            cursor = conn.cursor()
-
-            sql = """
-            INSERT INTO guides (name, qualification, sector, email, password)
-            VALUES (%s, %s, %s, %s, %s)
-            """
-
-            cursor.execute(sql, data)
-            conn.commit()
-
-            cursor.close()
-            conn.close()
-
-            print(f"✅ Guide Registered: {data[0]}")
-            return redirect(url_for('home'))
-
-        except mysql.connector.Error as err:
-            return f"❌ Database Error: {err}"
-
-    return render_template('register-guide.html')
-
-
-# =========================
-# 🏠 HOME PAGE
+# 🏠 HOME PAGE (Only Student)
 # =========================
 
 @app.route('/home')
 def home():
     return """
     <h1>🎉 Profile Created Successfully!</h1>
-    <a href='/'>Student Register</a><br><br>
-    <a href='/register-guide'>Guide Register</a>
+    <a href='/'>Student Register</a>
     """
 
 
