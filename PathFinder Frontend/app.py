@@ -31,7 +31,8 @@ def get_users():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM users")
     data = cur.fetchall()
-    return str(data)
+    # return str(data)
+    return jsonify(data)
 
 # profile GET
 @app.route('/user/<int:user_id>', methods=['GET'])
