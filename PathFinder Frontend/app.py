@@ -33,6 +33,68 @@ def get_users():
     data = cur.fetchall()
     return str(data)
 
+# profile er code
+
+@app.route('/user/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    cur = mysql.connection.cursor()
+
+    # column name gula ante ei line add koro
+    cur.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+    
+    row = cur.fetchone()
+
+    if row:
+        # column name gula manually set kora
+        columns = [col[0] for col in cur.description]
+        user = dict(zip(columns, row))
+
+        return jsonify(user)
+    else:
+        return jsonify({"error": "User not found"}), 404
+    
+    # update profile er part
+
+    @app.route('/user/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    data = request.json
+
+    name = data.get('name')
+    role = data.get('role')
+    interests = data.get('interests')
+    education = data.get('education')
+    expertise = data.get('expertise')
+    experience = data.get('experience')
+    bio = data.get('bio')
+    profile_pic = data.get('profile_pic')
+
+    cur = mysql.connection.cursor()
+
+    query = """
+    UPDATE users SET 
+        name=%s,
+        role=%s,
+        interests=%s,
+        education=%s,
+        expertise=%s,
+        experience=%s,
+        bio=%s,
+        profile_pic=%s
+    WHERE id=%s
+    """
+
+    cur.execute(query, (
+        name, role, interests, education,
+        expertise, experience, bio, profile_pic,
+        user_id
+    ))
+
+    mysql.connection.commit()
+
+    return jsonify({"message": "Profile updated successfully"})
+    
+# OTP generation and verification
+
 otp_storage = {}
 def generate_otp():
     return str(random.randint(1000, 9999))
