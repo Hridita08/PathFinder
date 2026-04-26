@@ -166,28 +166,53 @@
     function closeModal() { document.getElementById("editModal").style.display = "none"; }
 
     function saveChanges() {
-        const n = document.getElementById("editName").value;
-        const i = document.getElementById("editID").value;
-        const e = document.getElementById("editEmail").value;
-        const d = document.getElementById("editDept").value;
-        const img = document.getElementById("imageInput");
+       function saveChanges() {
+    const n = document.getElementById("editName").value;
+    const i = document.getElementById("editID").value;
+    const e = document.getElementById("editEmail").value;
+    const d = document.getElementById("editDept").value;
 
+   
+    fetch("http://localhost:5000/user/1", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: n,
+            role: "",
+            interests: "",
+            education: d,
+            expertise: "",
+            experience: "",
+            bio: "",
+            profile_pic: ""
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Profile updated successfully!");
+        
+     
         localStorage.setItem("username", n);
         localStorage.setItem("userID", i);
         localStorage.setItem("userEmail", e);
         localStorage.setItem("userDept", d);
-
-        if (img.files && img.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(ex) {
-                localStorage.setItem("profilePic", ex.target.result);
-                loadData();
-            };
-            reader.readAsDataURL(img.files[0]);
-        }
         
         loadData();
         closeModal();
+    })
+    .catch(err => alert("Update failed: " + err));
+
+    // Image handle
+    const img = document.getElementById("imageInput");
+    if (img.files && img.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(ex) {
+            localStorage.setItem("profilePic", ex.target.result);
+            loadData();
+        };
+        reader.readAsDataURL(img.files[0]);
+    }
+}
     }
 
     function logout() { localStorage.removeItem("username"); window.location.href = "login.html"; }
