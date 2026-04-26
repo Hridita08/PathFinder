@@ -32,7 +32,7 @@ def get_users():
     cur.execute("SELECT * FROM users")
     data = cur.fetchall()
     # return str(data)
-    return jsonify(data)
+    
 
 # profile GET
 @app.route('/user/<int:user_id>', methods=['GET'])
@@ -66,10 +66,12 @@ def update_user(user_id):
 
     cur = mysql.connection.cursor()
 
+    student_id = data.get('student_id')
+
     query = """
     UPDATE users SET 
         name=%s,
-        role=%s,
+        student_id=%s,
         interests=%s,
         education=%s,
         expertise=%s,
@@ -80,7 +82,7 @@ def update_user(user_id):
     """
 
     cur.execute(query, (
-        name, role, interests, education,
+        name, student_id , interests, education,
         expertise, experience, bio, profile_pic,
         user_id
     ))
