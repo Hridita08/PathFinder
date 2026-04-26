@@ -72,6 +72,7 @@ def update_user(user_id):
     UPDATE users SET 
         name=%s,
         student_id=%s,
+        role=%s,
         interests=%s,
         education=%s,
         expertise=%s,
@@ -82,7 +83,7 @@ def update_user(user_id):
     """
 
     cur.execute(query, (
-        name, student_id , interests, education,
+        name, student_id , role , interests, education,
         expertise, experience, bio, profile_pic,
         user_id
     ))
