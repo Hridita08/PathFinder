@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>PATHFINDER | Dashboard</title>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>PATHFINDER | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-<!-- Top Navbar -->
 <header class="topbar">
-
-    <!-- Hamburger + Title -->
     <div class="menu-section">
-        <i class="fa fa-bars menu-icon" onclick="goDashboard()"></i>
+        <i class="fa fa-bars menu-icon" onclick="location.reload()"></i>
         <span class="title-text">Pathfinder</span>
     </div>
 
@@ -25,24 +22,20 @@
     <div class="top-icons">
         <i class="fa fa-bell"></i>
         <i class="fa fa-envelope"></i>
-        <span id="userDisplay"></span>
+        <span id="userDisplay"><b>{{ username }}</b></span>
         <button onclick="logout()">Logout</button>
     </div>
 </header>
 
 <div>
-
-    <!-- Main Content -->
     <main class="content">
 
-        <!-- Post Box -->
         <div class="post-box">
-            <img src="../PathFinder Frontend/icons/profile.png">
+            <img src="icons/profile.png" alt="Profile">
             <input type="text" id="postInput" placeholder="What's on your mind?">
             <button onclick="addPost()">Post</button>
         </div>
 
-        <!-- Feed -->
         <div id="feedArea"></div>
 
     </main>
@@ -51,12 +44,59 @@
 <script src="script.js"></script>
 
 <script>
-const username = localStorage.getItem("username");
-if(!username){ window.location.href="login.html"; }
-document.getElementById("userDisplay").innerText=username;
+// Run on page load
+window.onload = function() {
+    loadPosts();
+};
 
-function goDashboard(){
-    window.location.href="dashboard.html";   
+// Function to send post to Backend
+function addPost() {
+    const content = document.getElementById("postInput").value;
+    const username = "{{ username }}"; 
+
+    if (!content) return;
+
+    let formData = new FormData();
+    formData.append("post_content", content);
+    formData.append("username", username);
+
+    fetch('/create-post', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.status === "success") {
+            document.getElementById("postInput").value = "";
+            loadPosts(); // Refresh feed after posting
+        }
+    });
+}
+
+// Function to fetch posts and display them
+function loadPosts() {
+    fetch('/get-posts')
+    .then(res => res.json())
+    .then(data => {
+        const feedArea = document.getElementById("feedArea");
+        feedArea.innerHTML = ""; 
+        data.forEach(post => {
+            const div = document.createElement("div");
+            // This container uses inline styles to avoid breaking your external CSS
+            div.innerHTML = `
+                <div style="background: white; padding: 15px; margin-top: 15px; border-radius: 8px; border: 1px solid #ddd;">
+                    <strong style="color: #333;">${post.username}</strong>
+                    <p style="margin: 10px 0; color: #555;">${post.content}</p>
+                    <small style="color: #999;">${new Date(post.created_at).toLocaleString()}</small>
+                </div>
+            `;
+            feedArea.appendChild(div);
+        });
+    });
+}
+
+function logout() {
+    window.location.href = "/";
 }
 </script>
 </body>

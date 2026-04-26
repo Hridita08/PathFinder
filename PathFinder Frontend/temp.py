@@ -1,10 +1,15 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import os
 import mysql.connector
 
-# Ensure Flask finds HTML files in the same folder
+# Path Configuration
 base_dir = os.path.dirname(os.path.abspath(__file__))
-app = Flask(__name__, template_folder=base_dir, static_folder=base_dir)
+frontend_dir = os.path.join(os.path.dirname(base_dir), 'PathFinder Frontend')
+
+app = Flask(__name__, 
+            template_folder=frontend_dir, 
+            static_folder=frontend_dir)
+
 app.secret_key = 'pathfinder_secret_key'
 
 def get_db_connection():
@@ -32,55 +37,51 @@ def login():
     db.close()
     
     if user:
-        return f"""
-        <div style="text-align:center; margin-top:50px; font-family:Arial;">
-            <h1 style="color:green;">Success!</h1>
-            <p>Welcome <b>{user['username']}</b> to PathFinder Dashboard.</p>
-            <a href="/" style="text-decoration:none; color:blue;">Logout</a>
-        </div>
-        """
+        # Pass the username to the template
+        return render_template('main.html', username=user['username'])
+    
     return render_template('login.html', error="Invalid Credentials")
 
-@app.route('/forgot-password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        email = request.form.get('email')
+@app.route('/create-post', methods=['POST'])
+def create_post():
+    content = request.form.get('post_content')
+    username = request.form.get('username')
+    
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+        cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+        user_result = cursor.fetchone()
+        
+        if user_result:
+            user_id = user_result[0]
+            cursor.execute("INSERT INTO posts (user_id, content) VALUES (%s, %s)", (user_id, content))
+            db.commit()
+            cursor.close()
+            db.close()
+            return jsonify({"status": "success"})
+        return jsonify({"status": "error", "message": "User not found"}), 404
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/get-posts', methods=['GET'])
+def get_posts():
+    try:
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT security_question FROM users WHERE email=%s", (email,))
-        user = cursor.fetchone()
+        query = """
+            SELECT users.username, posts.content, posts.created_at 
+            FROM posts 
+            JOIN users ON posts.user_id = users.id 
+            ORDER BY posts.created_at DESC
+        """
+        cursor.execute(query)
+        all_posts = cursor.fetchall()
         cursor.close()
         db.close()
-        
-        if user:
-            return render_template('forgot_password_verify.html', question=user['security_question'], email=email)
-        return "<h2>Email not found!</h2><a href='/forgot-password'>Try again</a>"
-    
-    return render_template('forgot_password.html')
-
-@app.route('/verify-answer', methods=['POST'])
-def verify_answer():
-    email = request.form.get('email')
-    answer = request.form.get('answer')
-    new_password = request.form.get('new_password')
-    
-    db = get_db_connection()
-    cursor = db.cursor()
-    # Check if security answer is correct
-    cursor.execute("SELECT * FROM users WHERE email=%s AND security_answer=%s", (email, answer))
-    user_record = cursor.fetchone()
-    
-    if user_record:
-        # Update to new password
-        cursor.execute("UPDATE users SET password=%s WHERE email=%s", (new_password, email))
-        db.commit()
-        cursor.close()
-        db.close()
-        return "<h2>Password reset successful!</h2><a href='/'>Click here to Login</a>"
-    
-    cursor.close()
-    db.close()
-    return "<h2>Wrong answer!</h2><a href='/forgot-password'>Try again</a>"
+        return jsonify(all_posts)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
