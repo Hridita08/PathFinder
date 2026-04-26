@@ -33,29 +33,24 @@ def get_users():
     data = cur.fetchall()
     return str(data)
 
-# profile er code
-
+# profile GET
 @app.route('/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     cur = mysql.connection.cursor()
-
-    # column name gula ante ei line add koro
     cur.execute("SELECT * FROM users WHERE id=%s", (user_id,))
     
     row = cur.fetchone()
 
     if row:
-        # column name gula manually set kora
         columns = [col[0] for col in cur.description]
         user = dict(zip(columns, row))
-
         return jsonify(user)
     else:
         return jsonify({"error": "User not found"}), 404
-    
-    # update profile er part
 
-    @app.route('/user/<int:user_id>', methods=['PUT'])
+
+# profile UPDATE  ✔️ (separate function)
+@app.route('/user/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     data = request.json
 
