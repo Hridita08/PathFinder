@@ -1,7 +1,9 @@
-function loginUser(event) {
+ console.log("JS LOADED");
+ function loginUser(event) {
     event.preventDefault();
     window.location.href = "home.html";
 }
+ 
 function addPost(){
     const input=document.getElementById("postInput");
     const feed=document.getElementById("feedArea");
@@ -63,16 +65,8 @@ else if(career==="journalism"){
 details.innerHTML=
 "<h3>Journalism</h3><p>Required Degree: Journalism / Media</p><p>Skills: Writing, Research</p><p>Jobs: Reporter, News Editor</p>";
 }
-function showDetails(career) {
-    const details = {
-        marketing: "Marketing involves promoting products, digital marketing, branding, and sales strategies.",
-        hr: "Human Resource deals with recruitment, employee management, and workplace development.",
-        teaching: "Teaching involves educating students, lesson planning, and guiding future generations.",
-        journalism: "Journalism focuses on news reporting, media writing, and communication."
-    };
-
-    document.getElementById("careerDetails").innerText = details[career];
 }
+
 
 function suggestCareer() {
     let interest = document.getElementById("interestInput").value.toLowerCase();
@@ -95,4 +89,67 @@ function suggestCareer() {
     }
 }
 
+// otp verify er code
+
+async function verifyOTP(event) {
+    event.preventDefault(); // form reload bondho
+
+    const inputs = document.querySelectorAll(".otp");
+    let otp = "";
+
+    inputs.forEach(input => {
+        otp += input.value;
+    });
+
+    if (otp.length !== 4) {
+    alert("Enter 4 digit OTP");
+    return;
 }
+
+    const email = new URLSearchParams(window.location.search).get("email");
+
+    const res = await fetch("http://127.0.0.1:5000/verify", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: email,
+            otp: otp
+        })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "success") {
+        alert("OTP Verified ✅");
+        console.log("redirecting...");
+        window.location.href = "./new-password.html"; // now redirect
+    } else {
+        alert("Wrong OTP ❌");
+    }
+}
+async function sendResetEmail(event) {
+    event.preventDefault();
+
+    const email = document.querySelector('input[name="email"]').value;
+    console.log("EMAIL:", email); 
+    const res = await fetch("http://127.0.0.1:5000/send-otp", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email })
+    });
+
+    const data = await res.text();
+console.log("RESPONSE:", data);
+
+if (data.includes("OTP")) {
+    window.location.href = "reset-sent.html?email=" + email;
+} else {
+    alert("Failed to send OTP ❌");
+}
+  
+}
+

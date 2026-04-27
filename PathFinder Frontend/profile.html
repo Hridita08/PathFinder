@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PATHFINDER | Profile</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    /* Profile Specific UI Fixes */
+    .profile-container { width: 100%; max-width: 800px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin: 20px auto; }
+    .cover-photo { height: 140px; background: linear-gradient(135deg, #1e293b, #2e7d32); }
+    .profile-header-main { padding: 0 30px 20px; text-align: left; }
+    .profile-img-wrapper { position: relative; margin-top: -65px; display: inline-block; }
+    .profile-img-main { width: 120px; height: 120px; border-radius: 50%; border: 5px solid white; background: #f8fafc; object-fit: cover; }
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 30px 25px; }
+    .info-card { background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; }
+    .info-card label { display: block; font-size: 10px; color: #64748b; text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
+    .info-card span { font-weight: 600; color: #1e293b; font-size: 14px; }
+    
+    /* Edit Modal Fix */
+    .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .modal-content { background: white; margin: 5% auto; padding: 25px; border-radius: 15px; width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    .edit-group { margin-bottom: 12px; text-align: left; }
+    .edit-group label { font-size: 12px; font-weight: bold; color: #334155; display: block; margin-bottom: 5px; }
+    .edit-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; }
+</style>
+</head>
+<body>
+    <!-- Profile Content -->
+
+  <script>
+   window.addEventListener("DOMContentLoaded", () => {
+  fetch("http://localhost:5000/user/1")
+    .then(res => res.json())
+    .then(data => {
+      // Backend data localStorage এ save করো
+      localStorage.setItem("username", data.name);
+      localStorage.setItem("userEmail", data.email);
+      localStorage.setItem("userID", data.id);
+      // এরপর loadData() call করো
+      loadData();
+    })
+    .catch(err => {
+      console.error("Backend error:", err);
+      loadData(); // backend না পেলে localStorage থেকে load করবে
+    });
+});
+  </script>
+
+
+<header class="topbar">
+    <div class="menu-section">
+        <i class="fa fa-bars menu-icon" onclick="window.location.href='dashboard.html'"></i>
+        <span class="title-text">Pathfinder</span>
+    </div>
+    <div class="top-icons">
+        <span id="userDisplay" style="font-weight:bold;"></span>
+        <button onclick="logout()" style="margin-left:15px; background:#2e7d32; color:white; border:none; padding:6px 15px; border-radius:20px; cursor:pointer;">Logout</button>
+    </div>
+</header>
+
+<div class="layout">
+    <aside class="sidebar">
+        <ul>
+            <li onclick="window.location.href='dashboard.html'"><i class="fa fa-home"></i> Home</li>
+            <li class="active"><i class="fa fa-user"></i> Profile</li>
+            <li onclick="window.location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
+        </ul>
+    </aside>
+
+    <main class="content">
+        <div class="profile-container">
+            <div class="cover-photo"></div>
+            <div class="profile-header-main">
+                <div class="profile-img-wrapper">
+                    <img src="icons/profile.png" id="mainProfilePic" class="profile-img-main">
+                    <div class="camera-badge" onclick="openModal()" style="position: absolute; bottom: 8px; right: 5px; background: #2563eb; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; cursor: pointer;">
+                        <i class="fa fa-camera" style="font-size: 12px;"></i>
+                    </div>
+                </div>
+                <div style="margin-top:10px;">
+                    <h2 id="profileName">Loading...</h2>
+                    <p id="profileDept" style="color: #64748b; font-size: 14px;">Computer Science & Engineering | BAUET</p>
+                </div>
+            </div>
+
+            <div class="profile-grid">
+                <div class="info-card">
+                    <label>Student ID</label>
+                    <span id="profileID">12345678</span>
+                </div>
+                <div class="info-card">
+                    <label>Email Address</label>
+                    <span id="profileEmail">student@bauet.ac.bd</span>
+                </div>
+                <div class="info-card" style="grid-column: span 2;">
+                    <label>Institution</label>
+                    <span id="profileInst">Bangladesh Army University of Engineering & Technology (BAUET)</span>
+                </div>
+            </div>
+
+            <div style="padding: 0 30px 30px;">
+                <button onclick="openModal()" style="width:100%; background:#1e293b; color:white; padding:12px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:10px;">
+                    <i class="fa fa-pen"></i> Edit Full Profile
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom:15px; color:#1e293b;">Update Information</h3>
+        
+        <div class="edit-group">
+            <label>Profile Image</label>
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+        <div class="edit-group">
+            <label>Full Name</label>
+            <input type="text" id="editName">
+        </div>
+        <div class="edit-group">
+            <label>Student ID</label>
+            <input type="text" id="editID">
+        </div>
+        <div class="edit-group">
+            <label>Department</label>
+            <input type="text" id="editDept">
+        </div>
+        <div class="edit-group">
+            <label>Email</label>
+            <input type="email" id="editEmail">
+        </div>
+
+        <button onclick="saveChanges()" style="width:100%; padding:12px; background:#2e7d32; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-top:10px;">Save All Changes</button>
+        <p onclick="closeModal()" style="text-align:center; margin-top:12px; color:#64748b; cursor:pointer; font-size:13px;">Cancel</p>
+    </div>
+</div>
+
+<script>
+    // Load Saved Data
+    function loadData() {
+        const name = localStorage.getItem("username") || "New User";
+        const email = localStorage.getItem("userEmail") || "student@bauet.ac.bd";
+        const id = localStorage.getItem("userID") || "12345678";
+        const dept = localStorage.getItem("userDept") || "Computer Science & Engineering";
+        const pic = localStorage.getItem("profilePic");
+
+        document.getElementById("userDisplay").innerText = name;
+        document.getElementById("profileName").innerText = name;
+        document.getElementById("profileEmail").innerText = email;
+        document.getElementById("profileID").innerText = id;
+        document.getElementById("profileDept").innerText = dept + " | BAUET";
+        if(pic) document.getElementById("mainProfilePic").src = pic;
+    }
+
+    function openModal() {
+        document.getElementById("editModal").style.display = "block";
+        document.getElementById("editName").value = document.getElementById("profileName").innerText;
+        document.getElementById("editID").value = document.getElementById("profileID").innerText;
+        document.getElementById("editEmail").value = document.getElementById("profileEmail").innerText;
+        document.getElementById("editDept").value = localStorage.getItem("userDept") || "Computer Science & Engineering";
+    }
+
+    function closeModal() { document.getElementById("editModal").style.display = "none"; }
+
+    function saveChanges() {
+       function saveChanges() {
+    const n = document.getElementById("editName").value;
+    const i = document.getElementById("editID").value;
+    const e = document.getElementById("editEmail").value;
+    const d = document.getElementById("editDept").value;
+
+   
+    fetch("http://localhost:5000/user/1", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: n,
+            student_id: i,
+            role: "",
+            interests: "",
+            education: d,
+            expertise: "",
+            experience: "",
+            bio: "",
+            profile_pic: ""
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert("Profile updated successfully!");
+        
+     
+        localStorage.setItem("username", n);
+        localStorage.setItem("userID", i);
+        localStorage.setItem("userEmail", e);
+        localStorage.setItem("userDept", d);
+        
+        loadData();
+        closeModal();
+    })
+    .catch(err => alert("Update failed: " + err));
+
+    // Image handle
+    const img = document.getElementById("imageInput");
+    if (img.files && img.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(ex) {
+            localStorage.setItem("profilePic", ex.target.result);
+            loadData();
+        };
+        reader.readAsDataURL(img.files[0]);
+    }
+}
+    }
+
+    function logout() { localStorage.removeItem("username"); window.location.href = "login.html"; }
+    
+</script>
+
+</body>
+</html>
