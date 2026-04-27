@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Result</title>
+</head>
+
+<body>
+
+<h2>Results for "{{ query }}"</h2>
+
+{% if results %}
+    <ul>
+        {% for guide in results %}
+            <li>
+                <b>{{ guide.name }}</b><br>
+                Qualification: {{ guide.qualification }}<br>
+                Sector: {{ guide.sector }}<br>
+                Email: {{ guide.email }}
+            </li>
+            <br>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found ❌</p>
+{% endif %}
+
+<a href="/">🔙 Back to Search</a>
+
+</body>
+</html>

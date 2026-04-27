@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PATHFINDER | Settings</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* CSS Variables */
+
+:root {
+
+    --bg-color: #e9f1f7;
+
+    --card-bg: #ffffff;
+
+    --text-color: #1e293b;
+
+    --sidebar-bg: #1b263b;
+
+    --topbar-bg: #334155;
+
+    --input-bg: #ffffff;
+
+    --border-color: #e2e8f0;
+
+}
+
+
+
+[data-theme="dark"] {
+
+    --bg-color: #0f172a;
+
+    --card-bg: #1e293b;
+
+    --text-color: #f1f5f9;
+
+    --sidebar-bg: #020617;
+
+    --topbar-bg: #1e293b;
+
+    --input-bg: #334155;
+
+    --border-color: #334155;
+
+}
+
+
+
+body { margin:0; font-family:'Segoe UI',sans-serif; background: var(--bg-color); color: var(--text-color); transition: 0.3s; }
+
+
+
+/* Topbar - Logout Removed */
+
+header.topbar { 
+
+    height:60px; display:flex; justify-content:space-between; align-items:center; 
+
+    padding:0 20px; background: var(--topbar-bg); color: white;
+
+}
+
+.menu-section { display: flex; align-items: center; gap: 15px; }
+
+.menu-icon { cursor: pointer; color: #2ecc71; font-size: 20px; }
+
+.title-text { font-weight: bold; font-size: 20px; color: #2ecc71; }
+
+
+
+/* Dashboard style Search & Icons */
+
+.top-icons { display: flex; align-items: center; gap: 20px; }
+
+.search-box { 
+
+    background: rgba(255,255,255,0.1); 
+
+    border-radius: 20px; 
+
+    padding: 5px 15px; 
+
+    display: flex; 
+
+    align-items: center;
+
+}
+
+.search-box input { 
+
+    background: transparent; border: none; color: white; outline: none; margin-left: 8px; 
+
+}
+
+
+
+/* Sidebar - Only Home */
+
+.layout { display:flex; height: calc(100vh - 60px); }
+
+.sidebar { width:260px; background: var(--sidebar-bg); color: white; transition: 0.3s; }
+
+.sidebar ul { list-style:none; padding:10px; margin:0; }
+
+.sidebar li { 
+
+    padding:15px; cursor:pointer; display:flex; align-items:center; gap:12px; 
+
+    transition:0.2s; border-radius: 8px;
+
+}
+
+.sidebar li:hover { background: #2c3e50; }
+
+
+
+/* Content Area */
+
+.content { flex:1; padding:30px; overflow-y:auto; }
+
+.settings-container { width:100%; max-width:700px; margin: 0 auto; background: var(--card-bg); border-radius:12px; padding:30px; box-shadow:0 4px 15px rgba(0,0,0,0.1); }
+
+
+
+.settings-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius:10px; padding:20px; margin-bottom: 20px; }
+
+.settings-input, select { 
+
+    width: 100%; padding: 10px; border: 1px solid var(--border-color); 
+
+    border-radius: 6px; background: var(--input-bg); color: var(--text-color);
+
+}
+
+
+
+.update-btn { background: #2e7d32; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 10px; }
+
+.danger-btn { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 10px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<header class="topbar">
+
+    <div class="menu-section">
+
+        <i class="fa fa-bars menu-icon" id="menuBtn"></i>
+
+        <span class="title-text">Pathfinder</span>
+
+    </div>
+
+    
+
+    <div class="top-icons">
+
+        <div class="search-box">
+
+            <i class="fa fa-search"></i>
+
+            <input type="text" placeholder="Search...">
+
+        </div>
+
+        <i class="fa fa-bell" style="cursor:pointer;"></i>
+
+        <i class="fa fa-envelope" style="cursor:pointer;"></i>
+
+        <div style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+
+            <i class="fa fa-user-circle" style="font-size:24px;"></i>
+
+            <span id="userDisplay"></span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <ul>
+
+            <li onclick="window.location.href='dashboard.html'"><i class="fa fa-home"></i> Home</li>
+
+        </ul>
+
+    </aside>
+
+
+
+    <main class="content">
+
+        <div class="settings-container">
+
+            <h2>Account Settings</h2>
+
+
+
+            <div class="settings-card">
+
+                <h3><i class="fa fa-palette"></i> Appearance</h3>
+
+                <div class="settings-group">
+
+                    <label style="display:block; margin-bottom:8px; font-weight:bold;">Select Theme</label>
+
+                    <select id="themeSelect">
+
+                        <option value="light">☀️ Light Mode</option>
+
+                        <option value="dark">🌙 Dark Mode</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="settings-card">
+
+                <h3><i class="fa fa-lock"></i> Password</h3>
+
+                <input type="password" id="newPass" class="settings-input" placeholder="New Password" style="margin-bottom:10px;">
+
+                <input type="password" id="confirmPass" class="settings-input" placeholder="Confirm Password">
+
+                <button class="update-btn" onclick="updatePassword()">Update</button>
+
+            </div>
+
+
+
+            <div class="settings-card" style="border-color:#fecaca;">
+
+                <h3 style="color:#dc2626;">Danger Zone</h3>
+
+                <button class="danger-btn" onclick="deleteAccount()">Delete Account</button>
+
+            </div>
+
+            <p id="statusMsg" style="text-align:center; font-weight:bold;"></p>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<script>
+
+// --- THEME ENGINE ---
+
+function applyTheme(theme) {
+
+    document.documentElement.setAttribute("data-theme", theme);
+
+    localStorage.setItem("appTheme", theme);
+
+    document.getElementById("themeSelect").value = theme;
+
+}
+
+
+
+const savedTheme = localStorage.getItem("appTheme") || "light";
+
+applyTheme(savedTheme);
+
+
+
+document.getElementById("themeSelect").addEventListener("change", (e) => {
+
+    applyTheme(e.target.value);
+
+});
+
+
+
+// --- SIDEBAR TOGGLE ---
+
+const menuBtn = document.getElementById('menuBtn');
+
+const sidebar = document.getElementById('sidebar');
+
+menuBtn.addEventListener('click', () => {
+
+    sidebar.style.display = (sidebar.style.display === "none") ? "block" : "none";
+
+});
+
+
+
+// --- USER DISPLAY ---
+
+document.getElementById("userDisplay").innerText = localStorage.getItem("username") || "User";
+
+
+
+// --- PASSWORD UPDATE ---
+
+function updatePassword() {
+
+    const p1 = document.getElementById("newPass").value;
+
+    const p2 = document.getElementById("confirmPass").value;
+
+    const status = document.getElementById("statusMsg");
+
+    if(p1 === p2 && p1.length >= 6) {
+
+        localStorage.setItem("userPassword", p1);
+
+        status.style.color="green"; status.innerText="Updated!";
+
+    } else {
+
+        status.style.color="red"; status.innerText="Error!";
+
+    }
+
+}
+
+
+
+// --- DELETE ACCOUNT ---
+
+function deleteAccount() {
+
+    if(confirm("Delete everything permanently?")) {
+
+        localStorage.clear();
+
+        window.location.href = "login.html";
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html> 
