@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>PATHFINDER | Dashboard</title>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>PATHFINDER | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
 <header class="topbar">
-
     <div class="menu-section">
         <i class="fa fa-bars menu-icon" onclick="goDashboard()"></i>
         <span class="title-text">Pathfinder</span>
@@ -29,7 +28,6 @@
 </header>
 
 <div class="layout">
-
     <aside class="sidebar">
         <ul>
             <li class="active" onclick="setActive(this); window.location.href='home.html'">
@@ -57,28 +55,70 @@
     </aside>
 
     <main class="content">
-
         <div class="post-box">
-            <img src="icons/profile.png">
+            <img src="icons/profile.png" alt="Profile">
             <input type="text" id="postInput" placeholder="What's on your mind?">
             <button onclick="addPost()">Post</button>
         </div>
 
-        <div id="feedArea"></div>
-
+        <div id="feedArea">
+            </div>
     </main>
 </div>
 
 <script src="script.js"></script>
 
 <script>
-const username = localStorage.getItem("username");
-if(!username){ window.location.href="login.html"; }
-document.getElementById("userDisplay").innerText=username;
+    // Authentication Check
+    const username = localStorage.getItem("username");
+    if(!username){ 
+        window.location.href="login.html"; 
+    }
+    document.getElementById("userDisplay").innerText = username;
 
-function goDashboard(){
-    window.location.href="main.html";
-}
+    function goDashboard(){
+        window.location.href="main.html";
+    }
+
+    // Function to handle creating a post
+    function addPost() {
+        const postInput = document.getElementById("postInput");
+        const postContent = postInput.value;
+        const currentUsername = localStorage.getItem("username");
+
+        if (!postContent) {
+            alert("Please write something first!");
+            return;
+        }
+
+        // Fetch API to send data to Flask backend
+        fetch('/create-post', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `post_content=${encodeURIComponent(postContent)}&username=${encodeURIComponent(currentUsername)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                postInput.value = ""; // Clear input
+                alert("Post shared successfully!");
+                location.reload(); // Refresh to show new post
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Server connection failed.");
+        });
+    }
+
+    function logout() {
+        localStorage.removeItem("username");
+        window.location.href = "login.html";
+    }
 </script>
 
 </body>
