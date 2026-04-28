@@ -20,18 +20,18 @@ Intelligent Career Guidance System for BAUET
 - [x] Dynamic post box
 - [x] Student Dashboard UI
 - [X] Create profile page
-- [ ] Design Settings Page
-- [-] Career Suggestion Page
-- [ ] Make responsive design
-- [x] Make the logout button rssponsive
+- [X] Design Settings Page
+- [X] Make responsive design
+
 ## Backend (Python)
-- [ ] Setup Python environment
+- [X] Setup Python environment
 - [ ] Create backend server
 - [ ] User authentication system
 - [ ] Career recommendation logic
-
+- [-] Login page
+- [ ] First page in forget password
 ## Database (MySQL)
-- [ ] Design database schema
+- [-] Design database schema
 - [ ] Create student table
 - [ ] Create career/skills table
 - [ ] Connect database with backend
@@ -45,8 +45,3 @@ Intelligent Career Guidance System for BAUET
 - [ ] Test login and signup
 - [ ] Test career guidance system
 - [ ] Fix bugs and errors
-
-## Final Work
-- [ ] Upload final code to GitHub
-- [ ] Write project documentation
-- [ ] Prepare presentation
