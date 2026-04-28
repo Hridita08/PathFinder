@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PATHFINDER | Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --sidebar-green: #1f4e3b;   
+            --accent-green: #10b981;
+            --page-bg: #f0f2f5;
+            --topbar-bg: #ffffff;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --hover-light: #e4e6eb;
+            --danger-red: #fc8686e4; 
+        }
+
+        /* Dark Mode Variables (Optional, matching Settings) */
+        body.dark-theme {
+            --page-bg: #18191a;
+            --topbar-bg: #242526;
+            --text-color: #e4e6eb;
+            --card-bg: #242526;
+            --hover-light: #3a3b3c;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); color: var(--text-color); transition: 0.3s; overflow-x: hidden; }
+        
+        /* TOPBAR */
+        .topbar {
+            background: var(--topbar-bg); height: 60px; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; width: 100%; top: 0; z-index: 1100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08); box-sizing: border-box;
+        }
+        .menu-section { display: flex; align-items: center; gap: 15px; }
+        .menu-icon { font-size: 20px; cursor: pointer; color: var(--text-color); padding: 8px; border-radius: 50%; transition: 0.3s; }
+        .menu-icon:hover { background: var(--hover-light); color: var(--sidebar-green); }
+        .title-text { font-size: 22px; font-weight: bold; color: var(--sidebar-green); }
+
+        .top-right { display: flex; align-items: center; gap: 12px; z-index: 1200; }
+        .user-display-name { font-weight: 600; color: var(--text-color); font-size: 14px; cursor: pointer; }
+        .user-display-name:hover { color: var(--accent-green); }
+
+        .top-profile-img { 
+            width:38px; height:38px; border-radius:50%; margin-left:10px; cursor:pointer; 
+            transition: 0.3s; border: 2px solid var(--sidebar-green); object-fit: cover;
+        }
+        .top-profile-img:hover { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); transform: scale(1.05); }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px; background: var(--sidebar-green); color: white; height: 100vh;
+            position: fixed; top: 0; left: -280px; transition: 0.3s ease; padding-top: 80px; z-index: 1000;
+        }
+        .sidebar.active { left: 0; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar ul li { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; color: white; }
+        .sidebar ul li:hover { background: rgba(255,255,255,0.1); padding-left: 35px; color: var(--accent-green); }
+        .sidebar ul li.active { background: rgba(255,255,255,0.1); color: var(--accent-green); }
+
+        .career-dropdown { display: none; background: rgba(0,0,0,0.2); list-style: none; padding: 0; }
+        .career-dropdown li { padding: 10px 25px 10px 60px !important; font-size: 14px; color: #ccc; transition: 0.3s; }
+
+        /* PROFILE CONTENT */
+        .content-wrapper { transition: margin-left 0.3s ease; display: flex; flex-direction: column; align-items: center; padding-top: 80px; width: 100%; padding-bottom: 40px; }
+        .content-wrapper.shifted { margin-left: 280px; width: calc(100% - 280px); }
+        
+        .profile-container { width: 95%; max-width: 800px; background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #ddd; }
+        .cover-photo { height: 160px; background: linear-gradient(135deg, var(--sidebar-green), var(--accent-green)); }
+        
+        .profile-header-main { padding: 0 30px 20px; text-align: left; }
+        .profile-img-wrapper { position: relative; margin-top: -60px; display: inline-block; }
+        .profile-img-main { width: 130px; height: 130px; border-radius: 50%; border: 5px solid var(--card-bg); background: #f8fafc; object-fit: cover; }
+        
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px 30px; }
+        .info-card { background: var(--page-bg); padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .info-card label { display: block; font-size: 11px; color: #65676b; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; }
+        .info-card span { font-weight: 600; color: var(--text-color); font-size: 15px; }
+
+        .edit-btn { width: 100%; background: var(--sidebar-green); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .edit-btn:hover { background: #163a2c; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: var(--card-bg); margin: 10% auto; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); color: var(--text-color); }
+        .edit-group { margin-bottom: 15px; }
+        .edit-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        .edit-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: var(--card-bg); color: var(--text-color); }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="menu-section">
+        <i class="fa fa-bars menu-icon" onclick="toggleSidebar()"></i>
+        <span class="title-text">Pathfinder</span>
+    </div>
+    <div class="top-right">
+        <span class="user-display-name" id="topUserNameDisplay" onclick="location.reload()">Loading...</span>
+        <img src="icons/profile.png" id="topNavPic" class="top-profile-img" onclick="location.reload()">
+    </div>
+</header>
+
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li onclick="location.href='main.html'"><i class="fa fa-home"></i> Home</li>
+        <li onclick="toggleCareerDropdown()" style="justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 15px;"><i class="fa fa-graduation-cap"></i> Career Path</div>
+            <i class="fa fa-chevron-down" id="dropIcon" style="font-size: 10px;"></i>
+        </li>
+        <ul class="career-dropdown" id="careerDropdown">
+            <li onclick="location.href='technical.html'"><i class="fa fa-code"></i> Technical</li>
+            <li onclick="location.href='non-technical.html'"><i class="fa fa-briefcase"></i> Non-Technical</li>
+        </ul>
+        <li onclick="location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
+        <li style="color: var(--danger-red) !important;" onclick="logout()"><i class="fa fa-sign-out-alt"></i> Logout</li>
+    </ul>
+</div>
+
+<div class="content-wrapper" id="mainContent">
+    <div class="profile-container">
+        <div class="cover-photo"></div>
+        <div class="profile-header-main">
+            <div class="profile-img-wrapper">
+                <img src="icons/profile.png" id="mainProfilePic" class="profile-img-main">
+                <div onclick="openModal('image')" style="position: absolute; bottom: 8px; right: 5px; background: var(--sidebar-green); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid var(--card-bg); cursor: pointer;">
+                    <i class="fa fa-camera"></i>
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <h2 id="profileName" style="margin:0;">Loading...</h2>
+                <p id="profileDept" style="color: #65676b; font-size: 14px;">Department | BAUET</p>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <div class="info-card"><label>Student ID</label><span id="profileID">---</span></div>
+            <div class="info-card"><label>Email Address</label><span id="profileEmail">---</span></div>
+            <div class="info-card" style="grid-column: span 2;"><label>Institution</label><span>BAUET</span></div>
+        </div>
+
+        <div style="padding: 0 30px 30px;">
+            <button class="edit-btn" onclick="openModal('info')"><i class="fa fa-pen"></i> Edit Profile Info</button>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle" style="margin-top:0; color:var(--sidebar-green);">Update Information</h3>
+        <div id="imageSection" class="edit-group hidden">
+            <label>Upload New Profile Picture</label>
+            <input type="file" id="imageInput" accept="image/*">
+            <button onclick="removeProfilePic()" style="margin-top: 15px; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 8px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: 600;">Remove Current Photo</button>
+        </div>
+        <div id="infoSection" class="hidden">
+            <div class="edit-group"><label>Full Name</label><input type="text" id="editName"></div>
+            <div class="edit-group"><label>Student ID</label><input type="text" id="editID"></div>
+            <div class="edit-group"><label>Department</label><input type="text" id="editDept"></div>
+            <div class="edit-group"><label>Email</label><input type="email" id="editEmail"></div>
+        </div>
+        <button class="edit-btn" onclick="saveChanges()" style="margin-top:10px;">Save Changes</button>
+        <p onclick="closeModal()" style="text-align:center; margin-top:15px; color:#65676b; cursor:pointer; font-size:14px;">Cancel</p>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+        document.getElementById("mainContent").classList.toggle("shifted");
+    }
+
+    function toggleCareerDropdown() {
+        const dropdown = document.getElementById("careerDropdown");
+        dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        document.getElementById("dropIcon").style.transform = (dropdown.style.display === "block") ? "rotate(180deg)" : "rotate(0deg)";
+    }
+
+    function loadData() {
+        // 'userName' key use kora holo jate Settings er sathe mile jay
+        const name = localStorage.getItem("username") || "User";
+        const email = localStorage.getItem("userEmail") || "Not Provided";
+        const id = localStorage.getItem("userID") || "Not Set";
+        const dept = localStorage.getItem("userDept") || "CSE";
+        const pic = localStorage.getItem("profilePic");
+        const theme = localStorage.getItem("appTheme") || "light";
+
+        document.getElementById("topUserNameDisplay").innerText = name;
+        document.getElementById("profileName").innerText = name;
+        document.getElementById("profileEmail").innerText = email;
+        document.getElementById("profileID").innerText = id;
+        document.getElementById("profileDept").innerText = dept + " | BAUET";
+        
+        const defaultPic = "icons/profile.png"; 
+        document.getElementById("mainProfilePic").src = pic ? pic : defaultPic;
+        document.getElementById("topNavPic").src = pic ? pic : defaultPic;
+
+        if(theme === "dark") document.body.classList.add("dark-theme");
+    }
+
+    function openModal(mode) {
+        document.getElementById("editModal").style.display = "block";
+        if(mode === 'image') {
+            document.getElementById("imageSection").classList.remove("hidden");
+            document.getElementById("infoSection").classList.add("hidden");
+            document.getElementById("modalTitle").innerText = "Update Profile Picture";
+        } else {
+            document.getElementById("imageSection").classList.add("hidden");
+            document.getElementById("infoSection").classList.remove("hidden");
+            document.getElementById("modalTitle").innerText = "Update Information";
+            document.getElementById("editName").value = localStorage.getItem("username") || "";
+            document.getElementById("editID").value = localStorage.getItem("userID") || "";
+            document.getElementById("editEmail").value = localStorage.getItem("userEmail") || "";
+            document.getElementById("editDept").value = localStorage.getItem("userDept") || "";
+        }
+    }
+
+    function closeModal() { document.getElementById("editModal").style.display = "none"; }
+
+    function saveChanges() {
+        if(!document.getElementById("infoSection").classList.contains("hidden")) {
+            localStorage.setItem("userName", document.getElementById("editName").value);
+            localStorage.setItem("userID", document.getElementById("editID").value);
+            localStorage.setItem("userEmail", document.getElementById("editEmail").value);
+            localStorage.setItem("userDept", document.getElementById("editDept").value);
+        }
+
+        const imgInput = document.getElementById("imageInput");
+        if (!document.getElementById("imageSection").classList.contains("hidden") && imgInput.files && imgInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem("profilePic", e.target.result);
+                loadData();
+            };
+            reader.readAsDataURL(imgInput.files[0]);
+        }
+        loadData();
+        closeModal();
+    }
+
+    function removeProfilePic() {
+        if(confirm("Confirm?")) {
+            localStorage.removeItem("profilePic");
+            loadData();
+            closeModal();
+        }
+    }
+
+    function logout() {
+        if(confirm("Logout korben?")) {
+            window.location.href = "login.html";
+        }
+    }
+
+    window.onload = loadData;
+</script>
+</body>
+</html>

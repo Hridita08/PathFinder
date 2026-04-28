@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Technical Careers</title>
+
+<style>
+
+body{
+background:#f3f4f6;
+font-family:Arial;
+}
+
+.tech-container{
+max-width:1000px;
+margin:40px auto;
+}
+
+.tech-title{
+font-size:30px;
+margin-bottom:30px;
+}
+
+.tech-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+align-items:start;
+}
+
+.tech-card{
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.tech-card h3{
+margin-bottom:10px;
+}
+
+.tech-card p{
+font-size:14px;
+color:#555;
+}
+
+.tech-card button{
+margin-top:15px;
+padding:8px 16px;
+background:#4f7cdc;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+.back-btn{
+margin-bottom:20px;
+padding:8px 16px;
+background:#333;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+/* 🔥 FIXED DETAILS STYLE */
+
+.career-details{
+margin-top:15px;
+padding:10px 0 0;
+border-top:1px solid #ddd;
+display:none;
+width:100%;
+animation:fade 0.3s ease;
+background:none;
+box-shadow:none;
+border-radius:0;
+}
+
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="tech-container">
+
+<button class="back-btn" onclick="window.location.href='main.html'">
+Back to Dashboard
+</button>
+
+<h1 class="tech-title">Technical Career Paths</h1>
+
+<div class="tech-grid">
+
+<div class="tech-card">
+<h3>Software Developer</h3>
+<p>Create software applications and systems.</p>
+<button onclick="showCareer(this,'software')">Learn More</button>
+<div class="career-details"></div>
+</div>
+
+<div class="tech-card">
+<h3>Web Developer</h3>
+<p>Build modern websites and web applications.</p>
+<button onclick="showCareer(this,'web')">Learn More</button>
+<div class="career-details"></div>
+</div>
+
+<div class="tech-card">
+<h3>Data Scientist</h3>
+<p>Analyze large datasets using machine learning.</p>
+<button onclick="showCareer(this,'data')">Learn More</button>
+<div class="career-details"></div>
+</div>
+
+<div class="tech-card">
+<h3>Cyber Security Specialist</h3>
+<p>Protect systems and networks from cyber attacks.</p>
+<button onclick="showCareer(this,'cyber')">Learn More</button>
+<div class="career-details"></div>
+</div>
+
+<div class="tech-card">
+<h3>AI / Machine Learning Engineer</h3>
+<p>Develop intelligent systems using AI technologies.</p>
+<button onclick="showCareer(this,'ai')">Learn More</button>
+<div class="career-details"></div>
+</div>
+
+<div class="tech-card">
+<h3>Network Engineer</h3>
+<p>Design and manage computer networks.</p>
+<button onclick="showCareer(this,'network')">Learn More</button>
+<div class="career-details"></div>
+</div>
+
+<div class="tech-card">
+<h3>Cloud Engineer</h3>
+<p>Work with cloud platforms like AWS and Azure.</p>
+<button onclick="showCareer(this,'cloud')">Learn More</button>
+<div class="career-details"></div>
+</div>
+
+<div class="tech-card">
+<h3>Mobile App Developer</h3>
+<p>Create mobile applications for Android and iOS.</p>
+<button onclick="showCareer(this,'mobile')">Learn More</button>
+<div class="career-details"></div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function showCareer(btn,type){
+
+let card = btn.parentElement;
+let box = card.querySelector(".career-details");
+
+if(box.style.display==="block"){
+    box.style.display="none";
+    return;
+}
+
+let content="";
+
+if(type==="software"){
+content=`
+<p><b>Software Developer</b></p>
+<p>Builds software and applications.</p>
+<p>Skills: Java, Python, C++</p>`;
+}
+
+if(type==="web"){
+content=`
+<p><b>Web Developer</b></p>
+<p>Builds websites and web apps.</p>
+<p>Skills: HTML, CSS, JavaScript</p>`;
+}
+
+if(type==="data"){
+content=`
+<p><b>Data Scientist</b></p>
+<p>Works with data and machine learning.</p>
+<p>Skills: Python, ML, Statistics</p>`;
+}
+
+if(type==="cyber"){
+content=`
+<p><b>Cyber Security</b></p>
+<p>Protects systems from hacking.</p>
+<p>Skills: Networking, Security</p>`;
+}
+
+if(type==="ai"){
+content=`
+<p><b>AI Engineer</b></p>
+<p>Builds intelligent systems.</p>
+<p>Skills: Python, AI, ML</p>`;
+}
+
+if(type==="network"){
+content=`
+<p><b>Network Engineer</b></p>
+<p>Manages computer networks.</p>`;
+}
+
+if(type==="cloud"){
+content=`
+<p><b>Cloud Engineer</b></p>
+<p>Works with AWS & Azure.</p>`;
+}
+
+if(type==="mobile"){
+content=`
+<p><b>Mobile Developer</b></p>
+<p>Builds Android & iOS apps.</p>`;
+}
+
+box.innerHTML=content;
+box.style.display="block";
+
+}
+
+</script>
+
+</body>
+</html>

@@ -5,13 +5,25 @@ Intelligent Career Guidance System for BAUET
 - [x] Create GitHub repository
 - [x] Connect project with VS Code
 - [x] Create project folder structure
+- [x] Add README.md-Shompa
+- [x] Add todo.md-PM
 
 ## Frontend (HTML, CSS, JS)
+- [x] Design logo and Name the website
+- [x] Design Splash Screen-
+- [x] Design Home Page
+- [x] Inside home page add Home,About,login and Get started button
+- [x] Create About page
+- [x] Create Login Page
 - [x] Create Registration Page
+- [-] Create Main Page and design UI
+- [x] Dynamic post box
+- [x] Student Dashboard UI
 - [X] Create profile page
-- [-] Design Settings Page
-- [-] Make responsive design
-
+- [ ] Design Settings Page
+- [-] Career Suggestion Page
+- [ ] Make responsive design
+- [x] Make the logout button rssponsive
 ## Backend (Python)
 - [ ] Setup Python environment
 - [ ] Create backend server
@@ -30,8 +42,11 @@ Intelligent Career Guidance System for BAUET
 - [ ] Fetch career suggestions from database
 
 ## Testing
+- [ ] Test login and signup
+- [ ] Test career guidance system
 - [ ] Fix bugs and errors
 
-## Submission
-- [ ] Push to branch
-- [ ] Create Pull Request (PR)
+## Final Work
+- [ ] Upload final code to GitHub
+- [ ] Write project documentation
+- [ ] Prepare presentation
