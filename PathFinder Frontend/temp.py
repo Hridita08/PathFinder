@@ -3,14 +3,13 @@ import os
 import mysql.connector
 
 # --- Path Configuration ---
-# This ensures Flask looks into 'PathFinder Frontend' for HTML, CSS, and JS
 base_dir = os.path.dirname(os.path.abspath(__file__))
 frontend_dir = os.path.join(os.path.dirname(base_dir), 'PathFinder Frontend')
 
 app = Flask(__name__, 
             template_folder=frontend_dir, 
             static_folder=frontend_dir,
-            static_url_path='') # static_url_path='' helps serve files from the root of frontend_dir
+            static_url_path='') 
 
 app.secret_key = 'pathfinder_secret_key'
 
@@ -42,7 +41,6 @@ def login():
     db.close()
     
     if user:
-        # Passes the dynamic username to main.html
         return render_template('main.html', username=user['username'])
     
     return render_template('login.html', error="Invalid Credentials")
@@ -59,13 +57,11 @@ def create_post():
         db = get_db_connection()
         cursor = db.cursor()
         
-        # Identify the user ID from the username provided by the frontend
         cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
         user_result = cursor.fetchone()
         
         if user_result:
             user_id = user_result[0]
-            # Insert new post into database
             cursor.execute("INSERT INTO posts (user_id, content) VALUES (%s, %s)", (user_id, content))
             db.commit()
             cursor.close()
@@ -81,9 +77,9 @@ def get_posts():
     try:
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
-        # Fetch posts with usernames using a JOIN
+        # share_count soho fetch korchi jate frontend-e koto bar share hoiche dekhano jay
         query = """
-            SELECT users.username, posts.content, posts.created_at 
+            SELECT posts.id, users.username, posts.content, posts.created_at, posts.share_count 
             FROM posts 
             JOIN users ON posts.user_id = users.id 
             ORDER BY posts.created_at DESC
@@ -96,6 +92,52 @@ def get_posts():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+# --- NEW: Comment Route ---
+@app.route('/add-comment', methods=['POST'])
+def add_comment():
+    data = request.json
+    post_id = data.get('post_id')
+    username = data.get('username')
+    content = data.get('content')
+    
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+        
+        # User ID ber kora
+        cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
+        user_res = cursor.fetchone()
+        
+        if user_res:
+            user_id = user_res[0]
+            cursor.execute("INSERT INTO comments (post_id, user_id, content) VALUES (%s, %s, %s)", 
+                           (post_id, user_id, content))
+            db.commit()
+            cursor.close()
+            db.close()
+            return jsonify({"status": "success", "message": "Comment added!"})
+            
+        return jsonify({"status": "error", "message": "User not found"}), 404
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+# --- NEW: Share Route ---
+@app.route('/share-post', methods=['POST'])
+def share_post():
+    data = request.json
+    post_id = data.get('post_id')
+    
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+        # Share count +1 kore update kora
+        cursor.execute("UPDATE posts SET share_count = share_count + 1 WHERE id = %s", (post_id,))
+        db.commit()
+        cursor.close()
+        db.close()
+        return jsonify({"status": "success", "message": "Post shared!"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 if __name__ == '__main__':
-    # Run the Flask app
     app.run(debug=True)
