@@ -1,32 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Guide Profile | PATHFINDER</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Guide Profile | PATHFINDER</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* PAGE */
+.guide-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg,#27a630bd,#c2e9fb);
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+/* BACKGROUND SHAPES */
+.guide-page::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    top: -200px;
+    left: -200px;
+}
+
+.guide-page::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(46,125,50,0.15);
+    border-radius: 50%;
+    bottom: -150px;
+    right: -150px;
+}
+
+/* CARD */
+.guide-card {
+    display: flex;
+    width: 900px;
+    max-width: 95%;
+    background: rgba(255,255,255,0.95);
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* LEFT IMAGE */
+.guide-left {
+    width: 45%;
+}
+
+.guide-left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* FORM */
+.guide-form {
+    width: 55%;
+    padding: 35px;
+}
+
+.guide-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.guide-form h2 span {
+    color: #2e7d32;
+}
+
+/* INPUT BOX */
+.input-box {
+    position: relative;
+    margin: 12px 0;
+}
+
+.input-box i {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    color: #666;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 12px 45px;
+    border-radius: 12px;
+    border: 2px solid #cce5cc;
+    background: #f0f9f0;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* FOCUS */
+.input-box input:focus {
+    border-color: #2e7d32;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(46,125,50,0.3);
+}
+
+/* BUTTON */
+.guide-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 25px;
+    margin-top: 15px;
+    background: linear-gradient(90deg,#2e7d32,#66bb6a);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.guide-btn:hover {
+    background: #1b5e20;
+}
+
+</style>
+
 </head>
 
-<body class="login-body">
+<body class="guide-page">
 
-<div class="login-container">
-    <h2>Guide <span>Profile</span></h2>
+<div class="guide-card">
 
-    <!-- ✅ Flask Connected Form -->
-    <form action="/guide-create-profile" method="POST">
+    <!-- LEFT IMAGE -->
+    <div class="guide-left">
+        <img src="icons/guide.png" alt="Guide Image">
+    </div>
 
-        <input type="text" name="name" placeholder="Guide Name" required>
+    <!-- FORM -->
+    <div class="guide-form">
+        <h2>Guide <span>Profile</span></h2>
 
-        <input type="text" name="qualification" placeholder="Educational Qualification" required>
+        <form action="/guide-create-profile" method="POST">
 
-        <input type="text" name="sector" placeholder="Current Sector" required>
+            <div class="input-box">
+                <i class="fa fa-user"></i>
+                <input type="text" name="name" placeholder="Guide Name" required>
+            </div>
 
-        <input type="email" name="email" placeholder="Guide Email" required>
+            <div class="input-box">
+                <i class="fa fa-graduation-cap"></i>
+                <input type="text" name="qualification" placeholder="Educational Qualification" required>
+            </div>
 
-        <input type="password" name="password" placeholder="Password" required>
+            <div class="input-box">
+                <i class="fa fa-briefcase"></i>
+                <input type="text" name="sector" placeholder="Current Sector" required>
+            </div>
 
-        <button type="submit" class="login-btn">Create Profile</button>
+            <div class="input-box">
+                <i class="fa fa-envelope"></i>
+                <input type="email" name="email" placeholder="Guide Email" required>
+            </div>
 
-    </form>
+            <div class="input-box">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="guide-btn">Create Profile</button>
+
+        </form>
+    </div>
+
 </div>
 
 </body>

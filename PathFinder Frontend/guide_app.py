@@ -1,15 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
-import os
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__)
 
-app = Flask(__name__,
-            template_folder=current_dir,
-            static_folder=current_dir,
-            static_url_path='')
-
-# DB connection
+# =========================
+# DATABASE CONNECTION
+# =========================
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
@@ -18,7 +14,9 @@ def get_db_connection():
         database="pathfinderdb"
     )
 
-# Create guide table
+# =========================
+# CREATE TABLE
+# =========================
 def setup_database():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -29,8 +27,8 @@ def setup_database():
         name VARCHAR(100),
         qualification VARCHAR(100),
         sector VARCHAR(100),
-        email VARCHAR(100),
-        password VARCHAR(100)
+        email VARCHAR(100) UNIQUE,
+        password VARCHAR(255)
     )
     """)
 
@@ -39,49 +37,55 @@ def setup_database():
     conn.close()
 
 # =========================
-# GUIDE ROUTES
+# ROUTES
 # =========================
 
+# 👉 GUIDE FORM PAGE
 @app.route('/')
 def guide_form():
     return render_template('register-guide.html')
 
-
+# 👉 FORM SUBMIT
 @app.route('/guide-create-profile', methods=['POST'])
 def guide_create():
-    data = (
-        request.form.get('name'),
-        request.form.get('qualification'),
-        request.form.get('sector'),
-        request.form.get('email'),
-        request.form.get('password')
-    )
+
+    name = request.form.get('name')
+    qualification = request.form.get('qualification')
+    sector = request.form.get('sector')
+    email = request.form.get('email')
+    password = request.form.get('password')
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    sql = """
+    # EMAIL CHECK
+    cursor.execute("SELECT * FROM guides WHERE email=%s", (email,))
+    if cursor.fetchone():
+        return "<h3 style='color:red'>❌ Email already exists!</h3>"
+
+    # INSERT
+    cursor.execute("""
     INSERT INTO guides (name, qualification, sector, email, password)
-    VALUES (%s, %s, %s, %s, %s)
-    """
+    VALUES (%s,%s,%s,%s,%s)
+    """, (name, qualification, sector, email, password))
 
-    cursor.execute(sql, data)
     conn.commit()
-
     cursor.close()
     conn.close()
 
     return redirect(url_for('success'))
 
-
+# 👉 SUCCESS PAGE
 @app.route('/success')
 def success():
     return """
     <h1>🎉 Guide Profile Created Successfully!</h1>
-    <a href='/'>Register Another Guide</a>
+    <a href="/">Go Back</a>
     """
 
+# =========================
 # RUN
+# =========================
 if __name__ == '__main__':
     setup_database()
     app.run(debug=True)
