@@ -9,14 +9,15 @@
 ## Frontend (HTML, CSS, JS)
 - [x] Design Home Page
 - [x] Inside home page add Home,About,login and Get started button
-- [-] Tecnical page
-- [-] Make responsive design
+- [X] Tecnical page
+- [X] Make responsive design
 ## Backend (Python)
-- [ ] Setup Python environment
-- [ ] Create backend server
+- [-] Setup Python environment
+- [-] Create backend server
 - [ ] User authentication system
 - [ ] Career recommendation logic
-
+- [-] Registration page-guide
+- [ ] Registration page-student
 ## Database (MySQL)
 - [ ] Design database schema
 - [ ] Create student table
@@ -30,7 +31,3 @@
 
 ## Testing
 - [ ] Fix bugs and errors
-
-## Submission
-- [ ] Push to branch 
-- [ ] Create Pull Request (PR)
