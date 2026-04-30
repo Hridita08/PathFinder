@@ -1,4 +1,3 @@
-# own_profile
 from flask import Flask, render_template, request, jsonify, session
 import mysql.connector
 import base64
@@ -62,6 +61,7 @@ def remove_pic():
     user_id = session.get('user_id', 1)
     db = get_db_connection()
     cursor = db.cursor()
+   
     cursor.execute("UPDATE users SET profile_pic = NULL WHERE id = %s", (user_id,))
     db.commit()
     cursor.close()

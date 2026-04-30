@@ -180,7 +180,7 @@
         document.getElementById("dropIcon").style.transform = (dropdown.style.display === "block") ? "rotate(180deg)" : "rotate(0deg)";
     }
 
-    // --- Database theke data load kora ---
+   
     async function loadData() {
         try {
             const response = await fetch('/get_profile_data');
@@ -201,7 +201,7 @@
             console.error("Error loading data:", error);
         }
 
-        // Theme check (LocalStorage theke thakbe)
+       
         const theme = localStorage.getItem("appTheme") || "light";
         if(theme === "dark") document.body.classList.add("dark-theme");
     }
@@ -217,7 +217,7 @@
             document.getElementById("infoSection").classList.remove("hidden");
             document.getElementById("modalTitle").innerText = "Update Information";
             
-            // Current data field-e boshano
+            
             document.getElementById("editName").value = document.getElementById("profileName").innerText;
             document.getElementById("editID").value = document.getElementById("profileID").innerText;
             document.getElementById("editEmail").value = document.getElementById("profileEmail").innerText;
@@ -236,7 +236,7 @@ async function removeProfilePic() {
             
             if(result.status === "success") {
                 alert("Photo is removed!");
-                loadData(); // Updated empty photo load hobe
+                loadData();
                 closeModal();
             }
         } catch (error) {
@@ -272,12 +272,12 @@ async function removeProfilePic() {
                 closeModal();
             }
         } catch (error) {
-            alert("Update fail hoyeche!");
+            alert("Update failed!");
         }
     }
 
     function logout() {
-        if(confirm("Logout korben?")) {
+        if(confirm("Are You Sure?")) {
             window.location.href = "login.html";
         }
     }
