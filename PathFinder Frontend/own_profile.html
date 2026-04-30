@@ -169,7 +169,7 @@
 </div>
 
 <script>
-    function toggleSidebar() {
+   function toggleSidebar() {
         document.getElementById("sidebar").classList.toggle("active");
         document.getElementById("mainContent").classList.toggle("shifted");
     }
@@ -180,25 +180,29 @@
         document.getElementById("dropIcon").style.transform = (dropdown.style.display === "block") ? "rotate(180deg)" : "rotate(0deg)";
     }
 
-    function loadData() {
-        // 'userName' key use kora holo jate Settings er sathe mile jay
-        const name = localStorage.getItem("username") || "User";
-        const email = localStorage.getItem("userEmail") || "Not Provided";
-        const id = localStorage.getItem("userID") || "Not Set";
-        const dept = localStorage.getItem("userDept") || "CSE";
-        const pic = localStorage.getItem("profilePic");
+    // --- Database theke data load kora ---
+    async function loadData() {
+        try {
+            const response = await fetch('/get_profile_data');
+            const data = await response.json();
+
+            if (data) {
+                document.getElementById("topUserNameDisplay").innerText = data.full_name || "User";
+                document.getElementById("profileName").innerText = data.full_name || "User";
+                document.getElementById("profileEmail").innerText = data.email || "Not Provided";
+                document.getElementById("profileID").innerText = data.student_id || "Not Set";
+                document.getElementById("profileDept").innerText = (data.department || "Dept") + " | BAUET";
+                
+                const profileImg = data.profile_pic ? `data:image/jpeg;base64,${data.profile_pic}` : "icons/profile.png";
+                document.getElementById("mainProfilePic").src = profileImg;
+                document.getElementById("topNavPic").src = profileImg;
+            }
+        } catch (error) {
+            console.error("Error loading data:", error);
+        }
+
+        // Theme check (LocalStorage theke thakbe)
         const theme = localStorage.getItem("appTheme") || "light";
-
-        document.getElementById("topUserNameDisplay").innerText = name;
-        document.getElementById("profileName").innerText = name;
-        document.getElementById("profileEmail").innerText = email;
-        document.getElementById("profileID").innerText = id;
-        document.getElementById("profileDept").innerText = dept + " | BAUET";
-        
-        const defaultPic = "icons/profile.png"; 
-        document.getElementById("mainProfilePic").src = pic ? pic : defaultPic;
-        document.getElementById("topNavPic").src = pic ? pic : defaultPic;
-
         if(theme === "dark") document.body.classList.add("dark-theme");
     }
 
@@ -212,41 +216,63 @@
             document.getElementById("imageSection").classList.add("hidden");
             document.getElementById("infoSection").classList.remove("hidden");
             document.getElementById("modalTitle").innerText = "Update Information";
-            document.getElementById("editName").value = localStorage.getItem("username") || "";
-            document.getElementById("editID").value = localStorage.getItem("userID") || "";
-            document.getElementById("editEmail").value = localStorage.getItem("userEmail") || "";
-            document.getElementById("editDept").value = localStorage.getItem("userDept") || "";
+            
+            // Current data field-e boshano
+            document.getElementById("editName").value = document.getElementById("profileName").innerText;
+            document.getElementById("editID").value = document.getElementById("profileID").innerText;
+            document.getElementById("editEmail").value = document.getElementById("profileEmail").innerText;
+            document.getElementById("editDept").value = document.getElementById("profileDept").innerText.split(" | ")[0];
         }
     }
 
     function closeModal() { document.getElementById("editModal").style.display = "none"; }
-
-    function saveChanges() {
+async function removeProfilePic() {
+    if(confirm("Confirm to remove photo?")) {
+        try {
+            const response = await fetch('/remove_profile_pic', {
+                method: 'POST'
+            });
+            const result = await response.json();
+            
+            if(result.status === "success") {
+                alert("Photo removed from database!");
+                loadData(); // Updated empty photo load hobe
+                closeModal();
+            }
+        } catch (error) {
+            alert("Error removing photo!");
+        }
+    }
+}
+    // --- Database-e data save kora ---
+    async function saveChanges() {
+        const formData = new FormData();
+        
         if(!document.getElementById("infoSection").classList.contains("hidden")) {
-            localStorage.setItem("userName", document.getElementById("editName").value);
-            localStorage.setItem("userID", document.getElementById("editID").value);
-            localStorage.setItem("userEmail", document.getElementById("editEmail").value);
-            localStorage.setItem("userDept", document.getElementById("editDept").value);
+            formData.append('name', document.getElementById("editName").value);
+            formData.append('student_id', document.getElementById("editID").value);
+            formData.append('email', document.getElementById("editEmail").value);
+            formData.append('dept', document.getElementById("editDept").value);
         }
 
         const imgInput = document.getElementById("imageInput");
-        if (!document.getElementById("imageSection").classList.contains("hidden") && imgInput.files && imgInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                localStorage.setItem("profilePic", e.target.result);
-                loadData();
-            };
-            reader.readAsDataURL(imgInput.files[0]);
+        if (!document.getElementById("imageSection").classList.contains("hidden") && imgInput.files[0]) {
+            formData.append('image', imgInput.files[0]);
         }
-        loadData();
-        closeModal();
-    }
 
-    function removeProfilePic() {
-        if(confirm("Confirm?")) {
-            localStorage.removeItem("profilePic");
-            loadData();
-            closeModal();
+        try {
+            const response = await fetch('/update_profile', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            if(result.status === "success") {
+                alert("Profile Updated Successfully!");
+                loadData();
+                closeModal();
+            }
+        } catch (error) {
+            alert("Update fail hoyeche!");
         }
     }
 
