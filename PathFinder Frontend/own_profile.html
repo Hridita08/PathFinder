@@ -235,7 +235,7 @@ async function removeProfilePic() {
             const result = await response.json();
             
             if(result.status === "success") {
-                alert("Photo removed from database!");
+                alert("Photo is removed!");
                 loadData(); // Updated empty photo load hobe
                 closeModal();
             }
@@ -244,7 +244,7 @@ async function removeProfilePic() {
         }
     }
 }
-    // --- Database-e data save kora ---
+    
     async function saveChanges() {
         const formData = new FormData();
         
