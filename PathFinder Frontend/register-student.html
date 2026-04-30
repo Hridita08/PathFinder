@@ -1,28 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Student Profile | PATHFINDER</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Profile | PathFinder</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* BODY */
+body.student-page {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #11998e, #38ef7d); /* 💚 GREEN */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.profile-card {
+    display: flex;
+    width: 850px;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* LEFT IMAGE */
+.profile-image {
+    width: 40%;
+    background: #e8fdf5; /* light green */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-image img {
+    width: 80%;
+}
+
+/* RIGHT FORM */
+.profile-form {
+    width: 60%;
+    padding: 30px;
+}
+
+.profile-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-form span {
+    color: #11998e; /* green highlight */
+}
+
+/* INPUT BOX */
+.input-box {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-box i {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    color: #11998e;
+}
+
+.input-box input,
+.input-box select {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.input-box input:focus,
+.input-box select:focus {
+    border-color: #11998e;
+}
+
+/* PASSWORD TOGGLE */
+.password-box {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    cursor: pointer;
+    color: #11998e;
+}
+
+/* BUTTON */
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #11998e, #38ef7d); /* 💚 green button */
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #0f7f73, #2ecc71);
+}
+
+</style>
+
 </head>
-<body class="login-body">
 
-<div class="login-container">
-    <h2>Student <span>Profile</span></h2>
+<body class="student-page">
 
-    <form action="/create-profile" method="POST">
-        
+<div class="profile-card">
+
+  <!-- LEFT IMAGE -->
+  <div class="profile-image">
+    <img src="icons/student.png" alt="Student Photo">
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="profile-form">
+    
+    <h2>Create <span>Student</span> Profile</h2>
+
+    <form action="/create-profile" method="POST" autocomplete="off">
+
+      <div class="input-box">
+        <i class="fa fa-user"></i>
         <input type="text" name="name" placeholder="Student Name" required>
+      </div>
+
+      <div class="input-box">
+        <i class="fa fa-id-card"></i>
         <input type="text" name="student_id" placeholder="Student ID" required>
-        <input type="text" name="dept" placeholder="Department" required>
-        <input type="text" name="batch" placeholder="Batch (overall)" required>
+      </div>
+
+      <div class="input-box">
+        <i class="fa fa-building"></i>
+        <select name="dept" required>
+          <option value="">Department</option>
+          <option>CE</option>
+          <option>CSE</option>
+          <option>EEE</option>
+          <option>ME</option>
+          <option>ICE</option>
+        </select>
+      </div>
+
+      <div class="input-box">
+        <i class="fa fa-graduation-cap"></i>
+        <input type="text" name="batch" placeholder="Batch (Overall)" required>
+      </div>
+
+      <div class="input-box">
+        <i class="fa fa-envelope"></i>
         <input type="email" name="email" placeholder="Student Email" required>
+      </div>
+
+      <div class="input-box">
+        <i class="fa fa-phone"></i>
         <input type="text" name="phone" placeholder="Phone Number" required>
-        <input type="password" name="password" placeholder="Password" required>
-        
-        <button type="submit" class="login-btn">Create Profile</button>
+      </div>
+
+      <div class="input-box password-box">
+        <i class="fa fa-lock"></i>
+        <input type="password" id="password" name="password" placeholder="Password" required>
+
+        <span class="toggle-password" onclick="togglePassword()">
+          <i class="fa fa-eye"></i>
+        </span>
+      </div>
+
+      <button type="submit" class="login-btn">Create Profile</button>
+
     </form>
+
+  </div>
+
 </div>
+
+<script>
+function togglePassword(){
+  let pass = document.getElementById("password");
+  pass.type = pass.type === "password" ? "text" : "password";
+}
+</script>
 
 </body>
 </html>

@@ -19,7 +19,7 @@ def get_db_connection():
         database="pathfinderdb"
     )
 
-# ✅ Database Setup (Only Student Table)
+# ✅ Database Setup
 def setup_database():
     try:
         conn = get_db_connection()
@@ -49,29 +49,30 @@ def setup_database():
 
 
 # =========================
-# 🔵 STUDENT ROUTES
+# 🔵 STUDENT FORM PAGE
 # =========================
 
-# Show student form
 @app.route('/')
 def student_form():
     return render_template('register-student.html')
 
 
-# Handle student form
+# =========================
+# 🔵 HANDLE FORM SUBMIT
+# =========================
+
 @app.route('/create-profile', methods=['POST'])
 def create_profile():
-    data = (
-        request.form.get('name'),
-        request.form.get('student_id'),
-        request.form.get('dept'),
-        request.form.get('batch'),
-        request.form.get('email'),
-        request.form.get('phone'),
-        request.form.get('password')
-    )
-
     try:
+        # 🔥 HTML er name attribute onujayi data nite hobe
+        name = request.form.get('name')
+        student_id = request.form.get('student_id')
+        dept = request.form.get('dept')
+        batch = request.form.get('batch')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        password = request.form.get('password')
+
         conn = get_db_connection()
         cursor = conn.cursor()
 
@@ -80,13 +81,14 @@ def create_profile():
         VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
 
-        cursor.execute(sql, data)
+        cursor.execute(sql, (name, student_id, dept, batch, email, phone, password))
         conn.commit()
 
         cursor.close()
         conn.close()
 
-        print(f"✅ Student Registered: {data[0]}")
+        print(f"✅ Student Registered: {name}")
+
         return redirect(url_for('home'))
 
     except mysql.connector.Error as err:
@@ -94,14 +96,14 @@ def create_profile():
 
 
 # =========================
-# 🏠 HOME PAGE (Only Student)
+# 🏠 HOME PAGE
 # =========================
 
 @app.route('/home')
 def home():
     return """
     <h1>🎉 Profile Created Successfully!</h1>
-    <a href='/'>Student Register</a>
+    <a href='/'>➕ Register Another Student</a>
     """
 
 
