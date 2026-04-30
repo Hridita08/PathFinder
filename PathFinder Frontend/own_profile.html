@@ -118,58 +118,119 @@
 </div>
 
 <script>
-    // Load Saved Data
-    function loadData() {
-        const name = localStorage.getItem("username") || "New User";
-        const email = localStorage.getItem("userEmail") || "student@bauet.ac.bd";
-        const id = localStorage.getItem("userID") || "12345678";
-        const dept = localStorage.getItem("userDept") || "Computer Science & Engineering";
-        const pic = localStorage.getItem("profilePic");
+   function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+        document.getElementById("mainContent").classList.toggle("shifted");
+    }
 
-        document.getElementById("userDisplay").innerText = name;
-        document.getElementById("profileName").innerText = name;
-        document.getElementById("profileEmail").innerText = email;
-        document.getElementById("profileID").innerText = id;
-        document.getElementById("profileDept").innerText = dept + " | BAUET";
-        if(pic) document.getElementById("mainProfilePic").src = pic;
+    function toggleCareerDropdown() {
+        const dropdown = document.getElementById("careerDropdown");
+        dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        document.getElementById("dropIcon").style.transform = (dropdown.style.display === "block") ? "rotate(180deg)" : "rotate(0deg)";
+    }
+
+   
+    async function loadData() {
+        try {
+            const response = await fetch('/get_profile_data');
+            const data = await response.json();
+
+            if (data) {
+                document.getElementById("topUserNameDisplay").innerText = data.full_name || "User";
+                document.getElementById("profileName").innerText = data.full_name || "User";
+                document.getElementById("profileEmail").innerText = data.email || "Not Provided";
+                document.getElementById("profileID").innerText = data.student_id || "Not Set";
+                document.getElementById("profileDept").innerText = (data.department || "Dept") + " | BAUET";
+                
+                const profileImg = data.profile_pic ? `data:image/jpeg;base64,${data.profile_pic}` : "icons/profile.png";
+                document.getElementById("mainProfilePic").src = profileImg;
+                document.getElementById("topNavPic").src = profileImg;
+            }
+        } catch (error) {
+            console.error("Error loading data:", error);
+        }
+
+       
+        const theme = localStorage.getItem("appTheme") || "light";
+        if(theme === "dark") document.body.classList.add("dark-theme");
     }
 
     function openModal() {
         document.getElementById("editModal").style.display = "block";
-        document.getElementById("editName").value = document.getElementById("profileName").innerText;
-        document.getElementById("editID").value = document.getElementById("profileID").innerText;
-        document.getElementById("editEmail").value = document.getElementById("profileEmail").innerText;
-        document.getElementById("editDept").value = localStorage.getItem("userDept") || "Computer Science & Engineering";
+        if(mode === 'image') {
+            document.getElementById("imageSection").classList.remove("hidden");
+            document.getElementById("infoSection").classList.add("hidden");
+            document.getElementById("modalTitle").innerText = "Update Profile Picture";
+        } else {
+            document.getElementById("imageSection").classList.add("hidden");
+            document.getElementById("infoSection").classList.remove("hidden");
+            document.getElementById("modalTitle").innerText = "Update Information";
+            
+            
+            document.getElementById("editName").value = document.getElementById("profileName").innerText;
+            document.getElementById("editID").value = document.getElementById("profileID").innerText;
+            document.getElementById("editEmail").value = document.getElementById("profileEmail").innerText;
+            document.getElementById("editDept").value = document.getElementById("profileDept").innerText.split(" | ")[0];
+        }
     }
 
     function closeModal() { document.getElementById("editModal").style.display = "none"; }
-
-    function saveChanges() {
-        const n = document.getElementById("editName").value;
-        const i = document.getElementById("editID").value;
-        const e = document.getElementById("editEmail").value;
-        const d = document.getElementById("editDept").value;
-        const img = document.getElementById("imageInput");
-
-        localStorage.setItem("username", n);
-        localStorage.setItem("userID", i);
-        localStorage.setItem("userEmail", e);
-        localStorage.setItem("userDept", d);
-
-        if (img.files && img.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(ex) {
-                localStorage.setItem("profilePic", ex.target.result);
+async function removeProfilePic() {
+    if(confirm("Confirm to remove photo?")) {
+        try {
+            const response = await fetch('/remove_profile_pic', {
+                method: 'POST'
+            });
+            const result = await response.json();
+            
+            if(result.status === "success") {
+                alert("Photo is removed!");
                 loadData();
-            };
-            reader.readAsDataURL(img.files[0]);
+                closeModal();
+            }
+        } catch (error) {
+            alert("Error removing photo!");
         }
+    }
+}
+    
+    async function saveChanges() {
+        const formData = new FormData();
         
-        loadData();
-        closeModal();
+        if(!document.getElementById("infoSection").classList.contains("hidden")) {
+            formData.append('name', document.getElementById("editName").value);
+            formData.append('student_id', document.getElementById("editID").value);
+            formData.append('email', document.getElementById("editEmail").value);
+            formData.append('dept', document.getElementById("editDept").value);
+        }
+
+        const imgInput = document.getElementById("imageInput");
+        if (!document.getElementById("imageSection").classList.contains("hidden") && imgInput.files[0]) {
+            formData.append('image', imgInput.files[0]);
+        }
+
+        try {
+            const response = await fetch('/update_profile', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            if(result.status === "success") {
+                alert("Profile Updated Successfully!");
+                loadData();
+                closeModal();
+            }
+        } catch (error) {
+            alert("Update failed!");
+        }
     }
 
-    function logout() { localStorage.removeItem("username"); window.location.href = "login.html"; }
+    function logout() {
+        if(confirm("Are You Sure?")) {
+            window.location.href = "login.html";
+        }
+    }
+
     window.onload = loadData;
 </script>
 
