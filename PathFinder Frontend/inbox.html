@@ -130,8 +130,16 @@ async function loadConversations(){
 
     const map = {};
     msgs.forEach(m => {
-      if(!map[m.sender_id] || new Date(m.created_at) > new Date(map[m.sender_id].created_at)){
-        map[m.sender_id] = m;
+      // অন্য user এর id বের করো
+      const otherUserId = m.sender_id === currentUserId ? m.receiver_id : m.sender_id;
+      const otherName = m.sender_id === currentUserId ? 'You → ' + m.sender_name : m.sender_name;
+
+      if(!map[otherUserId] || new Date(m.created_at) > new Date(map[otherUserId].created_at)){
+        map[otherUserId] = {
+          ...m,
+          other_user_id: otherUserId,
+          other_user_name: m.sender_id === currentUserId ? m.receiver_name || 'User #'+m.receiver_id : m.sender_name
+        };
       }
     });
 
