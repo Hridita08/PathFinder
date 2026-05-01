@@ -128,7 +128,10 @@
     </div>
     <div class="top-right">
         <div class="icon-btn"><i class="fa fa-bell"></i><span class="badge">3</span></div>
-        <div class="icon-btn"><i class="fa fa-envelope"></i><span class="badge">2</span></div>
+        <div class="icon-btn" onclick="location.href='messages.html'">
+    <i class="fa fa-envelope"></i>
+    <span class="badge">2</span>
+</div>
         <span class="user-display-name" id="displayUserName">Guest User</span>
         <img src="icons/profile.png" class="profile-img" onclick="location.href='own_profile.html'">
     </div>
@@ -137,7 +140,7 @@
 <div class="sidebar" id="sidebar">
     <ul>
         <li onclick="location.href='main.html'"><i class="fa fa-home"></i> Home</li>
-        
+        <li onclick="location.href='saved_posts.html'"><i class="fa fa-bookmark"></i> Saved Posts</li>
         <li onclick="toggleCareerDropdown()">
             <i class="fa fa-graduation-cap"></i> Career Path 
             <i class="fa fa-chevron-down" style="font-size: 10px; margin-left: auto;"></i>
@@ -186,8 +189,9 @@
                 <div class="post-card-actions">
                     <div class="action-item" onclick="toggleCommentSection(this)"><i class="fa fa-comment"></i> Comment</div>
                    <div class="action-item" onclick="sharePost('Check out this post on PathFinder!')"><i class="fa fa-share"></i> Share</div>
-                    <div class="action-item"><i class="fa fa-paper-plane"></i> Message</div>
-                </div>
+                    <div class="action-item" onclick="openChatbot('${text}')">
+    <i class="fa fa-paper-plane"></i> Message
+</div>
             </div>
         </div>
     </div>
@@ -255,16 +259,44 @@
         }
         el.parentElement.classList.remove('active');
     }
-    function toggleCommentSection(btn) {
+    function openChatbot(btn) {
+    const postCard = btn.closest('.post-card');
+    const authorName = postCard.querySelector('b').innerText; // পোস্টদাতার নাম
+    const postText = postCard.querySelector('.post-text').innerText;
+    
+    const userMsg = prompt(`Send a message to ${authorName} about this post:`);
+    
+    if (userMsg) {
+        // মেসেজ অবজেক্ট তৈরি
+        const newMessage = {
+            to: authorName,
+            from: localStorage.getItem("userName") || "Guest User",
+            content: userMsg,
+            referencePost: postText.substring(0, 30) + "...",
+            time: new Date().toLocaleTimeString()
+        };
+
+        let inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
+        inbox.push(newMessage);
+        localStorage.setItem("pathfinder_inbox", JSON.stringify(inbox));
+
+        alert(`Message sent to ${authorName}'s inbox!`);
+    }
+}
+   function toggleCommentSection(btn) {
     const postCard = btn.closest('.post-card');
     let commentBox = postCard.querySelector('.comment-box-container');
     
     if (!commentBox) {
         const html = `
-            <div class="comment-box-container" style="padding: 10px; border-top: 1px solid #eee;">
-                <input type="text" placeholder="Write a comment..." style="width: 80%; padding: 5px; border-radius: 5px; border: 1px solid #ddd;">
-                <button onclick="addComment(this)" style="padding: 5px 10px; cursor: pointer;">Send</button>
-                <div class="comments-list" style="margin-top: 10px; font-size: 13px;"></div>
+            <div class="comment-box-container" style="padding: 15px; border-top: 1px solid #eee; background: #f9f9f9;">
+                <div class="comments-list" style="margin-bottom: 10px; max-height: 150px; overflow-y: auto;">
+                    <p style="font-size: 13px; color: #555;"><b>Admin:</b> Great resources!</p> 
+                </div>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" class="comm-input" placeholder="Write a comment..." style="flex:1; padding: 8px; border-radius: 20px; border: 1px solid #ddd; outline:none;">
+                    <button onclick="addComment(this)" style="background:var(--sidebar-green); color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fa fa-paper-plane"></i></button>
+                </div>
             </div>`;
         postCard.insertAdjacentHTML('beforeend', html);
     } else {
@@ -274,10 +306,12 @@
 
 function addComment(btn) {
     const input = btn.previousElementSibling;
-    const list = btn.nextElementSibling;
+    const list = btn.parentElement.previousElementSibling;
+    const userName = localStorage.getItem("userName") || "User";
+    
     if (input.value.trim() !== "") {
-        const comment = `<p style="background: #f0f2f5; padding: 5px; border-radius: 5px; margin: 5px 0;"><b>You:</b> ${input.value}</p>`;
-        list.innerHTML += comment;
+        const newComment = `<p style="font-size: 13px; margin: 5px 0;"><b>${userName}:</b> ${input.value}</p>`;
+        list.innerHTML += newComment;
         input.value = "";
     }
 }
@@ -298,16 +332,36 @@ async function sharePost(text) {
     }
 }
     function savePost(btn) {
-    const postText = btn.closest('.post-card').querySelector('.post-text').innerText;
-    let savedPosts = JSON.parse(localStorage.getItem("savedPosts")) || [];
+    const postCard = btn.closest('.post-card');
+    const postData = {
+        author: postCard.querySelector('b').innerText,
+        text: postCard.querySelector('.post-text').innerText,
+        time: postCard.querySelector('small').innerText
+    };
+
+    let saved = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
     
-    if(!savedPosts.includes(postText)) {
-        savedPosts.push(postText);
-        localStorage.setItem("savedPosts", JSON.stringify(savedPosts));
-        alert("Post Saved Successfully!");
+    // চেক করা হচ্ছে আগে থেকেই সেভ আছে কি না
+    if (!saved.some(p => p.text === postData.text)) {
+        saved.push(postData);
+        localStorage.setItem("pathfinder_saved", JSON.stringify(saved));
+        alert("Post saved to your profile!");
     } else {
-        alert("Already saved!");
+        alert("Post already saved.");
     }
+}
+window.onload = function() {
+    const inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
+    const chatList = document.getElementById("chatList"); // যেখানে মেসেজ দেখাবেন
+
+    inbox.forEach(msg => {
+        chatList.innerHTML += `
+            <div class="msg-item">
+                <strong>To: ${msg.to}</strong>
+                <p>${msg.content}</p>
+                <small>Ref: ${msg.referencePost} | ${msg.time}</small>
+            </div>`;
+    });
 }
     window.onclick = function(e) {
         if (!e.target.matches('.three-dot')) {
