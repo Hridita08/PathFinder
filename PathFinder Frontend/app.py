@@ -54,7 +54,23 @@ def login():
         return jsonify({"status": "fail", "message": "Wrong password!"})
 
     return jsonify({"status": "success", "user_id": user[0]})
+
+ #password check
     
+@app.route('/reset-password', methods=['POST'])
+def reset_password():
+    data = request.json
+    email = data['email']
+    password = data['password']
+
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE users SET password=%s WHERE email=%s", (password, email))
+    mysql.connection.commit()
+
+    if cur.rowcount > 0:
+        return jsonify({"status": "success"})
+    else:
+        return jsonify({"status": "fail", "message": "Email not found"})
 
 # profile GET
 @app.route('/user/<int:user_id>', methods=['GET'])
