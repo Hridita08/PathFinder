@@ -200,8 +200,10 @@ async function openChat(userId, userName){
   try {
     const res = await fetch(`http://127.0.0.1:5000/api/messages/inbox/${currentUserId}`);
     const data = await res.json();
-    const msgs = (data.messages || []).filter(m => m.sender_id === userId);
-    renderMessages(msgs, userName);
+    const msgs = (data.messages || []).filter(m => 
+    m.sender_id === userId || m.receiver_id === userId
+);
+renderMessages(msgs, userId);
   } catch(e){
     document.getElementById('messageList').innerHTML = '<div class="loading">Could not load messages.</div>';
   }
