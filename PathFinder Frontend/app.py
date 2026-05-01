@@ -8,7 +8,7 @@ import random
 app = Flask(__name__)
 
 from flask_cors import CORS
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 app.secret_key = 'pathfinder_secret_key'  
 
@@ -160,7 +160,7 @@ def verify():
 
     
     # ১. Message পাঠানো (Post এর Message button)
-    
+
 @app.route('/api/messages/send', methods=['POST'])
 def send_message():
     data = request.json
