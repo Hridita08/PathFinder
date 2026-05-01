@@ -88,8 +88,9 @@ button:hover{
     </form>
 </div>
 
+
 <script>
-function loginUser(e){
+async function loginUser(e){
     e.preventDefault();
 
     let name = document.getElementById("name").value.trim();
@@ -104,21 +105,34 @@ function loginUser(e){
         return;
     }
 
-    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    if(!email.match(emailPattern)){
-        error.innerHTML = "Please enter a valid email address!";
-        return;
-    }
-
     if(password.length < 6){
         error.innerHTML = "Password must be at least 6 characters!";
         return;
     }
 
-    localStorage.setItem("username", name);
-    window.location.href = "main.html";
+    try {
+        const res = await fetch("http://127.0.0.1:5000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password })
+        });
+
+        const data = await res.json();
+
+        if(data.status === "success"){
+            localStorage.setItem("username", name);
+            localStorage.setItem("user_id", data.user_id);
+            window.location.href = "main.html";
+        } else {
+            error.innerHTML = data.message || "Invalid credentials!";
+        }
+
+    } catch(err) {
+        error.innerHTML = "Server error. Please try again.";
+    }
 }
 </script>
+
 
 </body>
 </html>
