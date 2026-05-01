@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PATHFINDER | Messages</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; height: 100vh; overflow: hidden; }
+
+  .topbar { height: 56px; background: #1a2e1a; display: flex; align-items: center; padding: 0 20px; gap: 16px; }
+  .topbar .title-text { color: white; font-size: 18px; font-weight: 600; letter-spacing: 1px; }
+  .topbar a { color: #a0c4a0; font-size: 13px; text-decoration: none; margin-left: auto; }
+  .topbar a:hover { color: white; }
+
+  .inbox-wrap { display: flex; height: calc(100vh - 56px); }
+
+  .sidebar { width: 300px; background: white; border-right: 1px solid #e4e6ea; display: flex; flex-direction: column; flex-shrink: 0; }
+  .sidebar-header { padding: 16px; border-bottom: 1px solid #e4e6ea; }
+  .sidebar-header h2 { font-size: 18px; font-weight: 600; color: #1a2e1a; }
+
+  .search-box { padding: 10px 16px; border-bottom: 1px solid #e4e6ea; }
+  .search-box input { width: 100%; padding: 8px 12px; border: 1px solid #e4e6ea; border-radius: 20px; font-size: 13px; background: #f0f2f5; outline: none; color: #333; }
+  .search-box input:focus { border-color: #2d5a2d; background: white; }
+
+  .conv-list { overflow-y: auto; flex: 1; }
+  .conv-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f0f2f5; transition: background 0.15s; }
+  .conv-item:hover { background: #f0f2f5; }
+  .conv-item.active { background: #e8f0e8; }
+
+  .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; flex-shrink: 0; color: white; }
+  .conv-info { flex: 1; min-width: 0; }
+  .conv-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  .conv-preview { font-size: 12px; color: #65676b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  .conv-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+  .conv-time { font-size: 11px; color: #65676b; }
+  .unread-badge { background: #2d5a2d; color: white; font-size: 11px; font-weight: 600; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+
+  .chat-area { flex: 1; display: flex; flex-direction: column; background: #f0f2f5; }
+  .chat-header { padding: 12px 20px; background: white; border-bottom: 1px solid #e4e6ea; display: flex; align-items: center; gap: 12px; }
+  .chat-header .info .name { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+  .chat-header .info .status { font-size: 12px; color: #2d5a2d; }
+
+  .messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .msg-group { display: flex; flex-direction: column; gap: 3px; }
+  .msg-group.out { align-items: flex-end; }
+  .msg-group.in { align-items: flex-start; }
+  .msg { max-width: 65%; padding: 9px 14px; font-size: 14px; line-height: 1.5; word-break: break-word; }
+  .msg-group.in .msg { background: white; color: #1a1a1a; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .msg-group.out .msg { background: #2d5a2d; color: white; border-radius: 18px 18px 4px 18px; }
+  .msg-time { font-size: 11px; color: #65676b; padding: 0 4px; margin-top: 2px; }
+
+  .no-chat { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f0f2f5; color: #65676b; gap: 12px; }
+  .no-chat i { font-size: 64px; color: #c8c8c8; }
+  .no-chat h3 { font-size: 20px; color: #444; font-weight: 600; }
+  .no-chat p { font-size: 14px; }
+
+  .chat-input-area { padding: 12px 20px; background: white; border-top: 1px solid #e4e6ea; display: flex; align-items: center; gap: 10px; }
+  .chat-input-area input { flex: 1; padding: 10px 16px; border: 1px solid #e4e6ea; border-radius: 22px; font-size: 14px; background: #f0f2f5; outline: none; color: #333; }
+  .chat-input-area input:focus { border-color: #2d5a2d; background: white; }
+
+  .send-btn { width: 40px; height: 40px; border-radius: 50%; background: #2d5a2d; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
+  .send-btn:hover { background: #1a4a1a; }
+  .send-btn i { color: white; font-size: 16px; }
+
+  .date-divider { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+  .date-divider::before, .date-divider::after { content: ''; flex: 1; height: 1px; background: #e4e6ea; }
+  .date-divider span { font-size: 12px; color: #65676b; }
+  .loading { text-align: center; padding: 20px; color: #65676b; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="title-text">Pathfinder</span>
+  <a href="main.html"><i class="fa fa-arrow-left"></i> Back to Feed</a>
+</div>
+
+<div class="inbox-wrap">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Messages</h2>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search messages..." oninput="filterConversations()">
+    </div>
+    <div class="conv-list" id="convList">
+      <div class="loading">Loading conversations...</div>
+    </div>
+  </div>
+
+  <div class="chat-area" id="chatArea">
+    <div class="no-chat">
+      <i class="fa fa-comments"></i>
+      <h3>Your Messages</h3>
+      <p>Select a conversation to start chatting</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const currentUserId = parseInt(localStorage.getItem('user_id'));
+const currentUsername = localStorage.getItem('username');
+if(!currentUsername) window.location.href = 'login.html';
+
+let conversations = [];
+let activeConvUserId = null;
+
+const avatarColors = ['#e74c3c','#3498db','#9b59b6','#e67e22','#1abc9c','#e91e8c','#2980b9'];
+function getColor(id){ return avatarColors[id % avatarColors.length]; }
+function getInitials(name){ return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+
+function timeAgo(dateStr){
+  if(!dateStr) return '';
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 1000);
+  if(diff < 60) return 'Just now';
+  if(diff < 3600) return Math.floor(diff/60) + 'm ago';
+  if(diff < 86400) return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  return d.toLocaleDateString([],{month:'short',day:'numeric'});
+}
+
+async function loadConversations(){
+  try {
+    const res = await fetch(`http://127.0.0.1:5000/api/messages/inbox/${currentUserId}`);
+    const data = await res.json();
+    const msgs = data.messages || [];
+
+    const map = {};
+    msgs.forEach(m => {
+      if(!map[m.sender_id] || new Date(m.created_at) > new Date(map[m.sender_id].created_at)){
+        map[m.sender_id] = m;
+      }
+    });
+
+    conversations = Object.values(map);
+    renderConversations(conversations);
+  } catch(e){
+    document.getElementById('convList').innerHTML = '<div class="loading">Could not load messages.</div>';
+  }
+}
+
+function renderConversations(list){
+  const el = document.getElementById('convList');
+  if(list.length === 0){
+    el.innerHTML = '<div class="loading">No conversations yet.</div>';
+    return;
+  }
+  el.innerHTML = list.map(m => `
+    <div class="conv-item ${activeConvUserId === m.sender_id ? 'active':''}" onclick="openChat(${m.sender_id}, '${m.sender_name}')">
+      <div class="avatar" style="background:${getColor(m.sender_id)}">${getInitials(m.sender_name)}</div>
+      <div class="conv-info">
+        <div class="conv-name">${m.sender_name}</div>
+        <div class="conv-preview">${m.content}</div>
+      </div>
+      <div class="conv-meta">
+        <span class="conv-time">${timeAgo(m.created_at)}</span>
+        ${!m.is_read ? '<span class="unread-badge">1</span>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterConversations(){
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = conversations.filter(c => c.sender_name.toLowerCase().includes(q) || c.content.toLowerCase().includes(q));
+  renderConversations(filtered);
+}
+
+async function openChat(userId, userName){
+  activeConvUserId = userId;
+  renderConversations(conversations);
+
+  const chatArea = document.getElementById('chatArea');
+  chatArea.innerHTML = `
+    <div class="chat-header">
+      <div class="avatar" style="background:${getColor(userId)}">${getInitials(userName)}</div>
+      <div class="info">
+        <div class="name">${userName}</div>
+        <div class="status">Pathfinder Member</div>
+      </div>
+    </div>
+    <div class="messages" id="messageList"><div class="loading">Loading...</div></div>
+    <div class="chat-input-area">
+      <input type="text" id="msgInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMsg(${userId})">
+      <button class="send-btn" onclick="sendMsg(${userId})"><i class="fa fa-paper-plane"></i></button>
+    </div>
+  `;
+
+  try {
+    const res = await fetch(`http://127.0.0.1:5000/api/messages/inbox/${currentUserId}`);
+    const data = await res.json();
+    const msgs = (data.messages || []).filter(m => m.sender_id === userId);
+    renderMessages(msgs, userName);
+  } catch(e){
+    document.getElementById('messageList').innerHTML = '<div class="loading">Could not load messages.</div>';
+  }
+}
+
+function renderMessages(msgs, userName){
+  const el = document.getElementById('messageList');
+  if(!el) return;
+  if(msgs.length === 0){
+    el.innerHTML = '<div class="loading">No messages yet.</div>';
+    return;
+  }
+  el.innerHTML = `
+    <div class="date-divider"><span>Today</span></div>
+    ${msgs.map(m => `
+      <div class="msg-group in">
+        <div class="msg">${m.content}</div>
+        <div class="msg-time">${timeAgo(m.created_at)}</div>
+      </div>
+    `).join('')}
+  `;
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendMsg(receiverId){
+  const input = document.getElementById('msgInput');
+  const content = input.value.trim();
+  if(!content) return;
+  input.value = '';
+
+  const el = document.getElementById('messageList');
+  el.innerHTML += `
+    <div class="msg-group out">
+      <div class="msg">${content}</div>
+      <div class="msg-time">Just now</div>
+    </div>
+  `;
+  el.scrollTop = el.scrollHeight;
+
+  try {
+    await fetch('http://127.0.0.1:5000/api/messages/send', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ sender_id: currentUserId, receiver_id: receiverId, content })
+    });
+    loadConversations();
+  } catch(e){
+    console.error('Send failed:', e);
+  }
+}
+
+loadConversations();
+</script>
+</body>
+</html>
