@@ -209,7 +209,7 @@ renderMessages(msgs, userId);
   }
 }
 
-function renderMessages(msgs, userName){
+function renderMessages(msgs, otherUserId){
   const el = document.getElementById('messageList');
   if(!el) return;
   if(msgs.length === 0){
@@ -218,12 +218,15 @@ function renderMessages(msgs, userName){
   }
   el.innerHTML = `
     <div class="date-divider"><span>Today</span></div>
-    ${msgs.map(m => `
-      <div class="msg-group in">
-        <div class="msg">${m.content}</div>
-        <div class="msg-time">${timeAgo(m.created_at)}</div>
-      </div>
-    `).join('')}
+    ${msgs.map(m => {
+      const isOut = m.sender_id === currentUserId;
+      return `
+        <div class="msg-group ${isOut ? 'out' : 'in'}">
+          <div class="msg">${m.content}</div>
+          <div class="msg-time">${timeAgo(m.created_at)}</div>
+        </div>
+      `;
+    }).join('')}
   `;
   el.scrollTop = el.scrollHeight;
 }
