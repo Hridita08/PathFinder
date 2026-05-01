@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
+from werkzeug.security import generate_password_hash
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder=os.path.dirname(os.path.abspath(__file__)),
+            static_folder=os.path.dirname(os.path.abspath(__file__)))
 
 # =========================
 # DATABASE CONNECTION
@@ -20,7 +24,6 @@ def get_db_connection():
 def setup_database():
     conn = get_db_connection()
     cursor = conn.cursor()
-
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS guides (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -31,7 +34,6 @@ def setup_database():
         password VARCHAR(255)
     )
     """)
-
     conn.commit()
     cursor.close()
     conn.close()
@@ -40,20 +42,19 @@ def setup_database():
 # ROUTES
 # =========================
 
-# 👉 GUIDE FORM PAGE
+# GUIDE FORM PAGE
 @app.route('/')
 def guide_form():
     return render_template('register-guide.html')
 
-# 👉 FORM SUBMIT
+# FORM SUBMIT
 @app.route('/guide-create-profile', methods=['POST'])
 def guide_create():
-
     name = request.form.get('name')
     qualification = request.form.get('qualification')
     sector = request.form.get('sector')
     email = request.form.get('email')
-    password = request.form.get('password')
+    password = generate_password_hash(request.form.get('password'))
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -61,7 +62,9 @@ def guide_create():
     # EMAIL CHECK
     cursor.execute("SELECT * FROM guides WHERE email=%s", (email,))
     if cursor.fetchone():
-        return "<h3 style='color:red'>❌ Email already exists!</h3>"
+        cursor.close()
+        conn.close()
+        return "<h3 style='color:red'>❌ this Email is already registered!</h3><a href='/'>← go back</a>"
 
     # INSERT
     cursor.execute("""
@@ -75,12 +78,14 @@ def guide_create():
 
     return redirect(url_for('success'))
 
-# 👉 SUCCESS PAGE
+# SUCCESS PAGE
 @app.route('/success')
 def success():
     return """
-    <h1>🎉 Guide Profile Created Successfully!</h1>
-    <a href="/">Go Back</a>
+    <div style="font-family:sans-serif;text-align:center;padding:60px">
+      <h1 style="color:#2e7d32">🎉 Guide Profile created successfully!</h1>
+      <a href="/" style="color:#2e7d32">← New profile create</a>
+    </div>
     """
 
 # =========================
