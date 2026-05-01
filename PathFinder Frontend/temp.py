@@ -83,7 +83,7 @@ def get_posts():
         cursor = db.cursor(dictionary=True)
         # Fetch posts with usernames using a JOIN
         query = """
-            SELECT users.username, posts.content, posts.created_at 
+            SELECT posts.id, users.username, posts.content, posts.created_at 
             FROM posts 
             JOIN users ON posts.user_id = users.id 
             ORDER BY posts.created_at DESC
@@ -93,6 +93,39 @@ def get_posts():
         cursor.close()
         db.close()
         return jsonify(all_posts)
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+# --- NEW: Save Post Route ---
+@app.route('/save-post', methods=['POST'])
+def save_post():
+    post_id = request.form.get('post_id')
+    username = request.form.get('username')
+    
+    if not post_id or not username:
+        return jsonify({"status": "error", "message": "Missing data"}), 400
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor()
+
+        # Check if already saved to prevent duplicates
+        cursor.execute("SELECT * FROM saved_posts WHERE username = %s AND post_id = %s", (username, post_id))
+        existing = cursor.fetchone()
+        
+        if existing:
+            cursor.close()
+            db.close()
+            return jsonify({"status": "info", "message": "Post already saved!"})
+
+        # Insert into saved_posts table
+        cursor.execute("INSERT INTO saved_posts (username, post_id) VALUES (%s, %s)", (username, post_id))
+        db.commit()
+        
+        cursor.close()
+        db.close()
+        return jsonify({"status": "success", "message": "Post saved successfully!"})
+        
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

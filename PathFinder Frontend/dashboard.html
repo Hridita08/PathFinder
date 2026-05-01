@@ -38,6 +38,11 @@
                 <i class="fa fa-user"></i> Profile
             </li>
 
+            <!-- Saved Posts Option -->
+            <li onclick="window.location.href='saved_posts.html'">
+                <i class="fa fa-bookmark"></i> Saved Posts
+            </li>
+
             <li onclick="toggleDropdown()">
                 <i class="fa fa-graduation-cap"></i> Career Paths
                 <i class="fa fa-chevron-down arrow"></i>
@@ -62,7 +67,8 @@
         </div>
 
         <div id="feedArea">
-            </div>
+            <!-- Posts will be loaded here from script.js -->
+        </div>
     </main>
 </div>
 
@@ -80,7 +86,28 @@
         window.location.href="main.html";
     }
 
-    // Function to handle creating a post
+    // --- Save Post Function ---
+    function savePost(postId) {
+        const currentUsername = localStorage.getItem("username");
+
+        fetch('/save-post', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `post_id=${postId}&username=${encodeURIComponent(currentUsername)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Server connection failed.");
+        });
+    }
+
+    // --- Add Post Function ---
     function addPost() {
         const postInput = document.getElementById("postInput");
         const postContent = postInput.value;
@@ -91,7 +118,6 @@
             return;
         }
 
-        // Fetch API to send data to Flask backend
         fetch('/create-post', {
             method: 'POST',
             headers: {
@@ -102,9 +128,9 @@
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                postInput.value = ""; // Clear input
+                postInput.value = ""; 
                 alert("Post shared successfully!");
-                location.reload(); // Refresh to show new post
+                location.reload(); 
             } else {
                 alert("Error: " + data.message);
             }
