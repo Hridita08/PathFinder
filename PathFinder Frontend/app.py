@@ -41,14 +41,40 @@ def create_profile():
     cursor.close()
     conn.close()
     
-    # ✅ Ekhane 'login_page' likhun jate register korle login page-e niye jay
+   
     return redirect(url_for('login_page'))
 
-# Login route-ti nishchit korun
+
 @app.route('/login')
 def login_page():
     return render_template('login.html')
-
+# Registration guide
+@app.route('/create-guide-profile', methods=['POST'])
+def create_guide_profile():
+    # request.form theke data neya
+    data = (
+        request.form.get('name'), 
+        request.form.get('email'),
+        request.form.get('phone'), 
+        request.form.get('expertise'),
+        request.form.get('experience'), 
+        request.form.get('password')
+    )
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Guide table-e data insert
+    sql = "INSERT INTO guides (name, email, phone, expertise, experience, password) VALUES (%s, %s, %s, %s, %s, %s)"
+    
+    cursor.execute(sql, data)
+    conn.commit()  # Workbench-e save korbe
+    
+    cursor.close()
+    conn.close()
+    
+    # Registration sheshe login page-e niye jabe
+    return redirect(url_for('login_page'))
 # Main & Profile Routes
 @app.route('/')
 def index():
