@@ -1,94 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Profile | PathFinder</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile | PathFinder</title>
 
-<!-- CSS -->
-<link rel="stylesheet" href="style.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
 
-<!-- Font Awesome Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="student-page">
 
 <div class="profile-card">
 
-  <!-- LEFT IMAGE -->
-  <div class="profile-image">
-    <img src="icons/student.png" alt="Student Photo">
-  </div>
+    <!-- LEFT IMAGE -->
+    <div class="profile-image">
+        <img src="icons/student.png" alt="Student Photo">
+    </div>
 
-  <!-- RIGHT FORM -->
-  <div class="profile-form">
-    
-    <h2>Create <span>Student</span> Profile</h2>
+    <!-- RIGHT FORM -->
+    <div class="profile-form">
+        
+        <h2>Create <span>Student</span> Profile</h2>
 
-    <form onsubmit="submitForm(event)" autocomplete="off">
+        <!-- Action: Python route, Method: POST for security -->
+        <form action="/create-profile" method="POST" autocomplete="off">
 
-      <div class="input-box">
-        <i class="fa fa-user"></i>
-        <input type="text" placeholder="Student Name" required>
-      </div>
+            <div class="input-box">
+                <i class="fa fa-user"></i>
+                <input type="text" name="name" placeholder="Student Name" required>
+            </div>
 
-      <div class="input-box">
-        <i class="fa fa-id-card"></i>
-        <input type="text" placeholder="Student ID" required>
-      </div>
+            <div class="input-box">
+                <i class="fa fa-id-card"></i>
+                <input type="text" name="student_id" placeholder="Student ID" required>
+            </div>
 
-      <div class="input-box">
-        <i class="fa fa-building"></i>
-        <select required>
-          <option value="">Department</option>
-          <option>CE</option>
-          <option>CSE</option>
-          <option>EEE</option>
-          <option>ME</option>
-          <option>ICE</option>
-        </select>
-      </div>
+            <div class="input-box">
+                <i class="fa fa-building"></i>
+                <select name="dept" required>
+                    <option value="">Department</option>
+                    <option value="CE">CE</option>
+                    <option value="CSE">CSE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="ME">ME</option>
+                    <option value="ICE">ICE</option>
+                </select>
+            </div>
 
-      <div class="input-box">
-        <i class="fa fa-graduation-cap"></i>
-        <input type="text" placeholder="Batch (Overall)" autocomplete="off" required>
-      </div>
+            <div class="input-box">
+                <i class="fa fa-graduation-cap"></i>
+                <input type="text" name="batch" placeholder="Batch (Overall)" required>
+            </div>
 
-      <div class="input-box">
-        <i class="fa fa-envelope"></i>
-        <input type="email" placeholder="Email" autocomplete="off" required>
-      </div>
+            <div class="input-box">
+                <i class="fa fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
 
-      <div class="input-box">
-        <i class="fa fa-phone"></i>
-        <input type="tel" placeholder="Phone Number" autocomplete="off" required>
-      </div>
+            <div class="input-box">
+                <i class="fa fa-phone"></i>
+                <input type="tel" name="phone" placeholder="Phone Number" required>
+            </div>
 
-      <div class="input-box password-box">
-        <i class="fa fa-lock"></i>
-        <input type="password" id="password" placeholder="Password" autocomplete="off" required>
-        <span class="toggle-password" onclick="togglePassword()">
-          <i class="fa fa-eye"></i>
-        </span>
-      </div>
+            <div class="input-box password-box">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePassword()">
+                    <i class="fa fa-eye"></i>
+                </span>
+            </div>
 
-      <button type="submit" class="login-btn">Create Profile</button>
+            <button type="submit" class="login-btn">Create Profile</button>
 
-    </form>
-  </div>
+        </form>
+    </div>
 
 </div>
 
 <script>
-function submitForm(e){
-  e.preventDefault();
-  window.location.href = "home.html";
-}
-
+// Password toggle logic
 function togglePassword(){
-  let pass = document.getElementById("password");
-  pass.type = pass.type === "password" ? "text" : "password";
+    let pass = document.getElementById("password");
+    let icon = document.querySelector(".toggle-password i");
+    if (pass.type === "password") {
+        pass.type = "text";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        pass.type = "password";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
 }
 </script>
 
