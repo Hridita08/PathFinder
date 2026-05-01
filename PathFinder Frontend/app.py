@@ -1,17 +1,16 @@
 
 from flask import Flask
 from flask_mysqldb import MySQL
-
-from flask import request, jsonify
+from flask import request, jsonify, session
 import random
-
-
 
 # Flask app
 app = Flask(__name__)
 
 from flask_cors import CORS
 CORS(app)
+
+app.secret_key = 'pathfinder_secret_key'  
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -158,6 +157,60 @@ def verify():
     else:
         return jsonify({"status": "fail"})
     
+
+    
+    # ১. Message পাঠানো (Post এর Message button)
+    
+@app.route('/api/messages/send', methods=['POST'])
+def send_message():
+    data = request.json
+    sender_id = data.get('sender_id')   # frontend থেকে পাঠাবেন
+    receiver_id = data.get('receiver_id')
+    content = data.get('content')
+
+    if not sender_id:
+        return jsonify({'error': 'Login করুন'}), 401
+
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "INSERT INTO messages (sender_id, receiver_id, content) VALUES (%s, %s, %s)",
+        (sender_id, receiver_id, content)
+    )
+    mysql.connection.commit()
+    return jsonify({'success': True, 'message': 'Message পাঠানো হয়েছে'})
+
+
+# ২. Inbox দেখানো (Header এর message icon)
+@app.route('/api/messages/inbox/<int:user_id>', methods=['GET'])
+def get_inbox(user_id):
+    cur = mysql.connection.cursor()
+    cur.execute("""
+        SELECT m.id, m.content, m.is_read, m.created_at, u.name as sender_name
+        FROM messages m
+        JOIN users u ON m.sender_id = u.id
+        WHERE m.receiver_id = %s
+        ORDER BY m.created_at DESC
+    """, (user_id,))
+
+    rows = cur.fetchall()
+    columns = [col[0] for col in cur.description]
+    messages = [dict(zip(columns, row)) for row in rows]
+    return jsonify({'messages': messages})
+
+
+# ৩. Unread count (badge number এর জন্য)
+@app.route('/api/messages/unread-count/<int:user_id>', methods=['GET'])
+def unread_count(user_id):
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "SELECT COUNT(*) FROM messages WHERE receiver_id = %s AND is_read = FALSE",
+        (user_id,)
+    )
+    count = cur.fetchone()[0]
+    return jsonify({'count': count})
+
+# ==================== MESSAGE ROUTES END ====================
+
 
 # Run server
 if __name__ == '__main__':
