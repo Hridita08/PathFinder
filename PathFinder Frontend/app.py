@@ -31,7 +31,29 @@ def get_users():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM users")
     data = cur.fetchall()
-    # return str(data)
+    return str(data)
+
+    #password update er kaj
+
+   
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    name = data['name']
+    email = data['email']
+    password = data['password']
+
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT id, password FROM users WHERE email=%s AND name=%s", (email, name))
+    user = cur.fetchone()
+
+    if user is None:
+        return jsonify({"status": "fail", "message": "User not found!"})
+
+    if user[1] != password:
+        return jsonify({"status": "fail", "message": "Wrong password!"})
+
+    return jsonify({"status": "success", "user_id": user[0]})
     
 
 # profile GET
