@@ -5,25 +5,31 @@
 }
  
 function addPost(){
-    const input=document.getElementById("postInput");
-    const feed=document.getElementById("feedArea");
-    const username=localStorage.getItem("username");
+    const input = document.getElementById("postInput");
+    const feed = document.getElementById("feedArea");
+    const username = localStorage.getItem("username");
+    const userId = localStorage.getItem("user_id");
 
-    if(input.value.trim()==="") return;
+    if(input.value.trim() === "") return;
 
-    const post=document.createElement("div");
-    post.className="post";
-    post.innerHTML=`
+    const post = document.createElement("div");
+    post.className = "post";
+    post.innerHTML = `
         <strong>${username}</strong>
         <p>${input.value}</p>
-        <div style="margin-top:10px;color:#555">
+        <div style="margin-top:10px; color:#555">
             <i class="fa fa-comment"></i> Comment
             &nbsp;&nbsp;
             <i class="fa fa-share"></i> Share
+            &nbsp;&nbsp;
+            <i class="fa fa-paper-plane" 
+               style="cursor:pointer;"
+               onclick="openMessageModal(${userId}, '${username}')">
+            </i> Message
         </div>
     `;
     feed.prepend(post);
-    input.value="";
+    input.value = "";
 }
 
 function logout(){
@@ -150,6 +156,79 @@ if (data.includes("OTP")) {
 } else {
     alert("Failed to send OTP ❌");
 }
-  
 }
+  
+// ==================== MESSAGE FUNCTIONS ====================
+
+// ১. Post এর Message button এর জন্য
+function openMessageModal(receiverId, receiverName) {
+    const content = prompt(`${receiverName} কে message লিখুন:`);
+    if (!content) return;
+
+    const senderId = localStorage.getItem('user_id');
+
+    fetch('http://127.0.0.1:5000/api/messages/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            sender_id: senderId,
+            receiver_id: receiverId,
+            content: content
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert(data.message))
+    .catch(err => console.error('Error:', err));
+}
+
+// ২. Header inbox icon এর জন্য
+function loadInbox() {
+    const userId = localStorage.getItem('user_id');
+
+    fetch(`http://127.0.0.1:5000/api/messages/inbox/${userId}`)
+    .then(res => res.json())
+    .then(data => {
+        const messages = data.messages;
+        let html = '';
+
+        if (messages.length === 0) {
+            html = '<p>কোনো message নেই।</p>';
+        } else {
+            messages.forEach(msg => {
+                html += `
+                    <div style="border:1px solid #ddd; padding:10px; margin:5px 0; border-radius:8px;">
+                        <strong>${msg.sender_name}</strong>
+                        <span style="font-size:12px; color:gray;">${msg.created_at}</span>
+                        <p>${msg.content}</p>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('inbox-container').innerHTML = html;
+    })
+    .catch(err => console.error('Error:', err));
+}
+
+// ৩. Unread badge count (page load এ automatically চলবে)
+function loadUnreadCount() {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) return;
+
+    fetch(`http://127.0.0.1:5000/api/messages/unread-count/${userId}`)
+    .then(res => res.json())
+    .then(data => {
+        const badge = document.getElementById('msg-badge');
+        if (badge) badge.innerText = data.count;
+    })
+    .catch(err => console.error('Error:', err));
+}
+
+// Page load হলে unread count দেখাবে
+window.addEventListener('load', loadUnreadCount);
+
+// ==================== MESSAGE FUNCTIONS END ====================
+
+
+
 
