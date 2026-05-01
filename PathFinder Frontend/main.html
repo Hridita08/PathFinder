@@ -178,14 +178,14 @@
                     <div style="position:relative;">
                         <i class="fa fa-ellipsis-v three-dot" onclick="this.nextElementSibling.classList.toggle('active')"></i>
                         <div class="dropdown">
-                            <div onclick="alert('Post saved!')">Save Post</div>
+                           <div onclick="savePost(this)">Save Post</div>
                         </div>
                     </div>
                 </div>
                 <div class="post-text">Guidelines are here for your career success.</div>
                 <div class="post-card-actions">
-                    <div class="action-item"><i class="fa fa-comment"></i> Comment</div>
-                    <div class="action-item"><i class="fa fa-share"></i> Share</div>
+                    <div class="action-item" onclick="toggleCommentSection(this)"><i class="fa fa-comment"></i> Comment</div>
+                   <div class="action-item" onclick="sharePost('Check out this post on PathFinder!')"><i class="fa fa-share"></i> Share</div>
                     <div class="action-item"><i class="fa fa-paper-plane"></i> Message</div>
                 </div>
             </div>
@@ -255,7 +255,60 @@
         }
         el.parentElement.classList.remove('active');
     }
+    function toggleCommentSection(btn) {
+    const postCard = btn.closest('.post-card');
+    let commentBox = postCard.querySelector('.comment-box-container');
+    
+    if (!commentBox) {
+        const html = `
+            <div class="comment-box-container" style="padding: 10px; border-top: 1px solid #eee;">
+                <input type="text" placeholder="Write a comment..." style="width: 80%; padding: 5px; border-radius: 5px; border: 1px solid #ddd;">
+                <button onclick="addComment(this)" style="padding: 5px 10px; cursor: pointer;">Send</button>
+                <div class="comments-list" style="margin-top: 10px; font-size: 13px;"></div>
+            </div>`;
+        postCard.insertAdjacentHTML('beforeend', html);
+    } else {
+        commentBox.style.display = commentBox.style.display === 'none' ? 'block' : 'none';
+    }
+}
 
+function addComment(btn) {
+    const input = btn.previousElementSibling;
+    const list = btn.nextElementSibling;
+    if (input.value.trim() !== "") {
+        const comment = `<p style="background: #f0f2f5; padding: 5px; border-radius: 5px; margin: 5px 0;"><b>You:</b> ${input.value}</p>`;
+        list.innerHTML += comment;
+        input.value = "";
+    }
+}
+async function sharePost(text) {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: 'PathFinder Post',
+                text: text,
+                url: window.location.href
+            });
+        } catch (err) {
+            console.log("Error sharing:", err);
+        }
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+    }
+}
+    function savePost(btn) {
+    const postText = btn.closest('.post-card').querySelector('.post-text').innerText;
+    let savedPosts = JSON.parse(localStorage.getItem("savedPosts")) || [];
+    
+    if(!savedPosts.includes(postText)) {
+        savedPosts.push(postText);
+        localStorage.setItem("savedPosts", JSON.stringify(savedPosts));
+        alert("Post Saved Successfully!");
+    } else {
+        alert("Already saved!");
+    }
+}
     window.onclick = function(e) {
         if (!e.target.matches('.three-dot')) {
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
