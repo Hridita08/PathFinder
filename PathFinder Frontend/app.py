@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, jsonify, session
 import mysql.connector
 import base64
-
-app = Flask(__name__, template_folder=".")
+app = Flask(__name__, 
+            template_folder=".", 
+            static_folder=".", 
+            static_url_path='')
 app.secret_key = "your_secret_key"
 
 # Database Connection
