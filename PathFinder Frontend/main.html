@@ -11,7 +11,6 @@
 <!-- Top Navbar -->
 <header class="topbar">
 
-    <!-- Hamburger + Title -->
     <div class="menu-section">
         <i class="fa fa-bars menu-icon" onclick="goDashboard()"></i>
         <span class="title-text">Pathfinder</span>
@@ -24,15 +23,43 @@
 
     <div class="top-icons">
         <i class="fa fa-bell"></i>
-        <i class="fa fa-envelope"></i>
+
+        <!-- Message icon — click করলে inbox খুলবে -->
+        <span style="position:relative; cursor:pointer;" onclick="toggleInbox()">
+            <i class="fa fa-envelope"></i>
+            <span id="msg-badge" style="
+                position:absolute;
+                top:-8px; right:-8px;
+                background:red; color:white;
+                border-radius:50%;
+                font-size:11px;
+                padding:1px 5px;">0</span>
+        </span>
+
         <span id="userDisplay"></span>
         <button onclick="logout()">Logout</button>
     </div>
 </header>
 
-<div>
+<!-- Inbox dropdown — message icon click করলে এটা দেখাবে -->
+<div id="inbox-dropdown" style="
+    display:none;
+    position:absolute;
+    top:60px; right:20px;
+    width:320px;
+    max-height:400px;
+    overflow-y:auto;
+    background:white;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    z-index:999;
+    padding:10px;">
+    <h4 style="margin:0 0 10px 0;">📩 Inbox</h4>
+    <div id="inbox-container">Loading...</div>
+</div>
 
-    <!-- Main Content -->
+<div>
     <main class="content">
 
         <!-- Post Box -->
@@ -49,14 +76,23 @@
 </div>
 
 <script src="script.js"></script>
-
 <script>
 const username = localStorage.getItem("username");
 if(!username){ window.location.href="login.html"; }
-document.getElementById("userDisplay").innerText=username;
+document.getElementById("userDisplay").innerText = username;
 
 function goDashboard(){
-    window.location.href="dashboard.html";   
+    window.location.href="dashboard.html";
+}
+
+function toggleInbox() {
+    const dropdown = document.getElementById("inbox-dropdown");
+    if(dropdown.style.display === "none"){
+        dropdown.style.display = "block";
+        loadInbox();
+    } else {
+        dropdown.style.display = "none";
+    }
 }
 </script>
 </body>
