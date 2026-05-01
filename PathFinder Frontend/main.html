@@ -140,7 +140,6 @@
 <div class="sidebar" id="sidebar">
     <ul>
         <li onclick="location.href='main.html'"><i class="fa fa-home"></i> Home</li>
-        <li onclick="location.href='saved_posts.html'"><i class="fa fa-bookmark"></i> Saved Posts</li>
         <li onclick="toggleCareerDropdown()">
             <i class="fa fa-graduation-cap"></i> Career Path 
             <i class="fa fa-chevron-down" style="font-size: 10px; margin-left: auto;"></i>
@@ -152,6 +151,7 @@
         </ul>
 
         <li onclick="location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
+        <li onclick="location.href='saved_posts.html'"><i class="fa fa-bookmark"></i> Saved Posts</li>
         <li onclick="logout()" class="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
 </div>
@@ -205,7 +205,7 @@
     window.onload = function() {
         const storedName = localStorage.getItem("username");
         if (storedName) {
-            // Jey element-er moddhe nam thake (e.g., id="displayUserName")
+            
             const topName = document.getElementById("displayUserName");
             if(topName) topName.innerText = storedName;
         }
@@ -220,7 +220,6 @@
         const text = document.getElementById("postInput").value.trim();
         if(!text) return;
 
-        // 2. Ekhane localStorage theke namti ana hoyeche
         const currentUserName = localStorage.getItem("userName") || "Guest User";
         
         const postHTML = `
@@ -261,13 +260,13 @@
     }
     function openChatbot(btn) {
     const postCard = btn.closest('.post-card');
-    const authorName = postCard.querySelector('b').innerText; // পোস্টদাতার নাম
+    const authorName = postCard.querySelector('b').innerText; 
     const postText = postCard.querySelector('.post-text').innerText;
     
     const userMsg = prompt(`Send a message to ${authorName} about this post:`);
     
     if (userMsg) {
-        // মেসেজ অবজেক্ট তৈরি
+       
         const newMessage = {
             to: authorName,
             from: localStorage.getItem("userName") || "Guest User",
@@ -331,28 +330,27 @@ async function sharePost(text) {
         alert("Link copied to clipboard!");
     }
 }
-    function savePost(btn) {
+   function savePost(btn) {
     const postCard = btn.closest('.post-card');
-    const postData = {
-        author: postCard.querySelector('b').innerText,
-        text: postCard.querySelector('.post-text').innerText,
-        time: postCard.querySelector('small').innerText
-    };
+    const author = postCard.querySelector('b').innerText;
+    const text = postCard.querySelector('.post-text').innerText;
+    const time = postCard.querySelector('small').innerText;
 
-    let saved = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+    let savedPosts = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+
+    const isAlreadySaved = savedPosts.some(p => p.text === text && p.author === author);
     
-    // চেক করা হচ্ছে আগে থেকেই সেভ আছে কি না
-    if (!saved.some(p => p.text === postData.text)) {
-        saved.push(postData);
-        localStorage.setItem("pathfinder_saved", JSON.stringify(saved));
-        alert("Post saved to your profile!");
+    if (!isAlreadySaved) {
+        savedPosts.push({ author, text, time });
+        localStorage.setItem("pathfinder_saved", JSON.stringify(savedPosts));
+        alert("Post saved successfully!");
     } else {
-        alert("Post already saved.");
+        alert("This post is already in your saved list.");
     }
 }
 window.onload = function() {
     const inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
-    const chatList = document.getElementById("chatList"); // যেখানে মেসেজ দেখাবেন
+    const chatList = document.getElementById("chatList"); 
 
     inbox.forEach(msg => {
         chatList.innerHTML += `
