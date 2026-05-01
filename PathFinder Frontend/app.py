@@ -13,7 +13,47 @@ def get_db_connection():
         password="Hridita",
         database="pathfinder"
     )
+# Registration Student
+@app.route('/register-student')
+def student_form():
+    return render_template('register-student.html')
 
+@app.route('/create-profile', methods=['POST'])
+def create_profile():
+    data = (
+        request.form.get('name'), request.form.get('student_id'),
+        request.form.get('dept'), request.form.get('batch'),
+        request.form.get('email'), request.form.get('phone'),
+        request.form.get('password')
+    )
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    sql = "INSERT INTO students (name, student_id, department, batch, email, phone, password) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    cursor.execute(sql, data)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('profile_page'))
+
+@app.route('/register-guide')
+def guide_form():
+    return render_template('register-guide.html')
+
+@app.route('/create-guide-profile', methods=['POST'])
+def create_guide_profile():
+    data = (
+        request.form.get('name'), request.form.get('email'),
+        request.form.get('phone'), request.form.get('expertise'),
+        request.form.get('experience'), request.form.get('password')
+    )
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    sql = "INSERT INTO guides (name, email, phone, expertise, experience, password) VALUES (%s, %s, %s, %s, %s, %s)"
+    cursor.execute(sql, data)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('index'))
 @app.route('/')
 def index():
     return render_template('main.html')
