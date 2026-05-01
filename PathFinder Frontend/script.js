@@ -33,20 +33,15 @@ function addPost(){
 
     const post = document.createElement("div");
     post.className = "post";
-    post.innerHTML = `
-        <strong>${username}</strong>
-        <p>${input.value}</p>
-        <div style="margin-top:10px; color:#555">
-            <i class="fa fa-comment"></i> Comment
-            &nbsp;&nbsp;
-            <i class="fa fa-share"></i> Share
-            &nbsp;&nbsp;
-            <i class="fa fa-paper-plane" 
-               style="cursor:pointer;"
-               onclick="openMessageModal(${userId}, '${username}')">
-            </i> Message
-        </div>
-    `;
+ post.innerHTML = `
+    <strong>${username}</strong>
+    <p>${input.value}</p>
+    <div style="margin-top:10px; color:#555">
+        <i class="fa fa-comment"></i> Comment
+        &nbsp;&nbsp;
+        <i class="fa fa-share"></i> Share
+    </div>
+`;
     feed.prepend(post);
     input.value = "";
 }
