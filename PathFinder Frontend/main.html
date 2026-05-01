@@ -24,7 +24,6 @@
     <div class="top-icons">
         <i class="fa fa-bell"></i>
 
-        <!-- Message icon — click করলে inbox খুলবে -->
         <span style="position:relative; cursor:pointer;" onclick="toggleInbox()">
             <i class="fa fa-envelope"></i>
             <span id="msg-badge" style="
@@ -41,7 +40,7 @@
     </div>
 </header>
 
-<!-- Inbox dropdown — message icon click করলে এটা দেখাবে -->
+<!-- Inbox dropdown -->
 <div id="inbox-dropdown" style="
     display:none;
     position:absolute;
@@ -71,6 +70,28 @@
 
         <!-- Feed -->
         <div id="feedArea"></div>
+
+        <!-- System Admin post -->
+        <div class="post">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <img src="../PathFinder Frontend/icons/profile.png" 
+                     style="width:40px; height:40px; border-radius:50%;">
+                <strong>System Admin</strong>
+            </div>
+            <p>Guidelines are here for your career success.</p>
+            <div style="margin-top:10px; color:#555; display:flex; gap:20px;">
+                <span style="cursor:pointer;">
+                    <i class="fa fa-comment"></i> Comment
+                </span>
+                <span style="cursor:pointer;">
+                    <i class="fa fa-share"></i> Share
+                </span>
+                <span style="cursor:pointer;" 
+                      onclick="openMessageModal(1, 'System Admin')">
+                    <i class="fa fa-paper-plane"></i> Message
+                </span>
+            </div>
+        </div>
 
     </main>
 </div>
