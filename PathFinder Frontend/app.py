@@ -169,7 +169,7 @@ def send_message():
     content = data.get('content')
 
     if not sender_id:
-        return jsonify({'error': 'Login করুন'}), 401
+        return jsonify({'error': 'Complete login'}), 401
 
     cur = mysql.connection.cursor()
     cur.execute(
