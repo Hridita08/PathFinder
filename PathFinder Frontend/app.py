@@ -177,7 +177,7 @@ def send_message():
         (sender_id, receiver_id, content)
     )
     mysql.connection.commit()
-    return jsonify({'success': True, 'message': 'Message পাঠানো হয়েছে'})
+    return jsonify({'success': True, 'message': 'Message is sent successfully'})
 
 
 # ২. Inbox দেখানো (Header এর message icon)
