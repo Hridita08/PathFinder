@@ -107,14 +107,9 @@ function goDashboard(){
 }
 
 function toggleInbox() {
-    const dropdown = document.getElementById("inbox-dropdown");
-    if(dropdown.style.display === "none"){
-        dropdown.style.display = "block";
-        loadInbox();
-    } else {
-        dropdown.style.display = "none";
-    }
+    window.location.href = "inbox.html";
 }
+
 </script>
 </body>
 </html>
