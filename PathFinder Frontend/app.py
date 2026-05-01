@@ -185,18 +185,18 @@ def send_message():
 def get_inbox(user_id):
     cur = mysql.connection.cursor()
     cur.execute("""
-        SELECT m.id, m.content, m.is_read, m.created_at, u.name as sender_name
+        SELECT m.id, m.sender_id, m.receiver_id, m.content, m.is_read, m.created_at,
+               u.name as sender_name
         FROM messages m
         JOIN users u ON m.sender_id = u.id
-        WHERE m.receiver_id = %s
-        ORDER BY m.created_at DESC
-    """, (user_id,))
+        WHERE m.sender_id = %s OR m.receiver_id = %s
+        ORDER BY m.created_at ASC
+    """, (user_id, user_id))
 
     rows = cur.fetchall()
     columns = [col[0] for col in cur.description]
     messages = [dict(zip(columns, row)) for row in rows]
     return jsonify({'messages': messages})
-
 
 # ৩. Unread count (badge number এর জন্য)
 @app.route('/api/messages/unread-count/<int:user_id>', methods=['GET'])
