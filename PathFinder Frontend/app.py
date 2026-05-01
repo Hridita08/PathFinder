@@ -33,7 +33,7 @@ def get_users():
     data = cur.fetchall()
     return str(data)
 
-    #password update er kaj
+    #password login update er kaj
 
    
 @app.route('/login', methods=['POST'])
