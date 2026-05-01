@@ -186,9 +186,11 @@ def get_inbox(user_id):
     cur = mysql.connection.cursor()
     cur.execute("""
         SELECT m.id, m.sender_id, m.receiver_id, m.content, m.is_read, m.created_at,
-               u.name as sender_name
+               u1.name as sender_name,
+               u2.name as receiver_name
         FROM messages m
-        JOIN users u ON m.sender_id = u.id
+        JOIN users u1 ON m.sender_id = u1.id
+        JOIN users u2 ON m.receiver_id = u2.id
         WHERE m.sender_id = %s OR m.receiver_id = %s
         ORDER BY m.created_at ASC
     """, (user_id, user_id))
