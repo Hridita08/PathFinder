@@ -1,7 +1,26 @@
  console.log("JS LOADED");
- function loginUser(event) {
+ async function loginUser(event) {
     event.preventDefault();
-    window.location.href = "home.html";
+
+    const name = document.querySelector('input[name="name"]').value;
+    const email = document.querySelector('input[name="email"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+
+    const res = await fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await res.json();
+
+    if(data.status === "success"){
+        localStorage.setItem("user_id", data.user_id);   // ← user_id save
+        localStorage.setItem("username", name);           // ← username save
+        window.location.href = "main.html";
+    } else {
+        alert(data.message);
+    }
 }
  
 function addPost(){
