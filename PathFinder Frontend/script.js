@@ -124,7 +124,7 @@ async function verifyOTP(event) {
     if (data.status === "success") {
         alert("OTP Verified ✅");
         console.log("redirecting...");
-        window.location.href = "./new-password.html"; // now redirect
+       window.location.href = "./new-password.html?email=" + email; // now redirect
     } else {
         alert("Wrong OTP ❌");
     }
