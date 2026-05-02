@@ -3,14 +3,13 @@ import os
 import mysql.connector
 
 # --- Path Configuration ---
-# This ensures Flask looks into 'PathFinder Frontend' for HTML, CSS, and JS
 base_dir = os.path.dirname(os.path.abspath(__file__))
 frontend_dir = os.path.join(os.path.dirname(base_dir), 'PathFinder Frontend')
 
 app = Flask(__name__, 
             template_folder=frontend_dir, 
             static_folder=frontend_dir,
-            static_url_path='') # static_url_path='' helps serve files from the root of frontend_dir
+            static_url_path='')
 
 app.secret_key = 'pathfinder_secret_key'
 
@@ -29,6 +28,7 @@ def get_db_connection():
 def home():
     return render_template('login.html')
 
+# ---------------- LOGIN ----------------
 @app.route('/login', methods=['POST'])
 def login():
     email = request.form.get('email')
@@ -42,11 +42,62 @@ def login():
     db.close()
     
     if user:
-        # Passes the dynamic username to main.html
         return render_template('main.html', username=user['username'])
     
     return render_template('login.html', error="Invalid Credentials")
 
+# ---------------- FORGOT PASSWORD ----------------
+
+# Step 1: Email input
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email')
+
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT security_question FROM users WHERE email=%s", (email,))
+        user = cursor.fetchone()
+
+        cursor.close()
+        db.close()
+
+        if user:
+            return render_template('forgot_password_verify.html',
+                                   question=user['security_question'],
+                                   email=email)
+        else:
+            return render_template('forgot_password.html', error="Email not found!")
+
+    return render_template('forgot_password.html')
+
+
+# Step 2: Verify answer + reset password
+@app.route('/verify-answer', methods=['POST'])
+def verify_answer():
+    email = request.form.get('email')
+    answer = request.form.get('answer')
+    new_password = request.form.get('new_password')
+
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM users WHERE email=%s AND security_answer=%s", (email, answer))
+    user = cursor.fetchone()
+
+    if user:
+        cursor.execute("UPDATE users SET password=%s WHERE email=%s", (new_password, email))
+        db.commit()
+        message = "Password reset successful!"
+    else:
+        message = "Wrong answer!"
+
+    cursor.close()
+    db.close()
+
+    return message
+
+# ---------------- CREATE POST ----------------
 @app.route('/create-post', methods=['POST'])
 def create_post():
     content = request.form.get('post_content')
@@ -59,13 +110,11 @@ def create_post():
         db = get_db_connection()
         cursor = db.cursor()
         
-        # Identify the user ID from the username provided by the frontend
         cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
         user_result = cursor.fetchone()
         
         if user_result:
             user_id = user_result[0]
-            # Insert new post into database
             cursor.execute("INSERT INTO posts (user_id, content) VALUES (%s, %s)", (user_id, content))
             db.commit()
             cursor.close()
@@ -76,12 +125,12 @@ def create_post():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+# ---------------- GET POSTS ----------------
 @app.route('/get-posts', methods=['GET'])
 def get_posts():
     try:
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
-        # Fetch posts with usernames using a JOIN
         query = """
             SELECT posts.id, users.username, posts.content, posts.created_at 
             FROM posts 
@@ -96,7 +145,7 @@ def get_posts():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# --- NEW: Save Post Route ---
+# ---------------- SAVE POST ----------------
 @app.route('/save-post', methods=['POST'])
 def save_post():
     post_id = request.form.get('post_id')
@@ -109,26 +158,24 @@ def save_post():
         db = get_db_connection()
         cursor = db.cursor()
 
-        # Check if already saved to prevent duplicates
-        cursor.execute("SELECT * FROM saved_posts WHERE username = %s AND post_id = %s", (username, post_id))
+        cursor.execute("SELECT * FROM saved_posts WHERE username=%s AND post_id=%s", (username, post_id))
         existing = cursor.fetchone()
         
         if existing:
             cursor.close()
             db.close()
-            return jsonify({"status": "info", "message": "Post already saved!"})
+            return jsonify({"status": "info", "message": "Already saved!"})
 
-        # Insert into saved_posts table
         cursor.execute("INSERT INTO saved_posts (username, post_id) VALUES (%s, %s)", (username, post_id))
         db.commit()
         
         cursor.close()
         db.close()
-        return jsonify({"status": "success", "message": "Post saved successfully!"})
+        return jsonify({"status": "success", "message": "Saved!"})
         
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+
 if __name__ == '__main__':
-    # Run the Flask app
     app.run(debug=True)
