@@ -130,15 +130,14 @@ async function loadConversations(){
 
     const map = {};
     msgs.forEach(m => {
-      // অন্য user এর id বের করো
       const otherUserId = m.sender_id === currentUserId ? m.receiver_id : m.sender_id;
-      const otherName = m.sender_id === currentUserId ? 'You → ' + m.sender_name : m.sender_name;
+      const otherName = m.sender_id === currentUserId ? m.receiver_name : m.sender_name;
 
       if(!map[otherUserId] || new Date(m.created_at) > new Date(map[otherUserId].created_at)){
         map[otherUserId] = {
           ...m,
           other_user_id: otherUserId,
-          other_user_name: m.sender_id === currentUserId ? m.receiver_name || 'User #'+m.receiver_id : m.sender_name
+          other_user_name: otherName
         };
       }
     });
@@ -157,10 +156,11 @@ function renderConversations(list){
     return;
   }
   el.innerHTML = list.map(m => `
-    <div class="conv-item ${activeConvUserId === m.sender_id ? 'active':''}" onclick="openChat(${m.sender_id}, '${m.sender_name}')">
-      <div class="avatar" style="background:${getColor(m.sender_id)}">${getInitials(m.sender_name)}</div>
+    <div class="conv-item ${activeConvUserId === m.other_user_id ? 'active':''}" 
+         onclick="openChat(${m.other_user_id}, '${m.other_user_name}')">
+      <div class="avatar" style="background:${getColor(m.other_user_id)}">${getInitials(m.other_user_name)}</div>
       <div class="conv-info">
-        <div class="conv-name">${m.sender_name}</div>
+        <div class="conv-name">${m.other_user_name}</div>
         <div class="conv-preview">${m.content}</div>
       </div>
       <div class="conv-meta">
@@ -173,27 +173,30 @@ function renderConversations(list){
 
 function filterConversations(){
   const q = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = conversations.filter(c => c.sender_name.toLowerCase().includes(q) || c.content.toLowerCase().includes(q));
+  const filtered = conversations.filter(c => c.other_user_name.toLowerCase().includes(q));
   renderConversations(filtered);
 }
 
-async function openChat(userId, userName){
-  activeConvUserId = userId;
+async function openChat(otherUserId, otherUserName){
+  activeConvUserId = otherUserId;
   renderConversations(conversations);
 
   const chatArea = document.getElementById('chatArea');
   chatArea.innerHTML = `
     <div class="chat-header">
-      <div class="avatar" style="background:${getColor(userId)}">${getInitials(userName)}</div>
+      <div class="avatar" style="background:${getColor(otherUserId)}">${getInitials(otherUserName)}</div>
       <div class="info">
-        <div class="name">${userName}</div>
+        <div class="name">${otherUserName}</div>
         <div class="status">Pathfinder Member</div>
       </div>
     </div>
     <div class="messages" id="messageList"><div class="loading">Loading...</div></div>
     <div class="chat-input-area">
-      <input type="text" id="msgInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMsg(${userId})">
-      <button class="send-btn" onclick="sendMsg(${userId})"><i class="fa fa-paper-plane"></i></button>
+      <input type="text" id="msgInput" placeholder="Type a message..." 
+             onkeydown="if(event.key==='Enter') sendMsg(${otherUserId})">
+      <button class="send-btn" onclick="sendMsg(${otherUserId})">
+        <i class="fa fa-paper-plane"></i>
+      </button>
     </div>
   `;
 
@@ -201,15 +204,16 @@ async function openChat(userId, userName){
     const res = await fetch(`http://127.0.0.1:5000/api/messages/inbox/${currentUserId}`);
     const data = await res.json();
     const msgs = (data.messages || []).filter(m => 
-    m.sender_id === userId || m.receiver_id === userId
-);
-renderMessages(msgs, userId);
+      (m.sender_id === currentUserId && m.receiver_id === otherUserId) ||
+      (m.sender_id === otherUserId && m.receiver_id === currentUserId)
+    );
+    renderMessages(msgs);
   } catch(e){
-    document.getElementById('messageList').innerHTML = '<div class="loading">Could not load messages.</div>';
+    document.getElementById('messageList').innerHTML = '<div class="loading">Could not load.</div>';
   }
 }
 
-function renderMessages(msgs, otherUserId){
+function renderMessages(msgs){
   const el = document.getElementById('messageList');
   if(!el) return;
   if(msgs.length === 0){
