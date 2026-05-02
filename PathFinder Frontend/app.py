@@ -75,6 +75,36 @@ def create_guide_profile():
     
     # Registration sheshe login page-e niye jabe
     return redirect(url_for('login_page'))
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    
+    # Students table check
+    cursor.execute("SELECT * FROM students WHERE email=%s AND password=%s", (email, password))
+    user = cursor.fetchone()
+    
+    # User na pele Guides table check
+    if not user:
+        cursor.execute("SELECT * FROM guides WHERE email=%s AND password=%s", (email, password))
+        user = cursor.fetchone()
+    
+    cursor.close()
+    db.close()
+    
+    if user:
+        # User-er information session-e save kora
+        session['user_id'] = user.get('id')
+        session['user_name'] = user.get('name')
+        
+        # Login success hole main page-e niye jabe
+        return redirect(url_for('index'))
+    
+    # Login fail hole abar login page-e back korbe error shoho
+    return render_template('login.html', error="Invalid Email or Password")
 # Main & Profile Routes
 @app.route('/')
 def index():
