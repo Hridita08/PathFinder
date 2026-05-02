@@ -105,11 +105,41 @@ def login():
     
     # Login fail hole abar login page-e back korbe error shoho
     return render_template('login.html', error="Invalid Email or Password")
+# --- Resource Search Route ---
+@app.route('/search')
+def search():
+    # User-er query input neya
+    query = request.args.get('query', '').strip()
+
+    if not query:
+        # Jodi query khali thake, search-result page-e khali list pathabe
+        return render_template('search-result.html', results=[], query=query)
+
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # SQL Query: resources table theke name ba sector onujayi search
+        sql = "SELECT name, sector, description, link FROM resources WHERE name LIKE %s OR sector LIKE %s"
+        
+        search_term = f"%{query}%"
+        cursor.execute(sql, (search_term, search_term))
+        results = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        # Search Result page-e data pathano
+        return render_template('search-result.html', results=results, query=query)
+
+    except Exception as e:
+        print(f"Database Error: {e}")
+        return "An error occurred while searching. Please check if 'resources' table exists."
 # Main & Profile Routes
 @app.route('/')
 def index():
-    return render_template('main.html')
-
+    user_name = session.get('user_name', 'Guest') 
+    return render_template('main.html', user_name=user_name)
 @app.route('/profile')
 def profile_page():
     return render_template('own_profile.html')

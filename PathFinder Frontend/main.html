@@ -122,19 +122,33 @@
         <i class="fa fa-bars menu-icon" onclick="toggleSidebar()"></i>
         <span class="title-text">Pathfinder</span>
     </div>
-    <div class="search-box">
-        <i class="fa fa-search"></i>
-        <input type="text" placeholder="Search resources...">
+    <!-- Ei structure-ti thakle enter dile kaj korbe -->
+<form action="/search" method="GET" style="display: flex; gap: 5px; max-width: 500px;">
+    <input type="text" name="query" placeholder="Search..." 
+           style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+    
+    <button type="submit" 
+            style="background-color: #1f4e3b; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+        <i class="fa fa-search"></i> Search
+    </button>
+</form>
+    <div class="top-right" style="display: flex; align-items: center; gap: 15px;">
+    <div class="icon-btn"><i class="fa fa-bell"></i><span class="badge">3</span></div>
+    <div class="icon-btn" onclick="location.href='messages.html'">
+        <i class="fa fa-envelope"></i>
+        <span class="badge">2</span>
     </div>
-    <div class="top-right">
-        <div class="icon-btn"><i class="fa fa-bell"></i><span class="badge">3</span></div>
-        <div class="icon-btn" onclick="location.href='messages.html'">
-    <i class="fa fa-envelope"></i>
-    <span class="badge">2</span>
+    
+    <!-- User name section - design thik rakhar jonno flex use kora hoyeche -->
+    <div style="display: flex; flex-direction: column; line-height: 1.2;">
+        <small style="font-size: 10px; color: gray;">Welcome,</small>
+        <span class="user-display-name" id="displayUserName" style="font-weight: bold;">
+            {{ user_name if user_name else 'Guest User' }}
+        </span>
+    </div>
+    
+    <img src="icons/profile.png" class="profile-img" onclick="location.href='own_profile.html'" style="cursor: pointer; width: 40px; border-radius: 50%;">
 </div>
-        <span class="user-display-name" id="displayUserName">Guest User</span>
-        <img src="icons/profile.png" class="profile-img" onclick="location.href='own_profile.html'">
-    </div>
 </header>
 
 <div class="sidebar" id="sidebar">
