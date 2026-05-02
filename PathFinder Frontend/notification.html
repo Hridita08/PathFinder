@@ -1,109 +1,268 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Notification</title>
-
+    <meta charset="UTF-8">
+    <title>Pathfinder</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            margin: 0;
-            font-family: Arial;
-            background: #eef2f7;
+            font-family: Arial, sans-serif;
+            background: #ffffff;
         }
 
-        /* NAVBAR */
         .navbar {
             display: flex;
             justify-content: space-between;
-            padding: 15px 20px;
+            align-items: center;
+            padding: 0 24px;
+            height: 60px;
             background: #5f6f86;
             color: white;
         }
 
-        .logo {
-            font-weight: bold;
-        }
+        .logo { font-weight: bold; font-size: 18px; }
 
-        .right {
+        .nav-right {
             display: flex;
             align-items: center;
+            gap: 14px;
         }
 
-        /* NOTIFICATION */
-        .notification {
-            position: relative;
-            margin-right: 20px;
+        /* Bell */
+        .notif-wrapper { position: relative; }
+
+        .bell-btn {
+            background: none;
+            border: none;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 22px;
+            position: relative;
+            padding: 4px;
         }
 
         .badge {
+            position: absolute;
+            top: -4px;
+            right: -6px;
             background: red;
-            border-radius: 50%;
-            padding: 3px 7px;
-            font-size: 12px;
             color: white;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* DROPDOWN */
+        .badge.hidden { display: none; }
+
+        /* Dropdown */
         .dropdown {
             display: none;
             position: absolute;
-            top: 30px;
+            top: calc(100% + 10px);
             right: 0;
+            width: 280px;
             background: white;
-            color: black;
-            width: 220px;
+            border: 1px solid #ddd;
             border-radius: 10px;
-            box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
-            padding: 10px;
-            z-index: 1000;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            z-index: 9999;
+            overflow: hidden;
         }
 
-        .notification:hover .dropdown {
-            display: block;
+        .dropdown.open { display: block; }
+
+        .dropdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
         }
 
-        .dropdown p {
-            border-bottom: 1px solid #ddd;
-            padding: 6px;
-            margin: 0;
+        .mark-all-btn {
+            background: none;
+            border: none;
+            color: #5f6f86;
+            font-size: 12px;
+            cursor: pointer;
         }
 
-        /* PROFILE */
-        .profile {
+        .mark-all-btn:hover { text-decoration: underline; }
+
+        .notif-list { max-height: 300px; overflow-y: auto; }
+
+        .notif-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 11px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .notif-item:last-child { border-bottom: none; }
+
+        .notif-item.unread { background: #f0f4ff; }
+        .notif-item:hover { background: #f5f5f5; }
+        .notif-item.unread:hover { background: #e8eeff; }
+
+        .notif-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #5f6f86;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .notif-item.read .notif-dot { background: transparent; }
+
+        .notif-msg {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .notif-item.read .notif-msg { color: #888; }
+
+        .notif-time {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        .empty-state {
+            padding: 24px;
+            text-align: center;
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        /* Profile */
+        .profile-btn {
             background: #3b4a5a;
-            padding: 5px 12px;
+            color: white;
+            border: none;
             border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 13px;
         }
     </style>
-
 </head>
-
 <body>
 
 <div class="navbar">
-
     <div class="logo">Pathfinder</div>
+    <div class="nav-right">
 
-    <div class="right">
+        <div class="notif-wrapper">
+            <button class="bell-btn" onclick="toggleDropdown()" id="bellBtn">
+                🔔
+                <span class="badge hidden" id="badge">0</span>
+            </button>
 
-        <!-- 🔔 Notification -->
-        <div class="notification">
-            🔔 <span class="badge">{{ count }}</span>
-
-            <div class="dropdown">
-                {% for n in notifications %}
-                    <p>{{ n.message }}</p>
-                {% endfor %}
+            <div class="dropdown" id="notifDropdown">
+                <div class="dropdown-header">
+                    <span>Notifications</span>
+                    <button class="mark-all-btn" onclick="markAllRead()">Mark all read</button>
+                </div>
+                <div class="notif-list" id="notifList">
+                    <div class="empty-state">No notifications</div>
+                </div>
             </div>
         </div>
 
-        <!-- 👤 Profile -->
-        <div class="profile">👤 User</div>
-
+        <button class="profile-btn">👤 User</button>
     </div>
-
 </div>
+
+
+<script>
+    let isOpen = false;
+    let lastCount = 0;
+
+    function toggleDropdown() {
+        isOpen = !isOpen;
+        document.getElementById('notifDropdown').classList.toggle('open', isOpen);
+        if (isOpen) loadNotifications();
+        if (isOpen) setTimeout(() => document.addEventListener('click', outsideClick), 10);
+    }
+
+    function outsideClick(e) {
+        if (!document.querySelector('.notif-wrapper').contains(e.target)) {
+            isOpen = false;
+            document.getElementById('notifDropdown').classList.remove('open');
+            document.removeEventListener('click', outsideClick);
+        }
+    }
+
+    function loadNotifications() {
+        fetch('/api/notifications?limit=5')
+            .then(r => r.json())
+            .then(data => {
+                renderList(data.notifications);
+                updateBadge(data.unread_count);
+            });
+    }
+
+    function renderList(notifications) {
+        const list = document.getElementById('notifList');
+        if (!notifications.length) {
+            list.innerHTML = `<div class="empty-state">No notifications</div>`;
+            return;
+        }
+        list.innerHTML = notifications.map(n => `
+            <div class="notif-item ${n.is_read ? 'read' : 'unread'}" onclick="markRead(${n.id}, this)">
+                <span class="notif-dot"></span>
+                <div>
+                    <div class="notif-msg">${n.message}</div>
+                    <div class="notif-time">${n.time_ago}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function updateBadge(count) {
+        const badge = document.getElementById('badge');
+        badge.textContent = count;
+        badge.classList.toggle('hidden', count === 0);
+        lastCount = count;
+    }
+
+    function markRead(id, el) {
+        if (el.classList.contains('read')) return;
+        fetch(`/api/notifications/read/${id}`, { method: 'POST' })
+            .then(() => loadNotifications());
+    }
+
+    function markAllRead() {
+        fetch('/api/notifications/read-all', { method: 'POST' })
+            .then(() => loadNotifications());
+    }
+
+    // Poll every 10s
+    function poll() {
+        fetch('/api/notifications/count')
+            .then(r => r.json())
+            .then(data => {
+                updateBadge(data.unread_count);
+                if (isOpen) loadNotifications();
+            }).catch(() => {});
+    }
+
+    poll();
+    setInterval(poll, 10000);
+</script>
 
 </body>
 </html>
