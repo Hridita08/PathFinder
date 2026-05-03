@@ -4,7 +4,7 @@ import os
 
 # --- Path Configuration ---
 base_dir = os.path.dirname(os.path.abspath(__file__))
-# Frontend folder configuration
+# Pathfinder Career Guidance System project-er frontend folder path
 frontend_dir = os.path.join(os.path.dirname(base_dir), 'PathFinder Frontend')
 
 app = Flask(__name__, 
@@ -19,7 +19,7 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="1234",  # Apnar database password
+        password="1234",  # Apnar MySQL password
         database="pathfinder_db"
     )
 
@@ -46,7 +46,7 @@ def login():
             session['username'] = user['username']
             cursor.close()
             db.close()
-            return render_template('main.html', username=user['username'])
+            return redirect(url_for('home'))
         
         cursor.close()
         db.close()
@@ -54,30 +54,25 @@ def login():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# --- Post Feature ---
-
 @app.route('/create-post', methods=['POST'])
 def create_post():
-    content = request.form.get('post_content')
-    username = request.form.get('username')
+    if 'user_id' not in session:
+        return jsonify({"status": "error", "message": "Unauthorized"}), 401
     
-    if not content or not username:
-        return jsonify({"status": "error", "message": "Content or username missing"}), 400
-
+    content = request.form.get('post_content')
+    user_id = session['user_id']
+    
+    if not content:
+        return jsonify({"status": "error", "message": "Content is empty"}), 400
+    
     try:
         db = get_db_connection()
         cursor = db.cursor()
-        cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
-        result = cursor.fetchone()
-        
-        if result:
-            user_id = result[0]
-            cursor.execute("INSERT INTO posts (user_id, content) VALUES (%s, %s)", (user_id, content))
-            db.commit()
-            cursor.close()
-            db.close()
-            return jsonify({"status": "success"})
-        return jsonify({"status": "error", "message": "User not found"}), 404
+        cursor.execute("INSERT INTO posts (user_id, content) VALUES (%s, %s)", (user_id, content))
+        db.commit()
+        cursor.close()
+        db.close()
+        return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -86,6 +81,7 @@ def get_posts():
     try:
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
+        # JOIN babohar kora hoyeche jeno username shoho post ashe
         cursor.execute("""
             SELECT posts.id, users.username, posts.content, posts.created_at 
             FROM posts 
@@ -99,22 +95,20 @@ def get_posts():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# --- Comment Feature ---
-
 @app.route('/add-comment', methods=['POST'])
 def add_comment():
-    post_id = request.form.get('post_id')
-    username = request.form.get('username')
-    comment_text = request.form.get('comment_text')
+    if 'user_id' not in session:
+        return jsonify({"status": "error", "message": "Unauthorized"}), 401
     
-    if not comment_text or not post_id or not username:
-        return jsonify({"status": "error", "message": "Missing data"}), 400
-
+    post_id = request.form.get('post_id')
+    content = request.form.get('comment_text')
+    username = session.get('username')
+    
     try:
         db = get_db_connection()
         cursor = db.cursor()
         cursor.execute("INSERT INTO comments (post_id, username, content) VALUES (%s, %s, %s)", 
-                       (post_id, username, comment_text))
+                       (post_id, username, content))
         db.commit()
         cursor.close()
         db.close()
@@ -127,7 +121,7 @@ def get_comments(post_id):
     try:
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT username, content FROM comments WHERE post_id = %s ORDER BY id ASC", (post_id,))
+        cursor.execute("SELECT id, username, content FROM comments WHERE post_id = %s ORDER BY id ASC", (post_id,))
         comments = cursor.fetchall()
         cursor.close()
         db.close()
@@ -135,26 +129,19 @@ def get_comments(post_id):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# --- Share & Save Features ---
-
-@app.route('/share-post', methods=['POST'])
-def share_post():
+@app.route('/edit-comment', methods=['POST'])
+def edit_comment():
     data = request.get_json()
-    post_id = data.get('post_id')
-    # Optional: Update share count in database if column exists
-    return jsonify({"status": "success", "message": "Post shared"})
-
-@app.route('/save-post', methods=['POST'])
-def save_post():
-    post_id = request.form.get('post_id')
-    username = request.form.get('username')
+    comment_id = data.get('id')
+    new_content = data.get('content')
+    
+    if not comment_id or not new_content:
+        return jsonify({"status": "error", "message": "Data missing"}), 400
     
     try:
         db = get_db_connection()
         cursor = db.cursor()
-        # Query to save post link to user profile (assuming 'saved_posts' table exists)
-        # Table structure: id, username, post_id
-        cursor.execute("INSERT INTO saved_posts (username, post_id) VALUES (%s, %s)", (username, post_id))
+        cursor.execute("UPDATE comments SET content = %s WHERE id = %s", (new_content, comment_id))
         db.commit()
         cursor.close()
         db.close()
@@ -168,4 +155,5 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
+    # Pathfinder Career Guidance System development mode
     app.run(debug=True)
