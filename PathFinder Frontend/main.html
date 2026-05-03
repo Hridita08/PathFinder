@@ -16,27 +16,27 @@
     }
 
     body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); overflow-x: hidden; }
-    /* Career Dropdown Style */
-.career-dropdown {
-    display: none; /* Prothome hidden thakbe */
-    background: rgba(0, 0, 0, 0.2);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.career-dropdown li {
-    padding: 10px 25px 10px 60px !important; /* Left side-e ektu beshi jayga */
-    font-size: 14px;
-    color: #ccc;
-    transition: 0.3s;
-}
-.career-dropdown li:hover {
-    color: var(--accent-green) !important;
-    background: transparent !important;
-}
-.career-dropdown.show {
-    display: block; /* Click korle eita show korbe */
-}
+
+    .career-dropdown {
+        display: none; 
+        background: rgba(0, 0, 0, 0.2);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .career-dropdown li {
+        padding: 10px 25px 10px 60px !important; 
+        font-size: 14px;
+        color: #ccc;
+        transition: 0.3s;
+    }
+    .career-dropdown li:hover {
+        color: var(--accent-green) !important;
+        background: transparent !important;
+    }
+    .career-dropdown.show {
+        display: block; 
+    }
     .topbar {
         background: var(--topbar-bg); height: 60px; padding: 0 20px;
         display: flex; justify-content: space-between; align-items: center;
@@ -116,7 +116,6 @@
     .comment-input-area input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
     .comment-input-area button { background: var(--sidebar-green); color: white; border: none; padding: 5px 15px; border-radius: 15px; cursor: pointer; }
 
-    /* New Comment List Style */
     .comment-display-list {
         background: #f8f9fa;
         border-radius: 8px;
@@ -170,6 +169,7 @@
         <li onclick="logout()" class="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
 </div>
+
 <div class="content-wrapper" id="mainContent">
     <div class="post-container">
         <div class="post-box">
@@ -187,7 +187,7 @@
         </div>
 
         <div id="feed">
-            <!-- Posts will be loaded here dynamically -->
+            <!-- Posts loaded dynamically -->
         </div>
     </div>
 </div>
@@ -212,7 +212,6 @@
         document.getElementById("mainContent").classList.toggle("shifted");
     }
 
-    // --- Backend Connection: Load Posts ---
     function loadPosts() {
         fetch('/get-posts')
             .then(res => res.json())
@@ -237,9 +236,7 @@
                             </div>
                             <div class="post-text">${post.content}</div>
                             
-                            <!-- New: Comment Display Section -->
                             <div class="comment-display-list" id="comment-list-${post.id}">
-                                <!-- Comments will be loaded here -->
                             </div>
 
                             <div class="post-card-actions">
@@ -254,21 +251,19 @@
                         </div>
                     `;
                     feed.insertAdjacentHTML('beforeend', postHTML);
-                    
-                    // Protiti post load hobar por tar comment gulo load koro
                     loadComments(post.id);
                 });
             })
             .catch(err => console.error("Error loading posts:", err));
     }
 
-    // --- New: Load Comments for each post ---
     function loadComments(postId) {
         fetch(`/get-comments/${postId}`)
             .then(res => res.json())
             .then(comments => {
                 const commentContainer = document.getElementById(`comment-list-${postId}`);
-                commentContainer.innerHTML = ""; // Purano gulo clear koro
+                if(!commentContainer) return;
+                commentContainer.innerHTML = ""; 
                 
                 if (comments.length > 0) {
                     comments.forEach(comment => {
@@ -285,7 +280,6 @@
             .catch(err => console.error("Error loading comments:", err));
     }
 
-    // --- Backend Connection: Create Post ---
     function addNewPost() {
         const text = document.getElementById("postInput").value.trim();
         const username = localStorage.getItem("username");
@@ -312,15 +306,12 @@
         .then(data => {
             if(data.status === "success") {
                 document.getElementById("postInput").value = "";
-                loadPosts(); // Refresh feed
+                loadPosts();
             } else {
                 alert("Post failed: " + data.message);
             }
         })
-        .catch(err => {
-            console.error("Error:", err);
-            alert("Could not connect to server.");
-        });
+        .catch(err => alert("Could not connect to server."));
     }
 
     function toggleCommentInput(postId) {
@@ -328,7 +319,6 @@
         area.style.display = area.style.display === "none" ? "flex" : "none";
     }
 
-    // --- Submit Comment and Refresh Comment List ---
     function submitComment(postId) {
         const input = document.getElementById(`input-${postId}`);
         const content = input.value.trim();
@@ -341,17 +331,21 @@
 
         if(!content) return;
 
+        const formData = new FormData();
+        formData.append('post_id', postId);
+        formData.append('username', username);
+        formData.append('comment_text', content); 
+
         fetch('/add-comment', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ post_id: postId, username: username, content: content })
+            body: formData
         })
         .then(res => res.json())
         .then(data => {
             if(data.status === "success") {
                 input.value = "";
                 toggleCommentInput(postId);
-                loadComments(postId); // Comment post hole shudhu oi post-er list refresh koro
+                loadComments(postId); 
             } else {
                 alert("Comment failed: " + data.message);
             }
