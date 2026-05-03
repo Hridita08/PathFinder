@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import mysql.connector
 import base64
+import random
 
 app = Flask(__name__, 
             template_folder=".", 
             static_folder=".", 
             static_url_path='')
 app.secret_key = "your_secret_key"
-
+otp_storage = {}
 # Database Connection
 def get_db_connection():
     return mysql.connector.connect(
@@ -17,7 +18,9 @@ def get_db_connection():
         database="pathfinder", #
         buffered=True 
     )
-
+@app.route('/')
+def start_page():
+    return render_template('index.html')
 # Registration Student
 @app.route('/register-student')
 def student_form():
@@ -102,8 +105,7 @@ def login():
         session['user_name'] = user.get('name')
         
         # Login success hole main page-e niye jabe
-        return redirect(url_for('index'))
-    
+        return redirect(url_for('main_dashboard'))
     # Login fail hole abar login page-e back korbe error shoho
     return render_template('login.html', error="Invalid Email or Password")
 #forget-password page
@@ -119,10 +121,9 @@ def send_reset_link():
         db = get_db_connection()
         cursor = db.cursor(dictionary=True)
         
-        # Database check logic...
+        # ১. ইমেইলটি ডাটাবেসে আছে কিনা চেক করা
         cursor.execute("SELECT * FROM students WHERE email=%s", (email,))
         user = cursor.fetchone()
-        
         if not user:
             cursor.execute("SELECT * FROM guides WHERE email=%s", (email,))
             user = cursor.fetchone()
@@ -131,13 +132,52 @@ def send_reset_link():
         db.close()
         
         if user:
-            return render_template('reset-sent.html')
+            # ২. OTP তৈরি করা
+            otp = str(random.randint(1000, 9999))
+            otp_storage[email] = otp # টেম্পোরারি স্টোরেজে রাখা
+            session['reset_email'] = email # সেশনে ইমেইল সেভ করা
+            
+            # ৩. টার্মিনালে OTP প্রিন্ট করা (যেহেতু ইমেইল পাঠাচ্ছেন না)
+            print("\n" + "="*30)
+            print(f"OTP for {email} is: {otp}")
+            print("="*30 + "\n")
+            
+            return render_template('reset-sent.html') # OTP দেওয়ার পেজে নিয়ে যাবে
         else:
-            # Email na thakle abar e-i page-e back korbe
-            return render_template('forget-password.html', error="This email is not registered!")
+            return render_template('forget-password.html', error="Email not registered!")
             
     except Exception as e:
-        return f"Database Error: {str(e)}"
+        print(f"Database Error: {e}")
+        return f"Error: {str(e)}"
+    
+def generate_otp():
+    return str(random.randint(1000, 9999))
+
+@app.route('/send-otp', methods=['POST'])
+def send_otp():
+    email = request.json.get('email')
+    if not email:
+        return jsonify({"status": "error", "message": "Email is required"}), 400
+
+    otp = generate_otp()
+    otp_storage[email] = otp
+    print(f"OTP for {email}: {otp}") 
+    return jsonify({"status": "success", "message": "OTP sent to console"})
+
+@app.route('/verify-otp', methods=['POST'])
+def verify_otp():
+    data = request.json
+    email = session.get('reset_email')
+    user_otp = data.get('otp')
+
+    if email in otp_storage and otp_storage[email] == user_otp:
+        return jsonify({"status": "success", "redirect": url_for('new_password_page')})
+    else:
+        return jsonify({"status": "fail", "message": "Invalid OTP Code!"})
+
+@app.route('/new-password')
+def new_password_page():
+    return render_template('new-password.html')
 # --- Resource Search Route ---
 @app.route('/search')
 def search():
@@ -169,8 +209,10 @@ def search():
         print(f"Database Error: {e}")
         return "An error occurred while searching. Please check if 'resources' table exists."
 # Main & Profile Routes
-@app.route('/')
-def index():
+@app.route('/main') # Route change kore /main kora hoyeche
+def main_dashboard():
+    if 'user_name' not in session:
+        return redirect(url_for('login_page'))
     user_name = session.get('user_name', 'Guest') 
     return render_template('main.html', user_name=user_name)
 @app.route('/profile')
