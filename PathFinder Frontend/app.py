@@ -13,8 +13,9 @@ def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="Hridita",
-        database="pathfinder"
+        password="Hridita", #
+        database="pathfinder", #
+        buffered=True 
     )
 
 # Registration Student
@@ -105,6 +106,38 @@ def login():
     
     # Login fail hole abar login page-e back korbe error shoho
     return render_template('login.html', error="Invalid Email or Password")
+#forget-password page
+@app.route('/forgot-password')
+def forgot_password_page():
+    # Ekhane file-er nam hoboho milte hobe
+    return render_template('forget-password.html') 
+
+@app.route('/send-reset-link', methods=['POST'])
+def send_reset_link():
+    email = request.form.get('email')
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        
+        # Database check logic...
+        cursor.execute("SELECT * FROM students WHERE email=%s", (email,))
+        user = cursor.fetchone()
+        
+        if not user:
+            cursor.execute("SELECT * FROM guides WHERE email=%s", (email,))
+            user = cursor.fetchone()
+            
+        cursor.close()
+        db.close()
+        
+        if user:
+            return render_template('reset-sent.html')
+        else:
+            # Email na thakle abar e-i page-e back korbe
+            return render_template('forget-password.html', error="This email is not registered!")
+            
+    except Exception as e:
+        return f"Database Error: {str(e)}"
 # --- Resource Search Route ---
 @app.route('/search')
 def search():
