@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comment Section</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #f0f2f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      padding: 36px 16px;
+      color: #1c1e21;
+    }
+
+    .page-wrapper {
+      max-width: 620px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* POST CARD */
+    .post-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.11);
+      padding: 18px 20px;
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .post-header-left { display: flex; align-items: center; gap: 10px; }
+
+    .avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px; flex-shrink: 0; user-select: none;
+    }
+
+    .avatar-admin { background: #e0e3f8; color: #3c45a5; }
+    .avatar-user  { background: #d6f0e8; color: #1a7a55; }
+
+    .post-meta h3 { font-size: 15px; font-weight: 700; color: #1c1e21; line-height: 1.2; }
+    .post-meta span { font-size: 12px; color: #65676b; }
+
+    .post-menu-btn {
+      background: none; border: none; font-size: 22px;
+      color: #65676b; cursor: pointer; padding: 4px 8px;
+      border-radius: 50%; line-height: 1; transition: background 0.15s;
+    }
+    .post-menu-btn:hover { background: #f0f2f5; }
+
+    .post-text { font-size: 15px; color: #1c1e21; line-height: 1.55; margin-bottom: 16px; }
+
+    .post-stats {
+      display: flex; align-items: center; justify-content: flex-end;
+      font-size: 13px; color: #65676b;
+      padding-bottom: 10px; border-bottom: 1px solid #e4e6ea;
+    }
+
+    .post-actions { display: flex; gap: 4px; padding-top: 6px; }
+
+    .action-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px; border: none; background: transparent; border-radius: 8px;
+      font-size: 14px; font-weight: 600; color: #65676b; cursor: pointer;
+      transition: background 0.15s, color 0.15s; font-family: inherit;
+    }
+    .action-btn:hover { background: #f0f2f5; color: #1c1e21; }
+
+    /* COMMENT CARD */
+    .comment-card {
+      background: #fff; border-radius: 14px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.11); padding: 18px 20px;
+    }
+
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+
+    .section-title { font-size: 16px; font-weight: 700; color: #1c1e21; display: flex; align-items: center; gap: 8px; }
+
+    .badge { background: #e7f3ff; color: #1877f2; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 20px; }
+
+    .sort-select {
+      font-size: 13px; color: #65676b; border: none;
+      background: #f0f2f5; border-radius: 8px; padding: 4px 8px;
+      cursor: pointer; font-family: inherit; outline: none;
+    }
+
+    .section-divider { border: none; border-top: 1px solid #e4e6ea; margin-bottom: 16px; }
+
+    /* WRITE COMMENT */
+    .write-comment { display: flex; gap: 10px; margin-bottom: 22px; }
+    .write-comment .avatar { width: 38px; height: 38px; font-size: 13px; margin-top: 2px; }
+
+    .comment-form { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+    .name-input {
+      width: 100%; padding: 9px 16px;
+      border: 1.5px solid #e4e6ea; border-radius: 22px;
+      font-size: 14px; outline: none;
+      background: #f0f2f5; color: #1c1e21;
+      transition: border-color 0.2s, background 0.2s; font-family: inherit;
+    }
+    .name-input:focus { border-color: #1877f2; background: #fff; }
+    .name-input::placeholder { color: #8a8d91; }
+
+    .textarea-wrap {
+      display: flex; align-items: flex-end; gap: 8px;
+      background: #f0f2f5; border-radius: 22px;
+      border: 1.5px solid #e4e6ea; padding: 9px 10px 9px 16px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .textarea-wrap:focus-within { border-color: #1877f2; background: #fff; }
+
+    .comment-textarea {
+      flex: 1; border: none; background: transparent; resize: none;
+      font-size: 14px; font-family: inherit; outline: none;
+      color: #1c1e21; min-height: 22px; max-height: 130px; line-height: 1.45;
+    }
+    .comment-textarea::placeholder { color: #8a8d91; }
+
+    .send-btn {
+      background: #1877f2; color: #fff; border: none; border-radius: 50%;
+      width: 32px; height: 32px; font-size: 15px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .send-btn:hover  { background: #166fe5; }
+    .send-btn:active { transform: scale(0.93); }
+    .send-btn:disabled { background: #c5c8cd; cursor: not-allowed; }
+
+    .char-count { font-size: 11px; color: #8a8d91; text-align: right; padding-right: 4px; }
+    .char-count.warn { color: #e74c3c; }
+
+    /* COMMENT LIST */
+    .comments-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .comment-item { display: flex; gap: 10px; animation: fadeUp 0.28s ease; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .comment-item .avatar { width: 36px; height: 36px; font-size: 13px; flex-shrink: 0; }
+    .comment-body { flex: 1; min-width: 0; }
+
+    .comment-bubble {
+      background: #f0f2f5; border-radius: 0 14px 14px 14px;
+      padding: 10px 14px; display: inline-block; max-width: 100%;
+    }
+
+    .commenter-name { font-size: 13px; font-weight: 700; color: #1c1e21; margin-bottom: 3px; }
+    .comment-text { font-size: 14px; color: #1c1e21; line-height: 1.45; word-break: break-word; }
+    .comment-text .mention { color: #1877f2; font-weight: 600; }
+
+    .comment-meta {
+      display: flex; align-items: center; gap: 14px;
+      margin-top: 5px; padding-left: 2px; flex-wrap: wrap;
+    }
+
+    .comment-time { font-size: 11px; color: #8a8d91; }
+
+    .meta-btn {
+      background: none; border: none; font-size: 12px; font-weight: 700;
+      color: #65676b; cursor: pointer; padding: 0;
+      display: flex; align-items: center; gap: 4px;
+      transition: color 0.15s; font-family: inherit;
+    }
+    .meta-btn:hover { color: #1877f2; }
+    .meta-btn.delete-btn:hover { color: #e74c3c; }
+
+    /* SHARE MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9998; opacity: 0; pointer-events: none;
+      transition: opacity 0.22s;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: #fff; border-radius: 16px;
+      padding: 22px 24px; width: 340px; max-width: 90vw;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      transform: translateY(16px); transition: transform 0.22s;
+    }
+    .modal-overlay.show .modal { transform: translateY(0); }
+
+    .modal-title { font-size: 16px; font-weight: 700; color: #1c1e21; margin-bottom: 16px; }
+
+    .share-options { display: flex; flex-direction: column; gap: 10px; }
+
+    .share-option-btn {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border: 1.5px solid #e4e6ea;
+      border-radius: 12px; background: #fff; cursor: pointer;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      color: #1c1e21; transition: background 0.15s, border-color 0.15s;
+    }
+    .share-option-btn:hover { background: #f0f2f5; border-color: #1877f2; }
+    .share-option-btn span.share-icon { font-size: 20px; }
+
+    .link-copy-wrap {
+      display: flex; gap: 8px; margin-top: 14px;
+    }
+
+    .link-input {
+      flex: 1; padding: 8px 12px; border: 1.5px solid #e4e6ea;
+      border-radius: 10px; font-size: 13px; font-family: inherit;
+      color: #65676b; background: #f0f2f5; outline: none;
+    }
+
+    .copy-btn {
+      padding: 8px 16px; background: #1877f2; color: #fff;
+      border: none; border-radius: 10px; font-size: 13px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .copy-btn:hover { background: #166fe5; }
+
+    .modal-close-btn {
+      width: 100%; margin-top: 14px; padding: 10px;
+      background: #f0f2f5; border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 600; color: #65676b;
+      cursor: pointer; font-family: inherit; transition: background 0.15s;
+    }
+    .modal-close-btn:hover { background: #e4e6ea; }
+
+    /* MESSAGE MODAL */
+    .msg-form { display: flex; flex-direction: column; gap: 10px; }
+
+    .msg-input {
+      width: 100%; padding: 9px 14px;
+      border: 1.5px solid #e4e6ea; border-radius: 10px;
+      font-size: 14px; font-family: inherit; outline: none;
+      background: #f0f2f5; color: #1c1e21;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .msg-input:focus { border-color: #1877f2; background: #fff; }
+    .msg-input::placeholder { color: #8a8d91; }
+
+    .msg-textarea {
+      width: 100%; padding: 9px 14px; resize: none; height: 90px;
+      border: 1.5px solid #e4e6ea; border-radius: 10px;
+      font-size: 14px; font-family: inherit; outline: none;
+      background: #f0f2f5; color: #1c1e21; line-height: 1.4;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .msg-textarea:focus { border-color: #1877f2; background: #fff; }
+    .msg-textarea::placeholder { color: #8a8d91; }
+
+    .msg-send-btn {
+      padding: 10px; background: #1877f2; color: #fff;
+      border: none; border-radius: 10px; font-size: 14px;
+      font-weight: 700; cursor: pointer; font-family: inherit;
+      transition: background 0.15s;
+    }
+    .msg-send-btn:hover { background: #166fe5; }
+
+    /* STATES */
+    .state-box { text-align: center; padding: 32px 16px; color: #65676b; }
+    .state-box .state-icon { font-size: 38px; margin-bottom: 10px; }
+    .state-box p { font-size: 14px; line-height: 1.5; }
+
+    .loading-dots { display: flex; justify-content: center; gap: 6px; padding: 24px; }
+    .loading-dots span {
+      width: 8px; height: 8px; background: #bec3c9; border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+      40%           { transform: scale(1);   opacity: 1; }
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      padding: 11px 26px; border-radius: 28px;
+      font-size: 14px; font-weight: 600; color: #fff;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.28s, transform 0.28s; z-index: 9999;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #2ecc71; }
+    .toast.error   { background: #e74c3c; }
+    .toast.info    { background: #3498db; }
+
+    @media (max-width: 480px) {
+      body { padding: 16px 10px; }
+      .post-card, .comment-card { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- POST CARD -->
+  <div class="post-card">
+    <div class="post-header">
+      <div class="post-header-left">
+        <div class="avatar avatar-admin">SA</div>
+        <div class="post-meta">
+          <h3>System Admin</h3>
+          <span>Just now</span>
+        </div>
+      </div>
+      <button class="post-menu-btn">&#8942;</button>
+    </div>
+
+    <p class="post-text">Guidelines are here for your career success.</p>
+
+    <div class="post-stats">
+      <span id="comment-summary"></span>
+    </div>
+
+    <div class="post-actions">
+      <button class="action-btn" onclick="focusCommentBox()">💬 Comment</button>
+      <button class="action-btn" onclick="openShareModal()">↗ Share</button>
+      <button class="action-btn" onclick="openMsgModal()">✉ Message</button>
+    </div>
+  </div>
+
+  <!-- COMMENT SECTION -->
+  <div class="comment-card">
+
+    <div class="section-header">
+      <div class="section-title">
+        Comments
+        <span class="badge" id="comment-badge">0</span>
+      </div>
+      <select class="sort-select" id="sort-select" onchange="changeSortAndReload()">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+      </select>
+    </div>
+
+    <hr class="section-divider" />
+
+    <div class="write-comment">
+      <div class="avatar avatar-user" id="user-avatar">You</div>
+      <div class="comment-form">
+        <input type="text" class="name-input" id="name-input" placeholder="Your name..." maxlength="40" autocomplete="off" />
+        <div class="textarea-wrap">
+          <textarea class="comment-textarea" id="comment-textarea" placeholder="Write a comment... (Enter to post)" rows="1" maxlength="500"></textarea>
+          <button class="send-btn" id="send-btn" onclick="postComment()">&#10148;</button>
+        </div>
+        <div class="char-count" id="char-count">0 / 500</div>
+      </div>
+    </div>
+
+    <div class="comments-list" id="comments-list">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="share-modal" onclick="closeShareModal(event)">
+  <div class="modal">
+    <div class="modal-title">↗ Share Post</div>
+    <div class="share-options">
+      <button class="share-option-btn" onclick="shareToFacebook()">
+        <span class="share-icon">📘</span> Share on Facebook
+      </button>
+      <button class="share-option-btn" onclick="shareToTwitter()">
+        <span class="share-icon">🐦</span> Share on Twitter
+      </button>
+      <button class="share-option-btn" onclick="shareToWhatsApp()">
+        <span class="share-icon">💬</span> Share on WhatsApp
+      </button>
+    </div>
+    <div class="link-copy-wrap">
+      <input type="text" class="link-input" id="share-link" readonly />
+      <button class="copy-btn" onclick="copyLink()">Copy</button>
+    </div>
+    <button class="modal-close-btn" onclick="closeShareModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- MESSAGE MODAL -->
+<div class="modal-overlay" id="msg-modal" onclick="closeMsgModal(event)">
+  <div class="modal">
+    <div class="modal-title">✉ Send Message</div>
+    <div class="msg-form">
+      <input type="text" class="msg-input" id="msg-to" placeholder="Recipient name..." maxlength="40" />
+      <textarea class="msg-textarea" id="msg-body" placeholder="Write your message..."></textarea>
+      <button class="msg-send-btn" onclick="sendMessage()">Send Message</button>
+    </div>
+    <button class="modal-close-btn" onclick="closeMsgModal()">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'http://localhost:5000/api';
+  let currentSort = 'newest';
+  let allComments = [];
+
+  const palette = [
+    { bg: '#d6f0e8', color: '#1a7a55' },
+    { bg: '#fde8d8', color: '#a34a1a' },
+    { bg: '#e0e3f8', color: '#3c45a5' },
+    { bg: '#fce4ec', color: '#ad1457' },
+    { bg: '#e8eaf6', color: '#3949ab' },
+    { bg: '#fff8e1', color: '#f57f17' },
+    { bg: '#e8f5e9', color: '#2e7d32' },
+    { bg: '#fce4ec', color: '#c62828' },
+  ];
+
+  function getAvatarStyle(name) {
+    let h = 0;
+    for (let ch of name) h += ch.charCodeAt(0);
+    return palette[h % palette.length];
+  }
+
+  function getInitials(name) {
+    return name.trim().split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  }
+
+  function timeAgo(dateStr) {
+    const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+    if (diff < 60)    return 'Just now';
+    if (diff < 3600)  return Math.floor(diff / 60) + ' min ago';
+    if (diff < 86400) return Math.floor(diff / 3600) + ' hr ago';
+    return Math.floor(diff / 86400) + ' d ago';
+  }
+
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function esc(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function formatText(text) {
+    return esc(text).replace(/@(\S+)/g, '<span class="mention">@$1</span>');
+  }
+
+  /* ── SHARE MODAL ── */
+  function openShareModal() {
+    document.getElementById('share-link').value = window.location.href;
+    document.getElementById('share-modal').classList.add('show');
+  }
+
+  function closeShareModal(e) {
+    if (!e || e.target === document.getElementById('share-modal'))
+      document.getElementById('share-modal').classList.remove('show');
+  }
+
+  function copyLink() {
+    const input = document.getElementById('share-link');
+    navigator.clipboard.writeText(input.value)
+      .then(() => showToast('Link copied! ✓'))
+      .catch(() => { input.select(); document.execCommand('copy'); showToast('Link copied! ✓'); });
+  }
+
+  function shareToFacebook() {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+  }
+
+  function shareToTwitter() {
+    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check+this+out!`, '_blank');
+  }
+
+  function shareToWhatsApp() {
+    window.open(`https://wa.me/?text=${encodeURIComponent('Check this out! ' + window.location.href)}`, '_blank');
+  }
+
+  /* ── MESSAGE MODAL ── */
+  function openMsgModal() {
+    document.getElementById('msg-to').value = '';
+    document.getElementById('msg-body').value = '';
+    document.getElementById('msg-modal').classList.add('show');
+  }
+
+  function closeMsgModal(e) {
+    if (!e || e.target === document.getElementById('msg-modal'))
+      document.getElementById('msg-modal').classList.remove('show');
+  }
+
+  function sendMessage() {
+    const to  = document.getElementById('msg-to').value.trim();
+    const msg = document.getElementById('msg-body').value.trim();
+    if (!to)  { showToast('Enter recipient name', 'error'); return; }
+    if (!msg) { showToast('Write a message', 'error'); return; }
+    closeMsgModal();
+    showToast(`Message sent to ${to}! ✓`);
+  }
+
+  /* ── COMMENTS ── */
+  async function loadComments() {
+    try {
+      const res  = await fetch(`${API}/comments`);
+      const data = await res.json();
+      allComments = data.comments || [];
+      renderComments();
+    } catch {
+      document.getElementById('comments-list').innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">⚠️</div>
+          <p>Cannot connect to server.<br>Make sure <strong>comment_app.py</strong> is running.</p>
+        </div>`;
+    }
+  }
+
+  function changeSortAndReload() {
+    currentSort = document.getElementById('sort-select').value;
+    renderComments();
+  }
+
+  function getSorted(comments) {
+    const arr = [...comments];
+    if (currentSort === 'oldest') return arr.reverse();
+    return arr;
+  }
+
+  function renderComments() {
+    const list  = document.getElementById('comments-list');
+    const badge = document.getElementById('comment-badge');
+    const cs    = document.getElementById('comment-summary');
+
+    badge.textContent = allComments.length;
+    cs.textContent    = allComments.length > 0 ? `💬 ${allComments.length} comments` : '';
+
+    const sorted = getSorted(allComments);
+
+    if (sorted.length === 0) {
+      list.innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">💬</div>
+          <p>No comments yet.<br>Be the first to comment!</p>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = '';
+    sorted.forEach(c => {
+      const style = getAvatarStyle(c.name);
+      const div   = document.createElement('div');
+      div.className = 'comment-item';
+      div.id        = `c-${c.id}`;
+      div.innerHTML = `
+        <div class="avatar" style="background:${style.bg};color:${style.color};">${getInitials(c.name)}</div>
+        <div class="comment-body">
+          <div class="comment-bubble">
+            <div class="commenter-name">${esc(c.name)}</div>
+            <div class="comment-text">${formatText(c.text)}</div>
+          </div>
+          <div class="comment-meta">
+            <span class="comment-time">${timeAgo(c.created_at)}</span>
+            <button class="meta-btn" onclick="replyTo('${esc(c.name)}')">Reply</button>
+            <button class="meta-btn delete-btn" onclick="deleteComment(${c.id})">🗑 Delete</button>
+          </div>
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+
+  async function postComment() {
+    const nameEl = document.getElementById('name-input');
+    const textEl = document.getElementById('comment-textarea');
+    const name   = nameEl.value.trim();
+    const text   = textEl.value.trim();
+
+    if (!name) { showToast('Please enter your name', 'error'); nameEl.focus(); return; }
+    if (!text) { showToast('Please write something', 'error'); textEl.focus(); return; }
+
+    const btn = document.getElementById('send-btn');
+    btn.disabled = true;
+
+    try {
+      const res  = await fetch(`${API}/comments`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name, text })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        textEl.value = '';
+        textEl.style.height = 'auto';
+        updateCharCount(0);
+        updateUserAvatar(name);
+        showToast('Comment posted! ✓');
+        await loadComments();
+      } else {
+        showToast(data.message || 'Something went wrong', 'error');
+      }
+    } catch {
+      showToast('Server unreachable', 'error');
+    }
+
+    btn.disabled = false;
+  }
+
+  async function deleteComment(id) {
+    if (!confirm('Delete this comment?')) return;
+    try {
+      const res  = await fetch(`${API}/comments/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) { showToast('Deleted'); await loadComments(); }
+    } catch {
+      showToast('Could not delete', 'error');
+    }
+  }
+
+  function replyTo(name) {
+    const ta = document.getElementById('comment-textarea');
+    ta.value = `@${name} `;
+    updateCharCount(ta.value.length);
+    ta.focus();
+  }
+
+  function focusCommentBox() {
+    const ta = document.getElementById('comment-textarea');
+    ta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => ta.focus(), 300);
+  }
+
+  function updateUserAvatar(name) {
+    const av = document.getElementById('user-avatar');
+    if (!name.trim()) return;
+    const style = getAvatarStyle(name);
+    av.textContent      = getInitials(name);
+    av.style.background = style.bg;
+    av.style.color      = style.color;
+  }
+
+  function updateCharCount(len) {
+    const el = document.getElementById('char-count');
+    el.textContent = `${len} / 500`;
+    el.classList.toggle('warn', len > 450);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const ta = document.getElementById('comment-textarea');
+    ta.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 130) + 'px';
+      updateCharCount(this.value.length);
+    });
+    ta.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); postComment(); }
+    });
+
+    document.getElementById('name-input').addEventListener('input', function () {
+      updateUserAvatar(this.value);
+    });
+
+    loadComments();
+    setInterval(loadComments, 15000);
+  });
+</script>
+
+</body>
+</html>
