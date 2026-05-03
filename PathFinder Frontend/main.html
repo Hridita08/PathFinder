@@ -17,26 +17,13 @@
 
     body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); overflow-x: hidden; }
 
-    .career-dropdown {
-        display: none; 
-        background: rgba(0, 0, 0, 0.2);
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    .career-dropdown li {
-        padding: 10px 25px 10px 60px !important; 
-        font-size: 14px;
-        color: #ccc;
-        transition: 0.3s;
-    }
-    .career-dropdown li:hover {
-        color: var(--accent-green) !important;
-        background: transparent !important;
-    }
-    .career-dropdown.show {
-        display: block; 
-    }
+    /* Career Dropdown */
+    .career-dropdown { display: none; background: rgba(0, 0, 0, 0.2); list-style: none; padding: 0; margin: 0; }
+    .career-dropdown li { padding: 10px 25px 10px 60px !important; font-size: 14px; color: #ccc; transition: 0.3s; }
+    .career-dropdown li:hover { color: var(--accent-green) !important; background: transparent !important; }
+    .career-dropdown.show { display: block; }
+
+    /* Topbar */
     .topbar {
         background: var(--topbar-bg); height: 60px; padding: 0 20px;
         display: flex; justify-content: space-between; align-items: center;
@@ -69,14 +56,8 @@
         width:35px; height:35px; border-radius:50%; margin-left:10px; cursor:pointer; 
         transition: 0.3s; border: 2px solid var(--sidebar-green); 
     }
-    .profile-img:hover { 
-        border-color: #299b51; 
-        box-shadow: 0 0 12px rgba(27, 92, 34, 0.6); 
-        transform: rotate(5deg);
-    }
 
-    .user-display-name { font-weight: 600; color: #333; font-size: 14px; }
-
+    /* Sidebar */
     .sidebar {
         width: 280px; background: var(--sidebar-green); color: white; height: 100vh;
         position: fixed; top: 0; left: -280px; transition: 0.3s ease; padding-top: 80px; z-index: 1000;
@@ -85,50 +66,53 @@
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
     .sidebar ul li:hover { background: rgba(255,255,255,0.1); padding-left: 35px; color: var(--accent-green); }
-    
-    .logout-btn { color: #fc8686e4 !important; transition: all 0.3s ease !important; }
-    .logout-btn:hover { color: #ff4d4d !important; padding-left: 35px !important; background: rgba(252, 134, 134, 0.1) !important; }
+    .logout-btn { color: var(--danger-red) !important; }
 
+    /* Content Area */
     .content-wrapper { transition: margin-left 0.3s ease; display: flex; flex-direction: column; align-items: center; padding-top: 80px; width: 100%; }
     .content-wrapper.shifted { margin-left: 280px; width: calc(100% - 280px); }
-    .post-container { width: 95%; max-width: 700px; }
+    .post-container { width: 95%; max-width: 600px; }
     
-    .post-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; transition: 0.3s; }
-    #postInput { width: 100%; border: none; border-radius: 8px; padding: 12px; resize: none; min-height: 60px; outline: none; background: #f0f2f5; font-size: 16px; font-family: inherit; }
-    .post-btn { background: var(--sidebar-green); color: white; border: none; padding: 8px 30px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-    .post-btn:hover { background: #163a2c; transform: translateY(-2px); }
+    .post-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; }
+    #postInput { width: 100%; border: none; border-radius: 8px; padding: 12px; resize: none; min-height: 50px; outline: none; background: #f0f2f5; font-size: 16px; font-family: inherit; }
+    .post-btn { background: var(--sidebar-green); color: white; border: none; padding: 8px 30px; border-radius: 6px; font-weight: 600; cursor: pointer; }
 
-    .post-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #ddd; transition: 0.3s; position: relative; }
+    /* Post Card & Actions */
+    .post-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #ddd; position: relative; }
     .three-dot { cursor: pointer; color: #65676b; padding: 8px; border-radius: 50%; transition: 0.3s; }
-    .three-dot:hover { color: #fc8686e4; background: #f2f2f2; }
+    .three-dot:hover { background: #f2f2f2; }
     
-    .dropdown { display: none; position: absolute; right: 0; top: 35px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; min-width: 120px; border: 1px solid #eee;}
+    .dropdown { display: none; position: absolute; right: 10px; top: 40px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; min-width: 150px; border: 1px solid #eee;}
     .dropdown.active { display: block; }
-    .dropdown div { padding: 10px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
-    .dropdown div:last-child { border-bottom: none; }
-    .dropdown div:hover { background: #f8fafc; color: #fc8686e4; }
+    .dropdown div { padding: 10px 15px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; }
+    .dropdown div:hover { background: #f8fafc; }
+    .dropdown .delete-opt { color: var(--danger-red); }
+    .dropdown .save-opt { color: #10b981; }
 
-    .post-card-actions { border-top: 1px solid #e4e6eb; padding-top: 10px; display: flex; margin-top: 15px; }
-    .action-item { flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 8px; color: #65676b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .action-item:hover { background: #f2f2f2; color: var(--sidebar-green); transform: scale(1.05); }
+    .post-card-actions { border-top: 1px solid #e4e6eb; border-bottom: 1px solid #e4e6eb; padding: 5px 0; display: flex; margin-top: 15px; }
+    .action-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; border-radius: 6px; color: #65676b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .action-item:hover { background: #f2f2f2; }
 
-    .comment-input-area { display: none; padding: 10px; border-top: 1px solid #eee; margin-top: 5px; gap: 5px; }
-    .comment-input-area input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
-    .comment-input-area button { background: var(--sidebar-green); color: white; border: none; padding: 5px 15px; border-radius: 15px; cursor: pointer; }
-
-    .comment-display-list {
-        background: #f8f9fa;
-        border-radius: 8px;
-        margin-top: 10px;
-        padding: 5px;
-    }
-    .comment-item {
-        padding: 5px 10px;
-        border-bottom: 1px solid #eef0f2;
+    /* Comments Section */
+    .comment-display-list { margin-top: 15px; padding: 0 10px; }
+    .comment-item { 
+        background: #f0f2f5; 
+        border-radius: 18px; 
+        padding: 8px 12px; 
+        margin-bottom: 8px; 
+        display: inline-block; 
+        max-width: 90%;
         font-size: 14px;
     }
-    .comment-item:last-child { border-bottom: none; }
-    .comment-user { font-weight: bold; color: var(--sidebar-green); margin-right: 5px; }
+    .comment-user { font-weight: bold; color: #050505; display: block; margin-bottom: 2px; }
+
+    .comment-input-area { display: none; padding: 10px; align-items: center; gap: 8px; }
+    .comment-input-area input { flex: 1; padding: 10px 15px; border: none; border-radius: 20px; background: #f0f2f5; outline: none; }
+    .comment-input-area button { background: transparent; color: var(--sidebar-green); border: none; font-weight: 600; cursor: pointer; }
+
+    /* Modal for Saved Items */
+    .modal { display: none; position: fixed; z-index: 1200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+    .modal-content { background: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 500px; border-radius: 12px; max-height: 70vh; overflow-y: auto; }
 </style>
 </head>
 
@@ -144,6 +128,7 @@
         <input type="text" placeholder="Search resources...">
     </div>
     <div class="top-right">
+        <div class="icon-btn" onclick="showSavedPosts()"><i class="fa fa-bookmark"></i></div>
         <div class="icon-btn"><i class="fa fa-bell"></i><span class="badge">3</span></div>
         <div class="icon-btn"><i class="fa fa-envelope"></i><span class="badge">2</span></div>
         <span class="user-display-name" id="displayUserName">Guest User</span>
@@ -154,17 +139,15 @@
 <div class="sidebar" id="sidebar">
     <ul>
         <li onclick="location.href='main.html'"><i class="fa fa-home"></i> Home</li>
-        
         <li onclick="toggleCareerDropdown()">
             <i class="fa fa-graduation-cap"></i> Career Path 
             <i class="fa fa-chevron-down" style="font-size: 10px; margin-left: auto;"></i>
         </li>
-        
         <ul class="career-dropdown" id="careerDropdown">
             <li onclick="location.href='technical.html'"><i class="fa fa-code"></i> Technical</li>
             <li onclick="location.href='non-technical.html'"><i class="fa fa-briefcase"></i> Non-Technical</li>
         </ul>
-
+        <li onclick="showSavedPosts()"><i class="fa fa-save"></i> Saved Items</li>
         <li onclick="location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
         <li onclick="logout()" class="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
@@ -172,44 +155,47 @@
 
 <div class="content-wrapper" id="mainContent">
     <div class="post-container">
+        <!-- New Post Box -->
         <div class="post-box">
             <div style="display:flex; gap:12px; margin-bottom:15px;">
-                <img src="icons/profile.png" style="width:45px; height:45px; border-radius:50%;">
+                <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
                 <textarea id="postInput" placeholder="What's on your mind?"></textarea>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <label style="color:#65676b; cursor:pointer; font-weight:600; font-size:14px;">
-                    <i class="fa fa-image" style="color:#45bd62;"></i> Add Photo
-                    <input type="file" id="imageUpload" style="display:none;" accept="image/*">
-                </label>
+            <div style="display:flex; justify-content:flex-end;">
                 <button class="post-btn" onclick="addNewPost()">Post</button>
             </div>
         </div>
 
         <div id="feed">
-            <!-- Posts loaded dynamically -->
+            <!-- Posts load here -->
         </div>
     </div>
 </div>
 
-<script>
-    function toggleCareerDropdown() {
-        const dropdown = document.getElementById("careerDropdown");
-        dropdown.classList.toggle("show");
-    }
+<!-- Saved Posts Modal -->
+<div id="savedModal" class="modal">
+    <div class="modal-content">
+        <span style="float:right; cursor:pointer; font-weight:bold;" onclick="document.getElementById('savedModal').style.display='none'">&times;</span>
+        <h3>Your Saved Posts</h3>
+        <hr>
+        <div id="savedItemsList"></div>
+    </div>
+</div>
 
+<script>
     window.onload = function() {
         const storedName = localStorage.getItem("username");
-        if (storedName) {
-            const topName = document.getElementById("displayUserName");
-            if(topName) topName.innerText = storedName;
-        }
+        if (storedName) document.getElementById("displayUserName").innerText = storedName;
         loadPosts(); 
     };
 
     function toggleSidebar() {
         document.getElementById("sidebar").classList.toggle("active");
         document.getElementById("mainContent").classList.toggle("shifted");
+    }
+
+    function toggleCareerDropdown() {
+        document.getElementById("careerDropdown").classList.toggle("show");
     }
 
     function loadPosts() {
@@ -221,29 +207,30 @@
                 posts.forEach(post => {
                     const postHTML = `
                         <div class="post-card" id="post-${post.id}">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                                <div style="display:flex; gap:12px; align-items:center;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                <div style="display:flex; gap:10px; align-items:center;">
                                     <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
                                     <div><b>${post.username}</b><br><small style="color:gray">${post.created_at}</small></div>
                                 </div>
                                 <div style="position:relative;">
-                                    <i class="fa fa-ellipsis-v three-dot" onclick="this.nextElementSibling.classList.toggle('active')"></i>
+                                    <i class="fa fa-ellipsis-h three-dot" onclick="toggleDropdown(this)"></i>
                                     <div class="dropdown">
-                                        <div onclick="editPost(this)">Edit</div>
-                                        <div onclick="deletePost(${post.id}, this)">Delete</div>
+                                        <div class="save-opt" onclick="savePost(${post.id})"><i class="fa fa-bookmark"></i> Save Post</div>
+                                        <div onclick="editPost(this)"><i class="fa fa-edit"></i> Edit</div>
+                                        <div class="delete-opt" onclick="deletePost(${post.id}, this)"><i class="fa fa-trash"></i> Delete</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="post-text">${post.content}</div>
-                            
-                            <div class="comment-display-list" id="comment-list-${post.id}">
-                            </div>
 
                             <div class="post-card-actions">
                                 <div class="action-item" onclick="toggleCommentInput(${post.id})"><i class="fa fa-comment"></i> Comment</div>
-                                <div class="action-item" onclick="handleShare(${post.id})"><i class="fa fa-share"></i> Share (<span id="share-count-${post.id}">${post.share_count || 0}</span>)</div>
+                                <div class="action-item" onclick="handleShare(${post.id})"><i class="fa fa-share"></i> Share</div>
                                 <div class="action-item"><i class="fa fa-paper-plane"></i> Message</div>
                             </div>
+
+                            <div class="comment-display-list" id="comment-list-${post.id}"></div>
+
                             <div class="comment-input-area" id="comment-area-${post.id}">
                                 <input type="text" placeholder="Write a comment..." id="input-${post.id}">
                                 <button onclick="submitComment(${post.id})">Post</button>
@@ -253,101 +240,77 @@
                     feed.insertAdjacentHTML('beforeend', postHTML);
                     loadComments(post.id);
                 });
-            })
-            .catch(err => console.error("Error loading posts:", err));
+            });
+    }
+
+    function toggleDropdown(el) {
+        document.querySelectorAll('.dropdown').forEach(d => {
+            if (d !== el.nextElementSibling) d.classList.remove('active');
+        });
+        el.nextElementSibling.classList.toggle('active');
     }
 
     function loadComments(postId) {
         fetch(`/get-comments/${postId}`)
             .then(res => res.json())
             .then(comments => {
-                const commentContainer = document.getElementById(`comment-list-${postId}`);
-                if(!commentContainer) return;
-                commentContainer.innerHTML = ""; 
-                
-                if (comments.length > 0) {
-                    comments.forEach(comment => {
-                        const commentHTML = `
+                const container = document.getElementById(`comment-list-${postId}`);
+                container.innerHTML = "";
+                comments.forEach(c => {
+                    container.innerHTML += `
+                        <div style="margin-bottom:5px;">
                             <div class="comment-item">
-                                <span class="comment-user">${comment.username}:</span>
-                                <span>${comment.content}</span>
+                                <span class="comment-user">${c.username}</span>
+                                <span>${c.content}</span>
                             </div>
-                        `;
-                        commentContainer.insertAdjacentHTML('beforeend', commentHTML);
-                    });
-                }
-            })
-            .catch(err => console.error("Error loading comments:", err));
+                        </div>
+                    `;
+                });
+            });
     }
 
     function addNewPost() {
         const text = document.getElementById("postInput").value.trim();
         const username = localStorage.getItem("username");
-
-        if(!username) {
-            alert("Please login first to post!");
-            return;
-        }
-
-        if(!text) {
-            alert("Please write something before posting.");
-            return;
-        }
+        if(!text) return;
 
         const formData = new FormData();
         formData.append('post_content', text);
         formData.append('username', username);
 
-        fetch('/create-post', {
-            method: 'POST',
-            body: formData
-        })
+        fetch('/create-post', { method: 'POST', body: formData })
         .then(res => res.json())
         .then(data => {
             if(data.status === "success") {
                 document.getElementById("postInput").value = "";
                 loadPosts();
-            } else {
-                alert("Post failed: " + data.message);
             }
-        })
-        .catch(err => alert("Could not connect to server."));
+        });
     }
 
     function toggleCommentInput(postId) {
         const area = document.getElementById(`comment-area-${postId}`);
         area.style.display = area.style.display === "none" ? "flex" : "none";
+        if(area.style.display === "flex") document.getElementById(`input-${postId}`).focus();
     }
 
     function submitComment(postId) {
         const input = document.getElementById(`input-${postId}`);
         const content = input.value.trim();
         const username = localStorage.getItem("username");
-
-        if(!username) {
-            alert("Please login first to comment!");
-            return;
-        }
-
         if(!content) return;
 
         const formData = new FormData();
         formData.append('post_id', postId);
         formData.append('username', username);
-        formData.append('comment_text', content); 
+        formData.append('comment_text', content);
 
-        fetch('/add-comment', {
-            method: 'POST',
-            body: formData
-        })
+        fetch('/add-comment', { method: 'POST', body: formData })
         .then(res => res.json())
         .then(data => {
             if(data.status === "success") {
                 input.value = "";
-                toggleCommentInput(postId);
-                loadComments(postId); 
-            } else {
-                alert("Comment failed: " + data.message);
+                loadComments(postId);
             }
         });
     }
@@ -360,38 +323,54 @@
         })
         .then(res => res.json())
         .then(data => {
-            if(data.status === "success") {
-                const countSpan = document.getElementById(`share-count-${postId}`);
-                countSpan.innerText = parseInt(countSpan.innerText) + 1;
-            }
+            if(data.status === "success") alert("Post shared successfully!");
         });
     }
 
-    function editPost(el) {
-        const postCard = el.closest('.post-card');
-        const textDiv = postCard.querySelector('.post-text');
-        const newText = prompt("Edit your post:", textDiv.innerText);
-        if (newText !== null && newText.trim() !== "") {
-            textDiv.innerText = newText;
-        }
-        el.parentElement.classList.remove('active');
+    function savePost(postId) {
+        const username = localStorage.getItem("username");
+        const formData = new FormData();
+        formData.append('post_id', postId);
+        formData.append('username', username);
+
+        fetch('/save-post', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === "success") alert("Post saved to your bookmarks!");
+        });
+    }
+
+    function showSavedPosts() {
+        const username = localStorage.getItem("username");
+        // Ekhane apni ekta endpoint banate paren backend-e /get-saved-posts
+        //আপাতত একটি এলার্ট দিচ্ছি, পরে ডাটাবেস থেকে ডাটা নিয়ে আসতে পারবেন।
+        document.getElementById('savedModal').style.display = 'block';
+        document.getElementById('savedItemsList').innerHTML = "Fetching saved posts...";
+        // Backend logic implementation here
     }
 
     function deletePost(postId, el) {
-        if(confirm("Are you sure?")) {
-            el.closest('.post-card').remove();
-        }
+        if(confirm("Delete this post?")) el.closest('.post-card').remove();
+    }
+
+    function editPost(el) {
+        const textDiv = el.closest('.post-card').querySelector('.post-text');
+        const newText = prompt("Edit your post:", textDiv.innerText);
+        if (newText) textDiv.innerText = newText;
+    }
+
+    function logout() {
+        localStorage.clear();
+        location.href = 'login.html';
     }
 
     window.onclick = function(e) {
         if (!e.target.matches('.three-dot')) {
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
         }
-    }
-
-    function logout() {
-        localStorage.clear();
-        location.href = 'login.html';
+        if (e.target == document.getElementById('savedModal')) {
+            document.getElementById('savedModal').style.display = "none";
+        }
     }
 </script>
 
