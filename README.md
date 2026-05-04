@@ -1,7 +1,6 @@
 # 🚀 PathFinder
 
 ### Intelligent Career Guidance System for BAUET
-
 PathFinder is a web-based Intelligent Career Guidance System designed to help BAUET students choose the right career path based on their skills, interests, and academic performance.
 The system analyzes student data and provides suitable career suggestions through a simple and interactive interface.
 
