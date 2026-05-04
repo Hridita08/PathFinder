@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sqlite3
 from datetime import datetime
@@ -28,6 +28,12 @@ def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+# Home route — browser এ 127.0.0.1:5000 দিলে সরাসরি page দেখাবে
+@app.route('/')
+def index():
+    return send_from_directory('.', 'comment-section.html')
 
 
 @app.route('/api/comments', methods=['GET'])
@@ -80,5 +86,5 @@ def delete_comment(comment_id):
 
 if __name__ == '__main__':
     init_db()
-    print("Server running: http://localhost:5000")
+    print("Server running: http://127.0.0.1:5000")
     app.run(debug=True, port=5000)
