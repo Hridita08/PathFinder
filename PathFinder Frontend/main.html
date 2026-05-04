@@ -1,119 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>PATHFINDER | Home</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>PATHFINDER | Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<style>
-    :root {
-        --sidebar-green: #1f4e3b;   
-        --accent-green: #10b981;
-        --page-bg: #f0f2f5;
-        --topbar-bg: #ffffff;
-        --hover-light: #e4e6eb;
-        --danger-red: #fc8686e4; 
-    }
+    <style>
+        :root {
+            --sidebar-green: #1f4e3b;   
+            --accent-green: #10b981;
+            --page-bg: #f0f2f5;
+            --topbar-bg: #ffffff;
+            --hover-light: #e4e6eb;
+            --danger-red: #fc8686e4; 
+        }
 
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); overflow-x: hidden; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); overflow-x: hidden; }
 
-    /* Career Dropdown */
-    .career-dropdown { display: none; background: rgba(0, 0, 0, 0.2); list-style: none; padding: 0; margin: 0; }
-    .career-dropdown li { padding: 10px 25px 10px 60px !important; font-size: 14px; color: #ccc; transition: 0.3s; }
-    .career-dropdown li:hover { color: var(--accent-green) !important; background: transparent !important; }
-    .career-dropdown.show { display: block; }
+        /* Career Dropdown */
+        .career-dropdown { display: none; background: rgba(0, 0, 0, 0.2); list-style: none; padding: 0; margin: 0; }
+        .career-dropdown li { padding: 10px 25px 10px 60px !important; font-size: 14px; color: #ccc; transition: 0.3s; }
+        .career-dropdown li:hover { color: var(--accent-green) !important; background: transparent !important; }
+        .career-dropdown.show { display: block; }
 
-    /* Topbar */
-    .topbar {
-        background: var(--topbar-bg); height: 60px; padding: 0 20px;
-        display: flex; justify-content: space-between; align-items: center;
-        position: fixed; width: 100%; top: 0; z-index: 1100;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08); box-sizing: border-box;
-    }
-    .menu-section { display: flex; align-items: center; gap: 15px; }
-    .menu-icon { font-size: 20px; cursor: pointer; color: #333; padding: 8px; border-radius: 50%; transition: 0.3s; }
-    .menu-icon:hover { background: var(--hover-light); color: var(--sidebar-green); }
-    .title-text { font-size: 22px; font-weight: bold; color: var(--sidebar-green); }
+        /* Topbar */
+        .topbar {
+            background: var(--topbar-bg); height: 60px; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; width: 100%; top: 0; z-index: 1100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08); box-sizing: border-box;
+        }
+        .menu-section { display: flex; align-items: center; gap: 15px; }
+        .menu-icon { font-size: 20px; cursor: pointer; color: #333; padding: 8px; border-radius: 50%; transition: 0.3s; }
+        .menu-icon:hover { background: var(--hover-light); color: var(--sidebar-green); }
+        .title-text { font-size: 22px; font-weight: bold; color: var(--sidebar-green); }
 
-    .search-box { 
-        background: #f0f2f5; padding: 8px 15px; border-radius: 20px; 
-        display: flex; align-items: center; width: 350px; 
-        transition: 0.3s ease; border: 1px solid transparent;
-    }
-    .search-box:hover { background: #ffffff; border-color: var(--sidebar-green); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .search-box input { border: none; background: transparent; outline: none; padding-left: 10px; width: 100%; }
+        .search-box { 
+            background: #f0f2f5; padding: 8px 15px; border-radius: 20px; 
+            display: flex; align-items: center; width: 350px; 
+            transition: 0.3s ease; border: 1px solid transparent;
+        }
+        .search-box:hover { background: #ffffff; border-color: var(--sidebar-green); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .search-box input { border: none; background: transparent; outline: none; padding-left: 10px; width: 100%; }
 
-    .top-right { display: flex; align-items: center; gap: 15px; }
-    .icon-btn { 
-        position: relative; cursor: pointer; font-size: 20px; color: #4b4f56; 
-        background: #e4e6eb; width: 40px; height: 40px; border-radius: 50%; 
-        display: flex; align-items: center; justify-content: center; transition: 0.3s; 
-    }
-    .icon-btn:hover { background: var(--sidebar-green); color: white; transform: scale(1.1); }
-    .badge { position: absolute; top: -2px; right: -2px; background: #e41e3f; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+        .top-right { display: flex; align-items: center; gap: 15px; }
+        .icon-btn { 
+            position: relative; cursor: pointer; font-size: 20px; color: #4b4f56; 
+            background: #e4e6eb; width: 40px; height: 40px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; transition: 0.3s; 
+        }
+        .icon-btn:hover { background: var(--sidebar-green); color: white; transform: scale(1.1); }
+        .badge { position: absolute; top: -2px; right: -2px; background: #e41e3f; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
 
-    .profile-img { 
-        width:35px; height:35px; border-radius:50%; margin-left:10px; cursor:pointer; 
-        transition: 0.3s; border: 2px solid var(--sidebar-green); 
-    }
+        .profile-img { 
+            width:35px; height:35px; border-radius:50%; margin-left:10px; cursor:pointer; 
+            transition: 0.3s; border: 2px solid var(--sidebar-green); 
+        }
 
-    /* Sidebar */
-    .sidebar {
-        width: 280px; background: var(--sidebar-green); color: white; height: 100vh;
-        position: fixed; top: 0; left: -280px; transition: 0.3s ease; padding-top: 80px; z-index: 1000;
-    }
-    .sidebar.active { left: 0; }
-    .sidebar ul { list-style: none; padding: 0; }
-    .sidebar ul li { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
-    .sidebar ul li:hover { background: rgba(255,255,255,0.1); padding-left: 35px; color: var(--accent-green); }
-    .logout-btn { color: var(--danger-red) !important; }
+        /* Sidebar */
+        .sidebar {
+            width: 280px; background: var(--sidebar-green); color: white; height: 100vh;
+            position: fixed; top: 0; left: -280px; transition: 0.3s ease; padding-top: 80px; z-index: 1000;
+        }
+        .sidebar.active { left: 0; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar ul li { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
+        .sidebar ul li:hover { background: rgba(255,255,255,0.1); padding-left: 35px; color: var(--accent-green); }
+        .logout-btn { color: var(--danger-red) !important; }
 
-    /* Content Area */
-    .content-wrapper { transition: margin-left 0.3s ease; display: flex; flex-direction: column; align-items: center; padding-top: 80px; width: 100%; }
-    .content-wrapper.shifted { margin-left: 280px; width: calc(100% - 280px); }
-    .post-container { width: 95%; max-width: 600px; }
-    
-    .post-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; }
-    #postInput { width: 100%; border: none; border-radius: 8px; padding: 12px; resize: none; min-height: 50px; outline: none; background: #f0f2f5; font-size: 16px; font-family: inherit; }
-    .post-btn { background: var(--sidebar-green); color: white; border: none; padding: 8px 30px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        /* Content Area */
+        .content-wrapper { transition: margin-left 0.3s ease; display: flex; flex-direction: column; align-items: center; padding-top: 80px; width: 100%; }
+        .content-wrapper.shifted { margin-left: 280px; width: calc(100% - 280px); }
+        .post-container { width: 95%; max-width: 600px; }
+        
+        .post-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; }
+        #postInput { width: 100%; border: none; border-radius: 8px; padding: 12px; resize: none; min-height: 50px; outline: none; background: #f0f2f5; font-size: 16px; font-family: inherit; }
+        .post-btn { background: var(--sidebar-green); color: white; border: none; padding: 8px 30px; border-radius: 6px; font-weight: 600; cursor: pointer; }
 
-    /* Post Card & Actions */
-    .post-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #ddd; position: relative; }
-    .three-dot { cursor: pointer; color: #65676b; padding: 8px; border-radius: 50%; transition: 0.3s; }
-    .three-dot:hover { background: #f2f2f2; }
-    
-    .dropdown { display: none; position: absolute; right: 10px; top: 40px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; min-width: 150px; border: 1px solid #eee;}
-    .dropdown.active { display: block; }
-    .dropdown div { padding: 10px 15px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; }
-    .dropdown div:hover { background: #f8fafc; }
-    .dropdown .delete-opt { color: var(--danger-red); }
-    .dropdown .save-opt { color: #10b981; }
+        /* Post Card & Actions */
+        .post-card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #ddd; position: relative; }
+        .three-dot { cursor: pointer; color: #65676b; padding: 8px; border-radius: 50%; transition: 0.3s; }
+        .three-dot:hover { background: #f2f2f2; }
+        
+        .dropdown { display: none; position: absolute; right: 10px; top: 40px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; min-width: 150px; border: 1px solid #eee;}
+        .dropdown.active { display: block; }
+        .dropdown div { padding: 10px 15px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 10px; }
+        .dropdown div:hover { background: #f8fafc; }
+        .dropdown .delete-opt { color: var(--danger-red); }
+        .dropdown .save-opt { color: #10b981; }
 
-    .post-card-actions { border-top: 1px solid #e4e6eb; border-bottom: 1px solid #e4e6eb; padding: 5px 0; display: flex; margin-top: 15px; }
-    .action-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; border-radius: 6px; color: #65676b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .action-item:hover { background: #f2f2f2; }
+        .post-card-actions { border-top: 1px solid #e4e6eb; border-bottom: 1px solid #e4e6eb; padding: 5px 0; display: flex; margin-top: 15px; }
+        .action-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; border-radius: 6px; color: #65676b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .action-item:hover { background: #f2f2f2; }
 
-    /* Comments Section */
-    .comment-display-list { margin-top: 15px; padding: 0 10px; }
-    .comment-item { 
-        background: #f0f2f5; 
-        border-radius: 18px; 
-        padding: 8px 12px; 
-        margin-bottom: 8px; 
-        display: inline-block; 
-        max-width: 90%;
-        font-size: 14px;
-    }
-    .comment-user { font-weight: bold; color: #050505; display: block; margin-bottom: 2px; }
+        /* Comments Section */
+        .comment-display-list { margin-top: 15px; padding: 0 10px; }
+        .comment-wrapper-div { margin-bottom: 12px; }
+        .comment-item { 
+            background: #f0f2f5; 
+            border-radius: 18px; 
+            padding: 8px 12px; 
+            display: inline-block; 
+            max-width: 90%;
+            font-size: 14px;
+        }
+        .comment-user { font-weight: bold; color: #050505; display: block; margin-bottom: 2px; }
+        .comment-actions { margin-left: 12px; margin-top: 2px; font-size: 12px; color: #65676b; }
+        .comment-actions span { cursor: pointer; font-weight: 600; margin-right: 15px; transition: 0.2s; }
+        .comment-actions span:hover { text-decoration: underline; color: var(--sidebar-green); }
+        .liked { color: var(--accent-green) !important; font-weight: bold; }
 
-    .comment-input-area { display: none; padding: 10px; align-items: center; gap: 8px; }
-    .comment-input-area input { flex: 1; padding: 10px 15px; border: none; border-radius: 20px; background: #f0f2f5; outline: none; }
-    .comment-input-area button { background: transparent; color: var(--sidebar-green); border: none; font-weight: 600; cursor: pointer; }
+        .comment-input-area { display: none; padding: 10px; align-items: center; gap: 8px; }
+        .comment-input-area input { flex: 1; padding: 10px 15px; border: none; border-radius: 20px; background: #f0f2f5; outline: none; }
+        .comment-input-area button { background: transparent; color: var(--sidebar-green); border: none; font-weight: 600; cursor: pointer; }
 
-    /* Modal for Saved Items */
-    .modal { display: none; position: fixed; z-index: 1200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-    .modal-content { background: white; margin: 10% auto; padding: 20px; width: 80%; max-width: 500px; border-radius: 12px; max-height: 70vh; overflow-y: auto; }
-</style>
+        /* Modal for Saved Items */
+        .modal { display: none; position: fixed; z-index: 1200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 10% auto; padding: 20px; width: 85%; max-width: 500px; border-radius: 12px; max-height: 75vh; overflow-y: auto; }
+        .saved-item-card { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; position: relative; }
+    </style>
 </head>
 
 <body>
@@ -155,7 +160,6 @@
 
 <div class="content-wrapper" id="mainContent">
     <div class="post-container">
-        <!-- New Post Box -->
         <div class="post-box">
             <div style="display:flex; gap:12px; margin-bottom:15px;">
                 <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
@@ -165,19 +169,15 @@
                 <button class="post-btn" onclick="addNewPost()">Post</button>
             </div>
         </div>
-
-        <div id="feed">
-            <!-- Posts load here -->
-        </div>
+        <div id="feed"></div>
     </div>
 </div>
 
-<!-- Saved Posts Modal -->
 <div id="savedModal" class="modal">
     <div class="modal-content">
-        <span style="float:right; cursor:pointer; font-weight:bold;" onclick="document.getElementById('savedModal').style.display='none'">&times;</span>
-        <h3>Your Saved Posts</h3>
-        <hr>
+        <span style="float:right; cursor:pointer; font-weight:bold; font-size: 24px;" onclick="document.getElementById('savedModal').style.display='none'">&times;</span>
+        <h3 style="color: var(--sidebar-green);"><i class="fa fa-bookmark"></i> Your Saved Posts</h3>
+        <hr style="border: 0.5px solid #eee;">
         <div id="savedItemsList"></div>
     </div>
 </div>
@@ -210,27 +210,24 @@
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                                 <div style="display:flex; gap:10px; align-items:center;">
                                     <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
-                                    <div><b>${post.username}</b><br><small style="color:gray">${post.created_at}</small></div>
+                                    <div><b class="author-name">${post.username}</b><br><small style="color:gray">${post.created_at}</small></div>
                                 </div>
                                 <div style="position:relative;">
                                     <i class="fa fa-ellipsis-h three-dot" onclick="toggleDropdown(this)"></i>
                                     <div class="dropdown">
                                         <div class="save-opt" onclick="savePost(${post.id})"><i class="fa fa-bookmark"></i> Save Post</div>
-                                        <div onclick="editPost(this)"><i class="fa fa-edit"></i> Edit</div>
+                                        <div onclick="editPost(${post.id}, this)"><i class="fa fa-edit"></i> Edit Post</div>
                                         <div class="delete-opt" onclick="deletePost(${post.id}, this)"><i class="fa fa-trash"></i> Delete</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="post-text">${post.content}</div>
-
                             <div class="post-card-actions">
                                 <div class="action-item" onclick="toggleCommentInput(${post.id})"><i class="fa fa-comment"></i> Comment</div>
                                 <div class="action-item" onclick="handleShare(${post.id})"><i class="fa fa-share"></i> Share</div>
                                 <div class="action-item"><i class="fa fa-paper-plane"></i> Message</div>
                             </div>
-
                             <div class="comment-display-list" id="comment-list-${post.id}"></div>
-
                             <div class="comment-input-area" id="comment-area-${post.id}">
                                 <input type="text" placeholder="Write a comment..." id="input-${post.id}">
                                 <button onclick="submitComment(${post.id})">Post</button>
@@ -258,10 +255,14 @@
                 container.innerHTML = "";
                 comments.forEach(c => {
                     container.innerHTML += `
-                        <div style="margin-bottom:5px;">
+                        <div class="comment-wrapper-div">
                             <div class="comment-item">
                                 <span class="comment-user">${c.username}</span>
-                                <span>${c.content}</span>
+                                <span id="comment-text-${c.id}">${c.content}</span>
+                            </div>
+                            <div class="comment-actions">
+                                <span onclick="likeComment(this)">Like</span>
+                                <span onclick="editComment(${c.id})">Edit</span>
                             </div>
                         </div>
                     `;
@@ -269,15 +270,79 @@
             });
     }
 
+    // functionality for Like
+    function likeComment(el) {
+        el.classList.toggle('liked');
+        el.innerText = el.classList.contains('liked') ? 'Liked' : 'Like';
+    }
+
+    // functionality for Edit Comment (Integrated with Backend API)
+    async function editComment(id) {
+        const span = document.getElementById(`comment-text-${id}`);
+        const oldText = span.innerText;
+        const newText = prompt("Edit your comment:", oldText);
+        
+        if(newText && newText.trim() !== "" && newText !== oldText) {
+            try {
+                const response = await fetch('/edit-comment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id, content: newText })
+                });
+                const data = await response.json();
+                if(data.status === "success") {
+                    span.innerText = newText;
+                } else {
+                    alert("Failed to update comment: " + data.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Connection error!");
+            }
+        }
+    }
+
+    // functionality for Save Post (Using LocalStorage)
+    function savePost(postId) {
+        const postCard = document.getElementById(`post-${postId}`);
+        const content = postCard.querySelector('.post-text').innerText;
+        const author = postCard.querySelector('.author-name').innerText;
+
+        let saved = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+        
+        if(!saved.some(p => p.id === postId)) {
+            saved.push({ id: postId, author: author, content: content });
+            localStorage.setItem("pathfinder_saved", JSON.stringify(saved));
+            alert("Post saved successfully!");
+        } else {
+            alert("Post already saved.");
+        }
+    }
+
+    function showSavedPosts() {
+        const list = document.getElementById('savedItemsList');
+        document.getElementById('savedModal').style.display = 'block';
+        const saved = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+        
+        if(saved.length === 0) {
+            list.innerHTML = "<p style='text-align:center; color:gray; padding:20px;'>No saved items yet.</p>";
+        } else {
+            list.innerHTML = saved.map(post => `
+                <div class="saved-item-card">
+                    <strong>${post.author}</strong>
+                    <p style="margin: 5px 0; font-size: 14px;">${post.content}</p>
+                </div>
+            `).join('');
+        }
+    }
+
     function addNewPost() {
         const text = document.getElementById("postInput").value.trim();
         const username = localStorage.getItem("username");
         if(!text) return;
-
         const formData = new FormData();
         formData.append('post_content', text);
         formData.append('username', username);
-
         fetch('/create-post', { method: 'POST', body: formData })
         .then(res => res.json())
         .then(data => {
@@ -290,21 +355,17 @@
 
     function toggleCommentInput(postId) {
         const area = document.getElementById(`comment-area-${postId}`);
-        area.style.display = area.style.display === "none" ? "flex" : "none";
-        if(area.style.display === "flex") document.getElementById(`input-${postId}`).focus();
+        area.style.display = (area.style.display === "none" || area.style.display === "") ? "flex" : "none";
     }
 
     function submitComment(postId) {
         const input = document.getElementById(`input-${postId}`);
         const content = input.value.trim();
-        const username = localStorage.getItem("username");
         if(!content) return;
-
         const formData = new FormData();
         formData.append('post_id', postId);
-        formData.append('username', username);
+        formData.append('username', localStorage.getItem("username"));
         formData.append('comment_text', content);
-
         fetch('/add-comment', { method: 'POST', body: formData })
         .then(res => res.json())
         .then(data => {
@@ -315,48 +376,20 @@
         });
     }
 
-    function handleShare(postId) {
-        fetch('/share-post', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ post_id: postId })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === "success") alert("Post shared successfully!");
-        });
-    }
-
-    function savePost(postId) {
-        const username = localStorage.getItem("username");
-        const formData = new FormData();
-        formData.append('post_id', postId);
-        formData.append('username', username);
-
-        fetch('/save-post', { method: 'POST', body: formData })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === "success") alert("Post saved to your bookmarks!");
-        });
-    }
-
-    function showSavedPosts() {
-        const username = localStorage.getItem("username");
-        // Ekhane apni ekta endpoint banate paren backend-e /get-saved-posts
-        //আপাতত একটি এলার্ট দিচ্ছি, পরে ডাটাবেস থেকে ডাটা নিয়ে আসতে পারবেন।
-        document.getElementById('savedModal').style.display = 'block';
-        document.getElementById('savedItemsList').innerHTML = "Fetching saved posts...";
-        // Backend logic implementation here
-    }
-
     function deletePost(postId, el) {
-        if(confirm("Delete this post?")) el.closest('.post-card').remove();
+        if(confirm("Delete this post?")) {
+            // Future: add fetch('/delete-post/${postId}') here
+            el.closest('.post-card').remove();
+        }
     }
 
-    function editPost(el) {
+    function editPost(postId, el) {
         const textDiv = el.closest('.post-card').querySelector('.post-text');
         const newText = prompt("Edit your post:", textDiv.innerText);
-        if (newText) textDiv.innerText = newText;
+        if (newText && newText.trim() !== "") {
+            // Future: add fetch('/edit-post') here
+            textDiv.innerText = newText;
+        }
     }
 
     function logout() {
@@ -364,6 +397,7 @@
         location.href = 'login.html';
     }
 
+    // Modal and Dropdown close logic
     window.onclick = function(e) {
         if (!e.target.matches('.three-dot')) {
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
@@ -373,6 +407,5 @@
         }
     }
 </script>
-
 </body>
 </html>
