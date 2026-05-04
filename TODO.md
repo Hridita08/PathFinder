@@ -12,22 +12,22 @@
 - [X] Tecnical page
 - [X] Make responsive design
 ## Backend (Python)
-- [-] Setup Python environment
-- [-] Create backend server
-- [ ] User authentication system
-- [ ] Career recommendation logic
-- [-] Registration page-guide
-- [ ] Registration page-student
+- [x] Setup Python environment
+- [x] Create backend server
+- [x] Registration page-guide
+- [x] Registration page-student
+- [x] Search option
+- [x] Responsive Notification
+- [x] Comment of own post
 ## Database (MySQL)
-- [ ] Design database schema
-- [ ] Create student table
-- [ ] Create career/skills table
-- [ ] Connect database with backend
+- [x] Design database schema
+- [x] Create student table
+- [x] Create guide table
+- [x] Connect database with backend
 
 ## Integration
-- [ ] Connect frontend with backend
-- [ ] Store form data in database
-- [ ] Fetch career suggestions from database
+- [x] Connect frontend with backend
+- [x] Store form data in database
 
 ## Testing
-- [ ] Fix bugs and errors
+- [x] Fix bugs and errors
