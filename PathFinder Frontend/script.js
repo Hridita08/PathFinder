@@ -174,7 +174,7 @@ if (data.includes("OTP")) {
   
 // ==================== MESSAGE FUNCTIONS ====================
 
-// ১. Post এর Message button এর জন্য
+//  Post Message button
 function openMessageModal(receiverId, receiverName) {
     const content = prompt(`${receiverName} কে message লিখুন:`);
     if (!content) return;
@@ -195,7 +195,7 @@ function openMessageModal(receiverId, receiverName) {
     .catch(err => console.error('Error:', err));
 }
 
-// ২. Header inbox icon এর জন্য
+// Header inbox icon 
 function loadInbox() {
     const userId = localStorage.getItem('user_id');
 
@@ -224,7 +224,7 @@ function loadInbox() {
     .catch(err => console.error('Error:', err));
 }
 
-// ৩. Unread badge count (page load এ automatically চলবে)
+// Unread badge count
 function loadUnreadCount() {
     const userId = localStorage.getItem('user_id');
     if (!userId) return;
@@ -238,10 +238,10 @@ function loadUnreadCount() {
     .catch(err => console.error('Error:', err));
 }
 
-// Page load হলে unread count দেখাবে
+
 window.addEventListener('load', loadUnreadCount);
 
-// ==================== MESSAGE FUNCTIONS END ====================
+
 
 
 
