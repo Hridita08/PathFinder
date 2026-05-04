@@ -29,8 +29,6 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
-
-# Home route — browser এ 127.0.0.1:5000 দিলে সরাসরি page দেখাবে
 @app.route('/')
 def index():
     return send_from_directory('.', 'comment-section.html')
