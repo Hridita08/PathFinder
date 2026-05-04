@@ -13,21 +13,21 @@ Intelligent Career Guidance System for BAUET
 - [X] Make responsive design
 ## Backend (Python)
 - [X] Setup Python environment
-- [-] Create backend server
-- [ ] User authentication system
-- [ ] Career recommendation logic
-- [-] Resent code page
-- [ ] Set new password 
+- [x] Create backend server
+- [x] User authentication system
+- [x] Resent code page
+- [x] Set new password 
+- [x] Inbox activate
+- [x] Responsive direct messagae 
 ## Database (MySQL)
-- [-] Design database schema
-- [ ] Create student table
-- [ ] Create career/skills table
-- [ ] Connect database with backend
+- [x] Design database schema
+- [x] Create student table
+- [x] Create career/skills table
+- [x] Connect database with backend
 
 ## Integration
-- [ ] Connect frontend with backend
-- [ ] Store form data in database
-- [ ] Fetch career suggestions from database
+- [x] Connect frontend with backend
+- [x] Store form data in database
 
 ## Testing
-- [ ] Fix bugs and errors
+- [x] Fix bugs and errors
