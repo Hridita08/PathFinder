@@ -143,7 +143,7 @@ def send_otp():
     otp = generate_otp()
     otp_storage[email] = otp
 
-    print(f"OTP for {email}: {otp}")  # এখন email না পাঠিয়ে console এ দেখাবে
+    print(f"OTP for {email}: {otp}")  
 
     return jsonify({"message": "OTP sent"})
 @app.route('/verify', methods=['POST'])
@@ -159,12 +159,12 @@ def verify():
     
 
     
-    # ১. Message পাঠানো (Post এর Message button)
+    # post Message button
 
 @app.route('/api/messages/send', methods=['POST'])
 def send_message():
     data = request.json
-    sender_id = data.get('sender_id')   # frontend থেকে পাঠাবেন
+    sender_id = data.get('sender_id')   
     receiver_id = data.get('receiver_id')
     content = data.get('content')
 
@@ -180,7 +180,7 @@ def send_message():
     return jsonify({'success': True, 'message': 'Message is sent successfully'})
 
 
-# ২. Inbox দেখানো (Header এর message icon)
+# Inbox (Header message icon)
 @app.route('/api/messages/inbox/<int:user_id>', methods=['GET'])
 def get_inbox(user_id):
     cur = mysql.connection.cursor()
@@ -200,7 +200,7 @@ def get_inbox(user_id):
     messages = [dict(zip(columns, row)) for row in rows]
     return jsonify({'messages': messages})
 
-# ৩. Unread count (badge number এর জন্য)
+#  Unread count (badge number )
 @app.route('/api/messages/unread-count/<int:user_id>', methods=['GET'])
 def unread_count(user_id):
     cur = mysql.connection.cursor()
@@ -211,7 +211,7 @@ def unread_count(user_id):
     count = cur.fetchone()[0]
     return jsonify({'count': count})
 
-# ==================== MESSAGE ROUTES END ====================
+
 
 
 # Run server
