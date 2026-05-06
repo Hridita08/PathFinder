@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from datetime import datetime
 import mysql.connector
 import base64
 import random
@@ -231,6 +232,52 @@ def get_data():
     cursor.close()
     db.close()
     return jsonify(user)
+# --- ১. নোটিফিকেশন এবং ড্যাশবোর্ড আপডেট API ---
+def time_ago(dt):
+    if not dt:
+        return ""
+    diff = datetime.now() - dt
+    seconds = int(diff.total_seconds())
+    
+    if seconds < 60:
+        return "Just now"
+    elif seconds < 3600:
+        return f"{seconds // 60}m ago"
+    elif seconds < 86400:
+        return f"{seconds // 3600}h ago"
+    else:
+        return f"{seconds // 86400}d ago"
+@app.route('/api/dashboard_updates')
+def dashboard_updates():
+    user_id = session.get('user_id')
+    db = get_db_connection()
+    cursor = db.cursor(dictionary=True)
+    
+    # নোটিফিকেশন আনা
+    cursor.execute("SELECT message, created_at FROM notifications ORDER BY created_at DESC LIMIT 5")
+    notifs = cursor.fetchall()
+    
+    # এই লুপটির আগে ৪টি স্পেস আছে কিনা চেক করুন
+    for n in notifs:
+        n['time_ago'] = time_ago(n['created_at'])
+        n['created_at'] = str(n['created_at'])
 
+    cursor.execute("SELECT COUNT(*) AS count FROM notifications WHERE is_read = 0")
+    unread_notif = cursor.fetchone()['count']
+    
+    # মেসেজ কাউন্ট
+    unread_msg = 0
+    if user_id:
+        cursor.execute("SELECT COUNT(*) AS count FROM messages WHERE receiver_id = %s AND is_read = 0", (user_id,))
+        unread_msg = cursor.fetchone()['count']
+        
+    cursor.close()
+    db.close()
+    
+    return jsonify({
+        "notifications": notifs,
+        "unread_notif_count": unread_notif,
+        "unread_msg_count": unread_msg
+    })
 if __name__ == '__main__':
     app.run(debug=True)

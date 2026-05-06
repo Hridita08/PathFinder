@@ -133,20 +133,32 @@
         <i class="fa fa-search"></i> Search
     </button>
 </form>
-    <div class="top-right" style="display: flex; align-items: center; gap: 15px;">
-    <div class="icon-btn"><i class="fa fa-bell"></i><span class="badge">3</span></div>
-    <div class="icon-btn" onclick="location.href='inbox.html'">
-        <i class="fa fa-envelope"></i>
-        <span class="badge">2</span>
-    </div>
+  <div class="top-right" style="display: flex; align-items: center; gap: 15px;">
     
-    <!-- User name section - design thik rakhar jonno flex use kora hoyeche -->
+    <div class="icon-btn" onclick="toggleNotif()" style="position: relative; cursor: pointer;">
+        <i class="fa fa-bell"></i>
+        <span id="notification-count" class="badge" style="display:none;">0</span>
+        
+        <div id="notif-dropdown" style="display: none; position: absolute; right: 0; top: 45px; width: 280px; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; color: #333; text-align: left;">
+            <div style="padding:10px; font-weight:bold; border-bottom:1px solid #eee;">Notifications</div>
+            <div id="notif-content">
+                <p style="padding:15px; font-size:12px; color:gray;">No new notifications</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="icon-btn" onclick="location.href='inbox.html'" style="position: relative;">
+        <i class="fa fa-envelope"></i>
+        <span id="message-count" class="badge" style="display:none;">0</span>
+    </div>
+
     <div style="display: flex; flex-direction: column; line-height: 1.2;">
         <small style="font-size: 10px; color: gray;">Welcome,</small>
         <span class="user-display-name" id="displayUserName" style="font-weight: bold;">
             {{ user_name if user_name else 'Guest User' }}
         </span>
-    </div>
+    
+</div>
     
     <img src="icons/profile.png" class="profile-img" onclick="location.href='own_profile.html'" style="cursor: pointer; width: 40px; border-radius: 50%;">
 </div>
@@ -381,6 +393,60 @@ window.onload = function() {
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
         }
     }
+    // ==================== MESSAGE FUNCTIONS ====================
+
+function toggleNotif() {
+    const dropdown = document.getElementById('notif-dropdown');
+    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+function connectDashboard() {
+    fetch('/api/dashboard_updates')
+    .then(res => res.json())
+    .then(data => {
+        // নোটিফিকেশন ব্যাজ আপডেট
+        const nBadge = document.getElementById('notification-count');
+        if(nBadge) {
+            nBadge.innerText = data.unread_notif_count;
+            nBadge.style.display = data.unread_notif_count > 0 ? 'block' : 'none';
+        }
+
+        // মেসেজ ব্যাজ আপডেট
+        const mBadge = document.getElementById('message-count'); 
+        if(mBadge) {
+            mBadge.innerText = data.unread_msg_count;
+            mBadge.style.display = data.unread_msg_count > 0 ? 'block' : 'none';
+        }
+
+        // ড্রপডাউন কন্টেন্ট আপডেট
+        const notifContent = document.getElementById('notif-content');
+        if(notifContent && data.notifications.length > 0) {
+            let html = '';
+            data.notifications.forEach(n => {
+                html += `<div style="padding:10px; border-bottom:1px solid #eee; font-size:12px; cursor:pointer;" onmouseover="this.style.background='#f9f9f9'" onmouseout="this.style.background='white'">
+                            ${n.message} <br> <small style="color:green;">${n.time_ago}</small>
+                         </div>`;
+            });
+            notifContent.innerHTML = html;
+        }
+    })
+    .catch(err => console.log("Waiting for server..."));
+}
+
+// ড্রপডাউনের বাইরে ক্লিক করলে যেন বন্ধ হয়ে যায়
+window.addEventListener('click', function(e) {
+    const dropdown = document.getElementById('notif-dropdown');
+    const btn = document.querySelector('.fa-bell');
+    if (dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = 'none';
+    }
+});
+
+setInterval(connectDashboard, 20000);
+window.addEventListener('load', connectDashboard);
 </script>
 
 </body>
