@@ -28,25 +28,16 @@
 Enter the 4 digit verification code sent to your email
 </p>
 
-<form action="new-password.html">
-
-<div class="pf-otp-box">
-
-<input type="text" maxlength="1" class="otp">
-<input type="text" maxlength="1" class="otp">
-<input type="text" maxlength="1" class="otp">
-<input type="text" maxlength="1" class="otp">
-
-</div>
-
-<button type="submit">Verify Code</button>
-
-<div class="pf-resend">
-Resend code in <span id="timer">30</span>s
-</div>
-
+<form id="otp-form">
+    <div class="pf-otp-box">
+        <input type="text" maxlength="1" class="otp" required>
+        <input type="text" maxlength="1" class="otp" required>
+        <input type="text" maxlength="1" class="otp" required>
+        <input type="text" maxlength="1" class="otp" required>
+    </div>
+    <button type="submit">Verify Code</button>
+    <div id="error-msg" style="color: red; margin-top: 10px; font-size: 14px;"></div>
 </form>
-
 </div>
 
 </div>
@@ -97,7 +88,34 @@ timer.textContent = time
 }
 
 },1000)
+document.getElementById('otp-form').addEventListener('submit', function(e) {
+    e.preventDefault();
 
+    // Sobgulo box er value eksathe kora
+    let otpValue = "";
+    inputs.forEach(input => {
+        otpValue += input.value;
+    });
+
+    // Proyojon: User er email-ti kothao save thakte hobe (e.g. localStorage)
+    // Jodi forgot-password page theke email pathan, tobe localStorage.getItem('user_email') use korun
+    const userEmail = localStorage.getItem('user_email'); 
+
+    fetch('/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail, otp: otpValue })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.href = data.redirect; // Success hole new password page-e jabe
+        } else {
+            document.getElementById('error-msg').textContent = data.message;
+        }
+    })
+    .catch(err => console.log("Error:", err));
+});
 </script>
 
 </body>

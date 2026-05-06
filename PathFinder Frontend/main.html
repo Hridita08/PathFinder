@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>PATHFINDER | Home</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<a href="{{ url_for('main_dashboard') }}">Go to Main</a>
 
 <style>
     :root {
@@ -122,22 +122,38 @@
         <i class="fa fa-bars menu-icon" onclick="toggleSidebar()"></i>
         <span class="title-text">Pathfinder</span>
     </div>
-    <div class="search-box">
-        <i class="fa fa-search"></i>
-        <input type="text" placeholder="Search resources...">
+    <!-- Ei structure-ti thakle enter dile kaj korbe -->
+<form action="/search" method="GET" style="display: flex; gap: 5px; max-width: 500px;">
+    <input type="text" name="query" placeholder="Search..." 
+           style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+    
+    <button type="submit" 
+            style="background-color: #1f4e3b; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+        <i class="fa fa-search"></i> Search
+    </button>
+</form>
+    <div class="top-right" style="display: flex; align-items: center; gap: 15px;">
+    <div class="icon-btn"><i class="fa fa-bell"></i><span class="badge">3</span></div>
+    <div class="icon-btn" onclick="location.href='messages.html'">
+        <i class="fa fa-envelope"></i>
+        <span class="badge">2</span>
     </div>
-    <div class="top-right">
-        <div class="icon-btn"><i class="fa fa-bell"></i><span class="badge">3</span></div>
-        <div class="icon-btn"><i class="fa fa-envelope"></i><span class="badge">2</span></div>
-        <span class="user-display-name" id="displayUserName">Guest User</span>
-        <img src="icons/profile.png" class="profile-img" onclick="location.href='own_profile.html'">
+    
+    <!-- User name section - design thik rakhar jonno flex use kora hoyeche -->
+    <div style="display: flex; flex-direction: column; line-height: 1.2;">
+        <small style="font-size: 10px; color: gray;">Welcome,</small>
+        <span class="user-display-name" id="displayUserName" style="font-weight: bold;">
+            {{ user_name if user_name else 'Guest User' }}
+        </span>
     </div>
+    
+    <img src="icons/profile.png" class="profile-img" onclick="location.href='own_profile.html'" style="cursor: pointer; width: 40px; border-radius: 50%;">
+</div>
 </header>
 
 <div class="sidebar" id="sidebar">
     <ul>
         <li onclick="location.href='main.html'"><i class="fa fa-home"></i> Home</li>
-        
         <li onclick="toggleCareerDropdown()">
             <i class="fa fa-graduation-cap"></i> Career Path 
             <i class="fa fa-chevron-down" style="font-size: 10px; margin-left: auto;"></i>
@@ -149,6 +165,7 @@
         </ul>
 
         <li onclick="location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
+        <li onclick="location.href='saved_posts.html'"><i class="fa fa-bookmark"></i> Saved Posts</li>
         <li onclick="logout()" class="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
 </div>
@@ -178,16 +195,17 @@
                     <div style="position:relative;">
                         <i class="fa fa-ellipsis-v three-dot" onclick="this.nextElementSibling.classList.toggle('active')"></i>
                         <div class="dropdown">
-                            <div onclick="alert('Post saved!')">Save Post</div>
+                           <div onclick="savePost(this)">Save Post</div>
                         </div>
                     </div>
                 </div>
                 <div class="post-text">Guidelines are here for your career success.</div>
                 <div class="post-card-actions">
-                    <div class="action-item"><i class="fa fa-comment"></i> Comment</div>
-                    <div class="action-item"><i class="fa fa-share"></i> Share</div>
-                    <div class="action-item"><i class="fa fa-paper-plane"></i> Message</div>
-                </div>
+                    <div class="action-item" onclick="toggleCommentSection(this)"><i class="fa fa-comment"></i> Comment</div>
+                   <div class="action-item" onclick="sharePost('Check out this post on PathFinder!')"><i class="fa fa-share"></i> Share</div>
+                    <div class="action-item" onclick="openChatbot('${text}')">
+    <i class="fa fa-paper-plane"></i> Message
+</div>
             </div>
         </div>
     </div>
@@ -201,7 +219,7 @@
     window.onload = function() {
         const storedName = localStorage.getItem("username");
         if (storedName) {
-            // Jey element-er moddhe nam thake (e.g., id="displayUserName")
+            
             const topName = document.getElementById("displayUserName");
             if(topName) topName.innerText = storedName;
         }
@@ -216,7 +234,6 @@
         const text = document.getElementById("postInput").value.trim();
         if(!text) return;
 
-        // 2. Ekhane localStorage theke namti ana hoyeche
         const currentUserName = localStorage.getItem("userName") || "Guest User";
         
         const postHTML = `
@@ -255,7 +272,109 @@
         }
         el.parentElement.classList.remove('active');
     }
+    function openChatbot(btn) {
+    const postCard = btn.closest('.post-card');
+    const authorName = postCard.querySelector('b').innerText; 
+    const postText = postCard.querySelector('.post-text').innerText;
+    
+    const userMsg = prompt(`Send a message to ${authorName} about this post:`);
+    
+    if (userMsg) {
+       
+        const newMessage = {
+            to: authorName,
+            from: localStorage.getItem("userName") || "Guest User",
+            content: userMsg,
+            referencePost: postText.substring(0, 30) + "...",
+            time: new Date().toLocaleTimeString()
+        };
 
+        let inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
+        inbox.push(newMessage);
+        localStorage.setItem("pathfinder_inbox", JSON.stringify(inbox));
+
+        alert(`Message sent to ${authorName}'s inbox!`);
+    }
+}
+   function toggleCommentSection(btn) {
+    const postCard = btn.closest('.post-card');
+    let commentBox = postCard.querySelector('.comment-box-container');
+    
+    if (!commentBox) {
+        const html = `
+            <div class="comment-box-container" style="padding: 15px; border-top: 1px solid #eee; background: #f9f9f9;">
+                <div class="comments-list" style="margin-bottom: 10px; max-height: 150px; overflow-y: auto;">
+                    <p style="font-size: 13px; color: #555;"><b>Admin:</b> Great resources!</p> 
+                </div>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" class="comm-input" placeholder="Write a comment..." style="flex:1; padding: 8px; border-radius: 20px; border: 1px solid #ddd; outline:none;">
+                    <button onclick="addComment(this)" style="background:var(--sidebar-green); color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fa fa-paper-plane"></i></button>
+                </div>
+            </div>`;
+        postCard.insertAdjacentHTML('beforeend', html);
+    } else {
+        commentBox.style.display = commentBox.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+function addComment(btn) {
+    const input = btn.previousElementSibling;
+    const list = btn.parentElement.previousElementSibling;
+    const userName = localStorage.getItem("userName") || "User";
+    
+    if (input.value.trim() !== "") {
+        const newComment = `<p style="font-size: 13px; margin: 5px 0;"><b>${userName}:</b> ${input.value}</p>`;
+        list.innerHTML += newComment;
+        input.value = "";
+    }
+}
+async function sharePost(text) {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                title: 'PathFinder Post',
+                text: text,
+                url: window.location.href
+            });
+        } catch (err) {
+            console.log("Error sharing:", err);
+        }
+    } else {
+        navigator.clipboard.writeText(window.location.href);
+        alert("Link copied to clipboard!");
+    }
+}
+   function savePost(btn) {
+    const postCard = btn.closest('.post-card');
+    const author = postCard.querySelector('b').innerText;
+    const text = postCard.querySelector('.post-text').innerText;
+    const time = postCard.querySelector('small').innerText;
+
+    let savedPosts = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+
+    const isAlreadySaved = savedPosts.some(p => p.text === text && p.author === author);
+    
+    if (!isAlreadySaved) {
+        savedPosts.push({ author, text, time });
+        localStorage.setItem("pathfinder_saved", JSON.stringify(savedPosts));
+        alert("Post saved successfully!");
+    } else {
+        alert("This post is already in your saved list.");
+    }
+}
+window.onload = function() {
+    const inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
+    const chatList = document.getElementById("chatList"); 
+
+    inbox.forEach(msg => {
+        chatList.innerHTML += `
+            <div class="msg-item">
+                <strong>To: ${msg.to}</strong>
+                <p>${msg.content}</p>
+                <small>Ref: ${msg.referencePost} | ${msg.time}</small>
+            </div>`;
+    });
+}
     window.onclick = function(e) {
         if (!e.target.matches('.three-dot')) {
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));

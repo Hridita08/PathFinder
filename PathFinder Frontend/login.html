@@ -28,8 +28,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <h2>Login</h2>
 
-<form onsubmit="loginUser(event)">
-
+<form action="/login" method="POST">
 <!-- NAME -->
 
 <div class="pf-input-group">
@@ -49,48 +48,35 @@ required>
 <!-- EMAIL -->
 
 <div class="pf-input-group">
-
-<i class="fa-solid fa-envelope"></i>
-
-<input
-type="email"
-placeholder="Email Address"
-name="email"
-autocomplete="email"
-required>
-
-</div>
+        <i class="fa-solid fa-envelope"></i>
+        <input 
+            type="email" 
+            placeholder="Email Address" 
+            name="email" 
+            required>
+    </div>
 
 
 <!-- PASSWORD -->
 
 <div class="pf-input-group">
-
-<i class="fa-solid fa-lock"></i>
-
-<input
-type="password"
-id="password"
-placeholder="Password"
-name="password"
-autocomplete="current-password"
-required>
-
-<i class="fa-solid fa-eye toggle-pass"
-onclick="togglePassword()"></i>
-
-</div>
+        <i class="fa-solid fa-lock"></i>
+        <input 
+            type="password" 
+            id="password" 
+            placeholder="Password" 
+            name="password" 
+            required>
+        <i class="fa-solid fa-eye toggle-pass" onclick="togglePassword()"></i>
+    </div>
 
 
 <button type="submit">Login</button>
 
-<div class="pf-forgot">
-    <a href="forget-password.html" style="text-decoration:none; color:#0d1367;">Forgot password?</a>
-</div>
-
+    <div class="pf-forgot">
+        <a href="forget-password.html" style="text-decoration:none; color:#0d1367;">Forgot password?</a>
+    </div>
 </form>
-
-</div>
 </div>
 <script src="script.js"></script>
 </body>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PathFinder | Saved Posts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .post-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #ddd; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .no-data { text-align: center; color: gray; margin-top: 50px; }
+        .back-btn { cursor: pointer; color: #1f4e3b; text-decoration: none; font-weight: bold; }
+        .remove-btn { color: #ff4d4d; border: 1px solid #ff4d4d; background: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        .remove-btn:hover { background: #ff4d4d; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="main.html" class="back-btn"><i class="fa fa-arrow-left"></i> Back to Home</a>
+            <h2>Saved Resources</h2>
+        </div>
+        <div id="savedContainer"></div>
+    </div>
+
+    <script>
+        // পেজ লোড হওয়ার সময় পোস্টগুলো দেখাবে
+        function renderSavedPosts() {
+            const savedContainer = document.getElementById("savedContainer");
+            const savedPosts = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+
+            if (savedPosts.length === 0) {
+                savedContainer.innerHTML = '<div class="no-data"><i class="fa fa-bookmark-o fa-3x"></i><p>No saved posts yet!</p></div>';
+                return;
+            }
+
+            // কন্টেইনার খালি করে নতুন করে ডাটা ঢোকানো
+            savedContainer.innerHTML = ""; 
+            savedPosts.forEach((post, index) => {
+                savedContainer.innerHTML += `
+                    <div class="post-card">
+                        <div style="display:flex; justify-content:space-between;">
+                            <b>${post.author}</b>
+                            <small style="color:gray">${post.time}</small>
+                        </div>
+                        <p>${post.text}</p>
+                        <button class="remove-btn" onclick="removeSaved(${index})">
+                            <i class="fa fa-trash"></i> Remove
+                        </button>
+                    </div>`;
+            });
+        }
+
+        // রিমুভ করার ফাংশন
+        function removeSaved(index) {
+            let savedPosts = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+            
+            // নির্দিষ্ট ইনডেক্স ডিলিট করা
+            savedPosts.splice(index, 1);
+            
+            // আপডেট করা লিস্ট আবার localStorage এ সেভ করা
+            localStorage.setItem("pathfinder_saved", JSON.stringify(savedPosts));
+            
+            // পেজ রিফ্রেশ না করে সরাসরি ফাংশন কল করে লিস্ট আপডেট করা
+            renderSavedPosts();
+        }
+
+        // শুরুতে রান হবে
+        window.onload = renderSavedPosts;
+    </script>
+</body>
+</html>
