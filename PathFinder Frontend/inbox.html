@@ -9,259 +9,454 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; height: 100vh; overflow: hidden; }
 
-  .topbar { height: 56px; background: #1a2e1a; display: flex; align-items: center; padding: 0 20px; gap: 16px; }
-  .topbar .title-text { color: white; font-size: 18px; font-weight: 600; letter-spacing: 1px; }
-  .topbar a { color: #a0c4a0; font-size: 13px; text-decoration: none; margin-left: auto; }
+  .topbar {
+    height: 56px; background: #1f4e3b;
+    display: flex; align-items: center; padding: 0 20px; gap: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .topbar .title-text { color: white; font-size: 18px; font-weight: 700; letter-spacing: 1px; flex: 1; }
+  .topbar a { color: #a0c4a0; font-size: 13px; text-decoration: none; display: flex; align-items: center; gap: 6px; }
   .topbar a:hover { color: white; }
 
-  .inbox-wrap { display: flex; height: calc(100vh - 56px); }
+  .inbox-wrap { display: flex; height: calc(100vh - 56px); position: relative; }
 
-  .sidebar { width: 300px; background: white; border-right: 1px solid #e4e6ea; display: flex; flex-direction: column; flex-shrink: 0; }
-  .sidebar-header { padding: 16px; border-bottom: 1px solid #e4e6ea; }
-  .sidebar-header h2 { font-size: 18px; font-weight: 600; color: #1a2e1a; }
+  /* SIDEBAR */
+  .conv-sidebar {
+    width: 320px; background: white; border-right: 1px solid #e4e6ea;
+    display: flex; flex-direction: column; flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+  .sidebar-head { padding: 16px 20px; border-bottom: 1px solid #e4e6ea; display: flex; align-items: center; justify-content: space-between; }
+  .sidebar-head h2 { font-size: 18px; font-weight: 700; color: #1a2e1a; }
+  .new-chat-btn { background: #1f4e3b; color: white; border: none; border-radius: 20px; padding: 6px 14px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .new-chat-btn:hover { background: #163a2c; }
 
   .search-box { padding: 10px 16px; border-bottom: 1px solid #e4e6ea; }
-  .search-box input { width: 100%; padding: 8px 12px; border: 1px solid #e4e6ea; border-radius: 20px; font-size: 13px; background: #f0f2f5; outline: none; color: #333; }
-  .search-box input:focus { border-color: #2d5a2d; background: white; }
+  .search-box input {
+    width: 100%; padding: 8px 14px; border: 1px solid #e4e6ea;
+    border-radius: 20px; font-size: 13px; background: #f0f2f5; outline: none;
+  }
+  .search-box input:focus { border-color: #1f4e3b; background: white; }
 
   .conv-list { overflow-y: auto; flex: 1; }
-  .conv-item { display: flex; align-items: center; gap: 10px; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f0f2f5; transition: background 0.15s; }
-  .conv-item:hover { background: #f0f2f5; }
-  .conv-item.active { background: #e8f0e8; }
+  .conv-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f5f5f5;
+    transition: background 0.15s; position: relative;
+  }
+  .conv-item:hover { background: #f5f5f5; }
+  .conv-item.active { background: #e8f2e8; border-left: 3px solid #1f4e3b; }
+  .conv-item .unread { background: #1f4e3b; color: white; font-size: 11px; font-weight: 700; border-radius: 10px; padding: 2px 7px; position: absolute; right: 12px; top: 12px; }
 
-  .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; flex-shrink: 0; color: white; }
+  .avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: white; flex-shrink: 0;
+  }
   .conv-info { flex: 1; min-width: 0; }
   .conv-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
-  .conv-preview { font-size: 12px; color: #65676b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
-  .conv-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
-  .conv-time { font-size: 11px; color: #65676b; }
-  .unread-badge { background: #2d5a2d; color: white; font-size: 11px; font-weight: 600; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+  .conv-preview { font-size: 12px; color: #65676b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; max-width: 200px; }
+  .conv-time { font-size: 11px; color: #999; margin-top: 2px; }
 
-  .chat-area { flex: 1; display: flex; flex-direction: column; background: #f0f2f5; }
-  .chat-header { padding: 12px 20px; background: white; border-bottom: 1px solid #e4e6ea; display: flex; align-items: center; gap: 12px; }
-  .chat-header .info .name { font-size: 15px; font-weight: 600; color: #1a1a1a; }
-  .chat-header .info .status { font-size: 12px; color: #2d5a2d; }
+  /* CHAT AREA */
+  .chat-area { flex: 1; display: flex; flex-direction: column; background: #f0f2f5; min-width: 0; }
+  .chat-header {
+    padding: 12px 20px; background: white; border-bottom: 1px solid #e4e6ea;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .chat-header .back-btn { display: none; font-size: 20px; cursor: pointer; color: #1f4e3b; padding: 4px 8px; }
+  .chat-header .info .name { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+  .chat-header .info .status { font-size: 12px; color: #10b981; }
 
-  .messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 6px; }
-  .msg-group { display: flex; flex-direction: column; gap: 3px; }
+  .messages-wrap { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px; }
+  .date-divider { text-align: center; margin: 12px 0; }
+  .date-divider span { background: #e4e6ea; padding: 4px 12px; border-radius: 12px; font-size: 12px; color: #65676b; }
+
+  .msg-group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
   .msg-group.out { align-items: flex-end; }
   .msg-group.in { align-items: flex-start; }
-  .msg { max-width: 65%; padding: 9px 14px; font-size: 14px; line-height: 1.5; word-break: break-word; }
-  .msg-group.in .msg { background: white; color: #1a1a1a; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-  .msg-group.out .msg { background: #2d5a2d; color: white; border-radius: 18px 18px 4px 18px; }
-  .msg-time { font-size: 11px; color: #65676b; padding: 0 4px; margin-top: 2px; }
+  .msg-group .sender-name { font-size: 11px; color: #888; padding: 0 4px; margin-bottom: 2px; }
 
-  .no-chat { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f0f2f5; color: #65676b; gap: 12px; }
+  .msg {
+    max-width: 68%; padding: 9px 14px; font-size: 14px; line-height: 1.5;
+    word-break: break-word; position: relative;
+  }
+  .msg-group.in .msg { background: white; color: #1a1a1a; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .msg-group.out .msg { background: #1f4e3b; color: white; border-radius: 18px 18px 4px 18px; }
+  .msg .post-ref { font-size: 11px; opacity: 0.75; border-top: 1px solid rgba(255,255,255,0.3); margin-top: 6px; padding-top: 4px; }
+  .msg-time { font-size: 11px; color: #aaa; padding: 0 4px; }
+
+  .no-chat {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 12px; color: #65676b;
+  }
   .no-chat i { font-size: 64px; color: #c8c8c8; }
   .no-chat h3 { font-size: 20px; color: #444; font-weight: 600; }
-  .no-chat p { font-size: 14px; }
 
-  .chat-input-area { padding: 12px 20px; background: white; border-top: 1px solid #e4e6ea; display: flex; align-items: center; gap: 10px; }
-  .chat-input-area input { flex: 1; padding: 10px 16px; border: 1px solid #e4e6ea; border-radius: 22px; font-size: 14px; background: #f0f2f5; outline: none; color: #333; }
-  .chat-input-area input:focus { border-color: #2d5a2d; background: white; }
+  /* INPUT */
+  .chat-input-area {
+    padding: 12px 20px; background: white; border-top: 1px solid #e4e6ea;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .chat-input-area input {
+    flex: 1; padding: 10px 16px; border: 1px solid #e4e6ea;
+    border-radius: 22px; font-size: 14px; background: #f0f2f5; outline: none;
+  }
+  .chat-input-area input:focus { border-color: #1f4e3b; background: white; }
+  .send-btn {
+    width: 42px; height: 42px; border-radius: 50%; background: #1f4e3b;
+    border: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; transition: 0.2s;
+  }
+  .send-btn:hover { background: #163a2c; transform: scale(1.05); }
+  .send-btn i { color: white; font-size: 15px; }
 
-  .send-btn { width: 40px; height: 40px; border-radius: 50%; background: #2d5a2d; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s; }
-  .send-btn:hover { background: #1a4a1a; }
-  .send-btn i { color: white; font-size: 16px; }
+  /* NEW CHAT MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.show { display: flex; }
+  .modal-box { background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 360px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+  .modal-box h3 { margin-bottom: 16px; color: #1f4e3b; }
+  .modal-box input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 12px; }
+  .modal-box input:focus { border-color: #1f4e3b; }
+  .modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
+  .modal-btns button { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+  .modal-btns .cancel-btn { background: #f0f2f5; color: #555; }
+  .modal-btns .start-btn { background: #1f4e3b; color: white; }
 
-  .date-divider { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
-  .date-divider::before, .date-divider::after { content: ''; flex: 1; height: 1px; background: #e4e6ea; }
-  .date-divider span { font-size: 12px; color: #65676b; }
-  .loading { text-align: center; padding: 20px; color: #65676b; font-size: 13px; }
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .conv-sidebar { position: absolute; width: 100%; z-index: 10; left: 0; top: 0; height: 100%; }
+    .conv-sidebar.hidden-mobile { transform: translateX(-100%); }
+    .chat-area { width: 100%; }
+    .chat-header .back-btn { display: block; }
+  }
+
+  .loading { text-align: center; padding: 24px; color: #888; font-size: 13px; }
+  .empty-inbox { padding: 32px 20px; text-align: center; color: #888; }
+  .empty-inbox i { font-size: 40px; color: #ddd; margin-bottom: 12px; display: block; }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <span class="title-text">Pathfinder</span>
-  <a href="main.html"><i class="fa fa-arrow-left"></i> Back to Feed</a>
+  <span class="title-text">Pathfinder Messages</span>
+  <a href="/main"><i class="fa fa-arrow-left"></i> Back to Feed</a>
 </div>
 
 <div class="inbox-wrap">
-  <div class="sidebar">
-    <div class="sidebar-header">
+  <!-- CONVERSATION SIDEBAR -->
+  <div class="conv-sidebar" id="convSidebar">
+    <div class="sidebar-head">
       <h2>Messages</h2>
+      <button class="new-chat-btn" onclick="showNewChatModal()">
+        <i class="fa fa-plus"></i> New
+      </button>
     </div>
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search messages..." oninput="filterConversations()">
+      <input type="text" id="searchInput" placeholder="Search conversations..." oninput="filterConvs()">
     </div>
     <div class="conv-list" id="convList">
-      <div class="loading">Loading conversations...</div>
+      <div class="loading"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
     </div>
   </div>
 
+  <!-- CHAT AREA -->
   <div class="chat-area" id="chatArea">
-    <div class="no-chat">
+    <div class="no-chat" id="noChatMsg">
       <i class="fa fa-comments"></i>
-      <h3>Your Messages</h3>
-      <p>Select a conversation to start chatting</p>
+      <h3>Select a Conversation</h3>
+      <p>Choose from the left or start a new chat</p>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CHAT MODAL -->
+<div class="modal-overlay" id="newChatModal">
+  <div class="modal-box">
+    <h3><i class="fa fa-comment-dots"></i> New Message</h3>
+    <input type="text" id="newChatRecipient" placeholder="Recipient name...">
+    <input type="text" id="newChatMessage" placeholder="Type your message..." onkeydown="if(event.key==='Enter') startNewChat()">
+    <div class="modal-btns">
+      <button class="cancel-btn" onclick="hideNewChatModal()">Cancel</button>
+      <button class="start-btn" onclick="startNewChat()"><i class="fa fa-paper-plane"></i> Send</button>
     </div>
   </div>
 </div>
 
 <script>
-const currentUserId = parseInt(localStorage.getItem('user_id'));
-const currentUsername = localStorage.getItem('username');
-if(!currentUsername) window.location.href = 'login.html';
+// ==================== STATE ====================
+// Get current user — NO redirect to login. If session not available, use localStorage fallback.
+const currentUserName = "{{ session.get('user_name', '') }}" || localStorage.getItem("username") || "Me";
+const currentUserId = parseInt("{{ session.get('user_id', 0) }}") || parseInt(localStorage.getItem("user_id")) || 0;
 
-let conversations = [];
-let activeConvUserId = null;
+let allConversations = [];
+let activeConv = null;
+let useBackend = false; // Will try backend, fallback to localStorage
 
-const avatarColors = ['#e74c3c','#3498db','#9b59b6','#e67e22','#1abc9c','#e91e8c','#2980b9'];
-function getColor(id){ return avatarColors[id % avatarColors.length]; }
-function getInitials(name){ return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
-
-function timeAgo(dateStr){
-  if(!dateStr) return '';
-  const d = new Date(dateStr);
-  const now = new Date();
+const COLORS = ["#e74c3c","#3498db","#9b59b6","#e67e22","#1abc9c","#16a085","#8e44ad","#d35400"];
+const getColor = id => COLORS[(typeof id === "number" ? id : id.charCodeAt(0)) % COLORS.length];
+const getInitials = name => (name || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2);
+const timeAgo = dateStr => {
+  if (!dateStr) return "Now";
+  const d = new Date(dateStr), now = new Date();
   const diff = Math.floor((now - d) / 1000);
-  if(diff < 60) return 'Just now';
-  if(diff < 3600) return Math.floor(diff/60) + 'm ago';
-  if(diff < 86400) return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  return d.toLocaleDateString([],{month:'short',day:'numeric'});
-}
+  if (diff < 60) return "Just now";
+  if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+  if (diff < 86400) return d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+  return d.toLocaleDateString([], {month:"short", day:"numeric"});
+};
 
-async function loadConversations(){
-  try {
-    const res = await fetch(`http://127.0.0.1:5000/api/messages/inbox/${currentUserId}`);
-    const data = await res.json();
-    const msgs = data.messages || [];
-
-    const map = {};
-    msgs.forEach(m => {
-      const otherUserId = m.sender_id === currentUserId ? m.receiver_id : m.sender_id;
-      const otherName = m.sender_id === currentUserId ? m.receiver_name : m.sender_name;
-
-      if(!map[otherUserId] || new Date(m.created_at) > new Date(map[otherUserId].created_at)){
-        map[otherUserId] = {
-          ...m,
-          other_user_id: otherUserId,
-          other_user_name: otherName
-        };
+// ==================== LOAD CONVERSATIONS ====================
+async function loadConversations() {
+  // Try backend first
+  if (currentUserId > 0) {
+    try {
+      const res = await fetch(`/api/messages/inbox/${currentUserId}`);
+      if (res.ok) {
+        const data = await res.json();
+        useBackend = true;
+        buildConversationsFromMessages(data.messages || []);
+        return;
       }
-    });
-
-    conversations = Object.values(map);
-    renderConversations(conversations);
-  } catch(e){
-    document.getElementById('convList').innerHTML = '<div class="loading">Could not load messages.</div>';
+    } catch(e) {}
   }
+
+  // Fallback: load from localStorage inbox
+  loadFromLocalStorage();
 }
 
-function renderConversations(list){
-  const el = document.getElementById('convList');
-  if(list.length === 0){
-    el.innerHTML = '<div class="loading">No conversations yet.</div>';
+function buildConversationsFromMessages(msgs) {
+  const map = {};
+  msgs.forEach(m => {
+    const isOut = (m.sender_id === currentUserId || m.sender_name === currentUserName);
+    const otherId = isOut ? (m.receiver_id || m.receiver_name) : (m.sender_id || m.sender_name);
+    const otherName = isOut ? (m.receiver_name || "Unknown") : (m.sender_name || "Unknown");
+    const key = String(otherId || otherName);
+
+    if (!map[key] || new Date(m.created_at) > new Date(map[key].latestTime)) {
+      map[key] = {
+        id: key,
+        name: otherName,
+        latestMsg: m.content,
+        latestTime: m.created_at,
+        unread: !m.is_read && !isOut ? 1 : 0,
+        messages: []
+      };
+    }
+  });
+
+  // Attach messages per conversation
+  msgs.forEach(m => {
+    const isOut = (m.sender_id === currentUserId || m.sender_name === currentUserName);
+    const otherId = isOut ? (m.receiver_id || m.receiver_name) : (m.sender_id || m.sender_name);
+    const otherName = isOut ? (m.receiver_name || "Unknown") : (m.sender_name || "Unknown");
+    const key = String(otherId || otherName);
+    if (map[key]) {
+      map[key].messages.push({
+        isOut,
+        content: m.content,
+        time: m.created_at,
+        postRef: m.post_ref || null
+      });
+    }
+  });
+
+  allConversations = Object.values(map).sort((a,b) => new Date(b.latestTime) - new Date(a.latestTime));
+  renderConvList(allConversations);
+}
+
+function loadFromLocalStorage() {
+  const inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
+
+  // Group by "to" or "from"
+  const map = {};
+  inbox.forEach(item => {
+    const other = item.to || item.from || "Unknown";
+    if (other === currentUserName) return;
+    if (!map[other]) {
+      map[other] = { id: other, name: other, latestMsg: "", latestTime: new Date().toISOString(), unread: 0, messages: [] };
+    }
+    const isOut = (item.from === currentUserName);
+    map[other].latestMsg = item.content;
+    map[other].messages.push({
+      isOut,
+      content: item.content,
+      time: item.time || "Now",
+      postRef: item.postRef || null,
+      type: item.type
+    });
+    if (!isOut) map[other].unread++;
+  });
+
+  allConversations = Object.values(map);
+  renderConvList(allConversations);
+}
+
+function renderConvList(list) {
+  const el = document.getElementById("convList");
+  if (list.length === 0) {
+    el.innerHTML = `<div class="empty-inbox"><i class="fa fa-inbox"></i><p>No messages yet.<br>Click <b>New</b> to start chatting!</p></div>`;
     return;
   }
-  el.innerHTML = list.map(m => `
-    <div class="conv-item ${activeConvUserId === m.other_user_id ? 'active':''}" 
-         onclick="openChat(${m.other_user_id}, '${m.other_user_name}')">
-      <div class="avatar" style="background:${getColor(m.other_user_id)}">${getInitials(m.other_user_name)}</div>
+  el.innerHTML = list.map(c => `
+    <div class="conv-item ${activeConv && activeConv.id === c.id ? 'active' : ''}" onclick="openConv('${c.id}')">
+      <div class="avatar" style="background:${getColor(c.id)}">${getInitials(c.name)}</div>
       <div class="conv-info">
-        <div class="conv-name">${m.other_user_name}</div>
-        <div class="conv-preview">${m.content}</div>
+        <div class="conv-name">${c.name}</div>
+        <div class="conv-preview">${c.latestMsg}</div>
+        <div class="conv-time">${timeAgo(c.latestTime)}</div>
       </div>
-      <div class="conv-meta">
-        <span class="conv-time">${timeAgo(m.created_at)}</span>
-        ${!m.is_read ? '<span class="unread-badge">1</span>' : ''}
-      </div>
-    </div>
-  `).join('');
+      ${c.unread > 0 ? `<span class="unread">${c.unread}</span>` : ""}
+    </div>`).join("");
 }
 
-function filterConversations(){
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  const filtered = conversations.filter(c => c.other_user_name.toLowerCase().includes(q));
-  renderConversations(filtered);
+function filterConvs() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  renderConvList(allConversations.filter(c => c.name.toLowerCase().includes(q)));
 }
 
-async function openChat(otherUserId, otherUserName){
-  activeConvUserId = otherUserId;
-  renderConversations(conversations);
+// ==================== OPEN CONVERSATION ====================
+function openConv(convId) {
+  activeConv = allConversations.find(c => c.id === convId);
+  if (!activeConv) return;
 
-  const chatArea = document.getElementById('chatArea');
-  chatArea.innerHTML = `
+  // Reset unread
+  activeConv.unread = 0;
+  renderConvList(allConversations);
+
+  // Mobile: hide sidebar
+  const sidebar = document.getElementById("convSidebar");
+  if (window.innerWidth <= 640) sidebar.classList.add("hidden-mobile");
+
+  const chat = document.getElementById("chatArea");
+  chat.innerHTML = `
     <div class="chat-header">
-      <div class="avatar" style="background:${getColor(otherUserId)}">${getInitials(otherUserName)}</div>
+      <button class="back-btn" onclick="goBack()"><i class="fa fa-arrow-left"></i></button>
+      <div class="avatar" style="background:${getColor(activeConv.id)}; width:40px; height:40px; font-size:14px; flex-shrink:0;">${getInitials(activeConv.name)}</div>
       <div class="info">
-        <div class="name">${otherUserName}</div>
+        <div class="name">${activeConv.name}</div>
         <div class="status">Pathfinder Member</div>
       </div>
     </div>
-    <div class="messages" id="messageList"><div class="loading">Loading...</div></div>
+    <div class="messages-wrap" id="msgWrap">
+      <div class="date-divider"><span>Today</span></div>
+    </div>
     <div class="chat-input-area">
-      <input type="text" id="msgInput" placeholder="Type a message..." 
-             onkeydown="if(event.key==='Enter') sendMsg(${otherUserId})">
-      <button class="send-btn" onclick="sendMsg(${otherUserId})">
-        <i class="fa fa-paper-plane"></i>
-      </button>
-    </div>
-  `;
+      <input type="text" id="replyInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendReply()">
+      <button class="send-btn" onclick="sendReply()"><i class="fa fa-paper-plane"></i></button>
+    </div>`;
 
-  try {
-    const res = await fetch(`http://127.0.0.1:5000/api/messages/inbox/${currentUserId}`);
-    const data = await res.json();
-    const msgs = (data.messages || []).filter(m => 
-      (m.sender_id === currentUserId && m.receiver_id === otherUserId) ||
-      (m.sender_id === otherUserId && m.receiver_id === currentUserId)
-    );
-    renderMessages(msgs);
-  } catch(e){
-    document.getElementById('messageList').innerHTML = '<div class="loading">Could not load.</div>';
-  }
+  // Render existing messages
+  renderMessages(activeConv.messages);
 }
 
-function renderMessages(msgs){
-  const el = document.getElementById('messageList');
-  if(!el) return;
-  if(msgs.length === 0){
-    el.innerHTML = '<div class="loading">No messages yet.</div>';
-    return;
-  }
-  el.innerHTML = `
-    <div class="date-divider"><span>Today</span></div>
-    ${msgs.map(m => {
-      const isOut = m.sender_id === currentUserId;
-      return `
-        <div class="msg-group ${isOut ? 'out' : 'in'}">
-          <div class="msg">${m.content}</div>
-          <div class="msg-time">${timeAgo(m.created_at)}</div>
-        </div>
-      `;
-    }).join('')}
-  `;
-  el.scrollTop = el.scrollHeight;
+function renderMessages(msgs) {
+  const wrap = document.getElementById("msgWrap");
+  if (!wrap) return;
+  msgs.forEach(m => appendMsgBubble(m.isOut, m.content, m.time, m.postRef));
+  wrap.scrollTop = wrap.scrollHeight;
 }
 
-async function sendMsg(receiverId){
-  const input = document.getElementById('msgInput');
+function appendMsgBubble(isOut, content, time, postRef) {
+  const wrap = document.getElementById("msgWrap");
+  if (!wrap) return;
+  const refHTML = postRef ? `<div class="post-ref">📌 Re: ${postRef}</div>` : "";
+  wrap.insertAdjacentHTML("beforeend", `
+    <div class="msg-group ${isOut ? 'out' : 'in'}">
+      ${!isOut ? `<div class="sender-name">${activeConv ? activeConv.name : ""}</div>` : ""}
+      <div class="msg">${escapeHtml(content)}${refHTML}</div>
+      <div class="msg-time">${time}</div>
+    </div>`);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+// ==================== SEND REPLY ====================
+async function sendReply() {
+  const input = document.getElementById("replyInput");
+  if (!input) return;
   const content = input.value.trim();
-  if(!content) return;
-  input.value = '';
+  if (!content || !activeConv) return;
+  input.value = "";
 
-  const el = document.getElementById('messageList');
-  el.innerHTML += `
-    <div class="msg-group out">
-      <div class="msg">${content}</div>
-      <div class="msg-time">Just now</div>
-    </div>
-  `;
-  el.scrollTop = el.scrollHeight;
+  const now = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+  appendMsgBubble(true, content, now, null);
 
-  try {
-    await fetch('http://127.0.0.1:5000/api/messages/send', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ sender_id: currentUserId, receiver_id: receiverId, content })
-    });
-    loadConversations();
-  } catch(e){
-    console.error('Send failed:', e);
+  // Add to local messages
+  if (!activeConv.messages) activeConv.messages = [];
+  activeConv.messages.push({ isOut: true, content, time: now });
+  activeConv.latestMsg = content;
+
+  // Try backend
+  if (useBackend && currentUserId > 0) {
+    try {
+      await fetch("/api/messages/send", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ sender_id: currentUserId, receiver_name: activeConv.name, content })
+      });
+    } catch(e) {}
   }
+
+  // Save to localStorage
+  saveLocalMsg({ from: currentUserName, to: activeConv.name, content, time: now, type: "reply" });
 }
 
+function saveLocalMsg(msg) {
+  let inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
+  inbox.unshift(msg);
+  localStorage.setItem("pathfinder_inbox", JSON.stringify(inbox));
+}
+
+// ==================== NEW CHAT ====================
+function showNewChatModal() { document.getElementById("newChatModal").classList.add("show"); }
+function hideNewChatModal() {
+  document.getElementById("newChatModal").classList.remove("show");
+  document.getElementById("newChatRecipient").value = "";
+  document.getElementById("newChatMessage").value = "";
+}
+
+function startNewChat() {
+  const to = document.getElementById("newChatRecipient").value.trim();
+  const msg = document.getElementById("newChatMessage").value.trim();
+  if (!to || !msg) { alert("Please fill in both fields."); return; }
+
+  hideNewChatModal();
+
+  // Check if conv exists
+  let conv = allConversations.find(c => c.name.toLowerCase() === to.toLowerCase());
+  if (!conv) {
+    conv = { id: to, name: to, latestMsg: msg, latestTime: new Date().toISOString(), unread: 0, messages: [] };
+    allConversations.unshift(conv);
+  }
+
+  activeConv = conv;
+  renderConvList(allConversations);
+  openConv(conv.id);
+
+  setTimeout(() => {
+    const input = document.getElementById("replyInput");
+    if (input) { input.value = msg; sendReply(); }
+  }, 100);
+}
+
+// ==================== BACK (MOBILE) ====================
+function goBack() {
+  document.getElementById("convSidebar").classList.remove("hidden-mobile");
+  document.getElementById("chatArea").innerHTML = `
+    <div class="no-chat" id="noChatMsg">
+      <i class="fa fa-comments"></i>
+      <h3>Select a Conversation</h3>
+      <p>Choose from the left or start a new chat</p>
+    </div>`;
+}
+
+// ==================== UTILS ====================
+function escapeHtml(str) {
+  if (!str) return "";
+  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+// ==================== START ====================
 loadConversations();
 </script>
 </body>

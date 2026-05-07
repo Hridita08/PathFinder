@@ -2,41 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PATHFINDER | Home</title>
-<a href="{{ url_for('main_dashboard') }}">Go to Main</a>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
     :root {
-        --sidebar-green: #1f4e3b;   
+        --sidebar-green: #1f4e3b;
         --accent-green: #10b981;
         --page-bg: #f0f2f5;
         --topbar-bg: #ffffff;
         --hover-light: #e4e6eb;
-        --danger-red: #fc8686e4; 
+        --danger-red: #fc8686e4;
     }
 
     body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); overflow-x: hidden; }
-    /* Career Dropdown Style */
-.career-dropdown {
-    display: none; /* Prothome hidden thakbe */
-    background: rgba(0, 0, 0, 0.2);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.career-dropdown li {
-    padding: 10px 25px 10px 60px !important; /* Left side-e ektu beshi jayga */
-    font-size: 14px;
-    color: #ccc;
-    transition: 0.3s;
-}
-.career-dropdown li:hover {
-    color: var(--accent-green) !important;
-    background: transparent !important;
-}
-.career-dropdown.show {
-    display: block; /* Click korle eita show korbe */
-}
+
+    .career-dropdown { display: none; background: rgba(0,0,0,0.2); list-style: none; padding: 0; margin: 0; }
+    .career-dropdown li { padding: 10px 25px 10px 60px !important; font-size: 14px; color: #ccc; transition: 0.3s; }
+    .career-dropdown li:hover { color: var(--accent-green) !important; background: transparent !important; }
+    .career-dropdown.show { display: block; }
+
     .topbar {
         background: var(--topbar-bg); height: 60px; padding: 0 20px;
         display: flex; justify-content: space-between; align-items: center;
@@ -48,34 +33,26 @@
     .menu-icon:hover { background: var(--hover-light); color: var(--sidebar-green); }
     .title-text { font-size: 22px; font-weight: bold; color: var(--sidebar-green); }
 
-    .search-box { 
-        background: #f0f2f5; padding: 8px 15px; border-radius: 20px; 
-        display: flex; align-items: center; width: 350px; 
-        transition: 0.3s ease; border: 1px solid transparent;
-    }
-    .search-box:hover { background: #ffffff; border-color: var(--sidebar-green); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .search-box input { border: none; background: transparent; outline: none; padding-left: 10px; width: 100%; }
+    .search-form { display: flex; gap: 5px; }
+    .search-form input { padding: 8px 14px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-size: 14px; width: 260px; background: #f0f2f5; transition: 0.3s; }
+    .search-form input:focus { background: #fff; border-color: var(--sidebar-green); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .search-form button { background: var(--sidebar-green); color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.3s; }
+    .search-form button:hover { background: #163a2c; }
 
     .top-right { display: flex; align-items: center; gap: 15px; }
-    .icon-btn { 
-        position: relative; cursor: pointer; font-size: 20px; color: #4b4f56; 
-        background: #e4e6eb; width: 40px; height: 40px; border-radius: 50%; 
-        display: flex; align-items: center; justify-content: center; transition: 0.3s; 
+    .icon-btn {
+        position: relative; cursor: pointer; font-size: 18px; color: #4b4f56;
+        background: #e4e6eb; width: 40px; height: 40px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; transition: 0.3s;
     }
     .icon-btn:hover { background: var(--sidebar-green); color: white; transform: scale(1.1); }
-    .badge { position: absolute; top: -2px; right: -2px; background: #e41e3f; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+    .badge { position: absolute; top: -2px; right: -2px; background: #e41e3f; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none; }
 
-    /* Profile Icon Color & Hover Change */
-    .profile-img { 
-        width:35px; height:35px; border-radius:50%; margin-left:10px; cursor:pointer; 
-        transition: 0.3s; border: 2px solid var(--sidebar-green); /* Base color red */
+    .profile-img {
+        width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+        transition: 0.3s; border: 2px solid var(--sidebar-green); object-fit: cover;
     }
-    .profile-img:hover { 
-        border-color: #299b51; 
-        box-shadow: 0 0 12px rgba(27, 92, 34, 0.6); 
-        transform: rotate(5deg);
-    }
-
+    .profile-img:hover { border-color: #299b51; box-shadow: 0 0 12px rgba(27,92,34,0.6); transform: scale(1.05); }
     .user-display-name { font-weight: 600; color: #333; font-size: 14px; }
 
     .sidebar {
@@ -86,368 +63,537 @@
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
     .sidebar ul li:hover { background: rgba(255,255,255,0.1); padding-left: 35px; color: var(--accent-green); }
-    
-    .logout-btn { color: #fc8686e4 !important; transition: all 0.3s ease !important; }
-    .logout-btn:hover { color: #ff4d4d !important; padding-left: 35px !important; background: rgba(252, 134, 134, 0.1) !important; }
+    .logout-btn { color: #fc8686e4 !important; }
+    .logout-btn:hover { color: #ff4d4d !important; padding-left: 35px !important; background: rgba(252,134,134,0.1) !important; }
 
     .content-wrapper { transition: margin-left 0.3s ease; display: flex; flex-direction: column; align-items: center; padding-top: 80px; width: 100%; }
     .content-wrapper.shifted { margin-left: 280px; width: calc(100% - 280px); }
     .post-container { width: 95%; max-width: 700px; }
-    
-    .post-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; transition: 0.3s; }
-    #postInput { width: 100%; border: none; border-radius: 8px; padding: 12px; resize: none; min-height: 60px; outline: none; background: #f0f2f5; font-size: 16px; font-family: inherit; }
+
+    /* POST BOX */
+    .post-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; }
+    #postInput { width: 100%; border: none; border-radius: 8px; padding: 12px; resize: none; min-height: 60px; outline: none; background: #f0f2f5; font-size: 16px; font-family: inherit; box-sizing: border-box; }
     .post-btn { background: var(--sidebar-green); color: white; border: none; padding: 8px 30px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; }
     .post-btn:hover { background: #163a2c; transform: translateY(-2px); }
 
+    /* IMAGE PREVIEW */
+    #imagePreview { display: none; margin-top: 10px; position: relative; }
+    #imagePreview img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; }
+    #removeImg { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+
+    /* POST CARD */
     .post-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #ddd; transition: 0.3s; position: relative; }
+    .post-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
     .three-dot { cursor: pointer; color: #65676b; padding: 8px; border-radius: 50%; transition: 0.3s; }
-    .three-dot:hover { color: #fc8686e4; background: #f2f2f2; }
-    
-    .dropdown { display: none; position: absolute; right: 0; top: 35px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; min-width: 120px; border: 1px solid #eee;}
-    .dropdown.active { display: block; }
-    .dropdown div { padding: 10px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
-    .dropdown div:last-child { border-bottom: none; }
-    .dropdown div:hover { background: #f8fafc; color: #fc8686e4; }
+    .three-dot:hover { color: var(--danger-red); background: #f2f2f2; }
+
+    .dropdown-menu { display: none; position: absolute; right: 10px; top: 45px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; min-width: 130px; border: 1px solid #eee; }
+    .dropdown-menu.active { display: block; }
+    .dropdown-menu div { padding: 10px 15px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; }
+    .dropdown-menu div:last-child { border-bottom: none; }
+    .dropdown-menu div:hover { background: #f8fafc; color: var(--sidebar-green); }
+
+    .post-image { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin: 10px 0; }
 
     .post-card-actions { border-top: 1px solid #e4e6eb; padding-top: 10px; display: flex; margin-top: 15px; }
-    .action-item { flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 8px; color: #65676b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .action-item:hover { background: #f2f2f2; color: var(--sidebar-green); transform: scale(1.05); }
+    .action-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; border-radius: 8px; color: #65676b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
+    .action-item:hover { background: #f2f2f2; color: var(--sidebar-green); }
+
+    /* COMMENT SECTION */
+    .comment-section { border-top: 1px solid #eee; padding: 12px 0 0; margin-top: 10px; display: none; }
+    .comment-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
+    .comment-item .comment-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--sidebar-green); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; }
+    .comment-bubble { background: #f0f2f5; border-radius: 12px; padding: 8px 12px; flex: 1; }
+    .comment-bubble b { font-size: 13px; color: #333; }
+    .comment-bubble p { font-size: 13px; color: #555; margin: 2px 0 0; }
+    .comment-input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .comment-input-row input { flex: 1; padding: 8px 14px; border-radius: 20px; border: 1px solid #ddd; outline: none; font-size: 13px; background: #f0f2f5; }
+    .comment-input-row input:focus { background: white; border-color: var(--sidebar-green); }
+    .comment-send-btn { background: var(--sidebar-green); color: white; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* NOTIFICATION DROPDOWN */
+    #notif-dropdown { display: none; position: absolute; right: 0; top: 45px; width: 290px; background: white; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); z-index: 2000; color: #333; }
+    .notif-header { padding: 12px 16px; font-weight: bold; border-bottom: 1px solid #eee; font-size: 15px; }
+    .notif-item { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
+    .notif-item:hover { background: #f9f9f9; }
+    .notif-item small { color: var(--accent-green); display: block; margin-top: 2px; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1f4e3b; color: white; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 600; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .toast.show { opacity: 1; }
 </style>
 </head>
-
 <body>
 
 <header class="topbar">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <div class="menu-section">
         <i class="fa fa-bars menu-icon" onclick="toggleSidebar()"></i>
         <span class="title-text">Pathfinder</span>
     </div>
-    <!-- Ei structure-ti thakle enter dile kaj korbe -->
-<form action="/search" method="GET" style="display: flex; gap: 5px; max-width: 500px;">
-    <input type="text" name="query" placeholder="Search..." 
-           style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-    
-    <button type="submit" 
-            style="background-color: #1f4e3b; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
-        <i class="fa fa-search"></i> Search
-    </button>
-</form>
-  <div class="top-right" style="display: flex; align-items: center; gap: 15px;">
-    
-    <div class="icon-btn" onclick="toggleNotif()" style="position: relative; cursor: pointer;">
-        <i class="fa fa-bell"></i>
-        <span id="notification-count" class="badge" style="display:none;">0</span>
-        
-        <div id="notif-dropdown" style="display: none; position: absolute; right: 0; top: 45px; width: 280px; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; color: #333; text-align: left;">
-            <div style="padding:10px; font-weight:bold; border-bottom:1px solid #eee;">Notifications</div>
-            <div id="notif-content">
-                <p style="padding:15px; font-size:12px; color:gray;">No new notifications</p>
+
+    <form class="search-form" action="/search" method="GET">
+        <input type="text" name="query" placeholder="Search resources...">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+
+    <div class="top-right">
+        <!-- NOTIFICATION -->
+        <div class="icon-btn" id="notifBtn" onclick="toggleNotif()" style="position:relative;">
+            <i class="fa fa-bell"></i>
+            <span id="notification-count" class="badge">0</span>
+            <div id="notif-dropdown">
+                <div class="notif-header">Notifications</div>
+                <div id="notif-content">
+                    <div class="notif-item" style="color:#888;">No new notifications</div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="icon-btn" onclick="location.href='inbox.html'" style="position: relative;">
-        <i class="fa fa-envelope"></i>
-        <span id="message-count" class="badge" style="display:none;">0</span>
-    </div>
+        <!-- INBOX — FIX: href to Flask route, not inbox.html -->
+        <div class="icon-btn" onclick="location.href='/inbox'" style="position:relative;">
+            <i class="fa fa-envelope"></i>
+            <span id="message-count" class="badge">0</span>
+        </div>
 
-    <div style="display: flex; flex-direction: column; line-height: 1.2;">
-        <small style="font-size: 10px; color: gray;">Welcome,</small>
-        <span class="user-display-name" id="displayUserName" style="font-weight: bold;">
-            {{ user_name if user_name else 'Guest User' }}
-        </span>
-    
-</div>
-    
-    <img src="icons/profile.png" class="profile-img" onclick="location.href='own_profile.html'" style="cursor: pointer; width: 40px; border-radius: 50%;">
-</div>
+        <div style="display:flex; flex-direction:column; line-height:1.2;">
+            <small style="font-size:10px; color:gray;">Welcome,</small>
+            <span class="user-display-name" id="displayUserName">{{ user_name if user_name else 'Guest' }}</span>
+        </div>
+
+        <img src="icons/profile.png" id="topProfilePic" class="profile-img" onclick="location.href='/profile'" title="My Profile">
+    </div>
 </header>
 
 <div class="sidebar" id="sidebar">
     <ul>
-        <li onclick="location.href='main.html'"><i class="fa fa-home"></i> Home</li>
+        <li onclick="location.href='/main'"><i class="fa fa-home"></i> Home</li>
         <li onclick="toggleCareerDropdown()">
-            <i class="fa fa-graduation-cap"></i> Career Path 
-            <i class="fa fa-chevron-down" style="font-size: 10px; margin-left: auto;"></i>
+            <i class="fa fa-graduation-cap"></i> Career Path
+            <i class="fa fa-chevron-down" style="font-size:10px; margin-left:auto;" id="careerIcon"></i>
         </li>
-        
         <ul class="career-dropdown" id="careerDropdown">
-            <li onclick="location.href='technical.html'"><i class="fa fa-code"></i> Technical</li>
-            <li onclick="location.href='non-technical.html'"><i class="fa fa-briefcase"></i> Non-Technical</li>
+            <li onclick="location.href='/technical'"><i class="fa fa-code"></i> Technical</li>
+            <li onclick="location.href='/non-technical'"><i class="fa fa-briefcase"></i> Non-Technical</li>
         </ul>
-
-        <li onclick="location.href='settings.html'"><i class="fa fa-cog"></i> Settings</li>
-        <li onclick="location.href='saved_posts.html'"><i class="fa fa-bookmark"></i> Saved Posts</li>
+        <li onclick="location.href='/settings'"><i class="fa fa-cog"></i> Settings</li>
+        <li onclick="location.href='/saved-posts'"><i class="fa fa-bookmark"></i> Saved Posts</li>
         <li onclick="logout()" class="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
 </div>
+
 <div class="content-wrapper" id="mainContent">
     <div class="post-container">
+
+        <!-- CREATE POST BOX -->
         <div class="post-box">
-            <div style="display:flex; gap:12px; margin-bottom:15px;">
-                <img src="icons/profile.png" style="width:45px; height:45px; border-radius:50%;">
+            <div style="display:flex; gap:12px; margin-bottom:15px; align-items:flex-start;">
+                <img src="icons/profile.png" id="postBoxAvatar" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
                 <textarea id="postInput" placeholder="What's on your mind?"></textarea>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <label style="color:#65676b; cursor:pointer; font-weight:600; font-size:14px;">
-                    <i class="fa fa-image" style="color:#45bd62;"></i> Add Photo
-                    <input type="file" id="imageUpload" style="display:none;" accept="image/*">
+
+            <!-- IMAGE PREVIEW AREA -->
+            <div id="imagePreview">
+                <img id="previewImg" src="" alt="Preview">
+                <button id="removeImg" onclick="removeImage()" title="Remove"><i class="fa fa-times"></i></button>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                <label style="color:#65676b; cursor:pointer; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px;">
+                    <i class="fa fa-image" style="color:#45bd62; font-size:18px;"></i> Add Photo
+                    <input type="file" id="imageUpload" style="display:none;" accept="image/*" onchange="previewImage(this)">
                 </label>
-                <button class="post-btn" onclick="addNewPost()">Post</button>
+                <button class="post-btn" onclick="addNewPost()"><i class="fa fa-paper-plane"></i> Post</button>
             </div>
         </div>
 
+        <!-- FEED -->
         <div id="feed">
-            <div class="post-card">
+            <!-- Default admin post -->
+            <div class="post-card" data-post-id="admin-1">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div style="display:flex; gap:12px; align-items:center;">
-                        <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
-                        <div><b>System Admin</b><br><small style="color:gray">Just now</small></div>
+                        <img src="icons/profile.png" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
+                        <div>
+                            <b>System Admin</b><br>
+                            <small style="color:gray;">Just now</small>
+                        </div>
                     </div>
                     <div style="position:relative;">
-                        <i class="fa fa-ellipsis-v three-dot" onclick="this.nextElementSibling.classList.toggle('active')"></i>
-                        <div class="dropdown">
-                           <div onclick="savePost(this)">Save Post</div>
+                        <i class="fa fa-ellipsis-v three-dot" onclick="toggleDropdown(this)"></i>
+                        <div class="dropdown-menu">
+                            <div onclick="savePost(this)"><i class="fa fa-bookmark"></i> Save Post</div>
                         </div>
                     </div>
                 </div>
-                <div class="post-text">Guidelines are here for your career success.</div>
+                <div class="post-text">Welcome to Pathfinder! Guidelines are here for your career success. Explore career paths, connect with guides, and grow your network. 🎯</div>
                 <div class="post-card-actions">
-                    <div class="action-item" onclick="toggleCommentSection(this)"><i class="fa fa-comment"></i> Comment</div>
-                   <div class="action-item" onclick="sharePost('Check out this post on PathFinder!')"><i class="fa fa-share"></i> Share</div>
-                    <div class="action-item" onclick="openChatbot('${text}')">
-    <i class="fa fa-paper-plane"></i> Message
-</div>
+                    <div class="action-item" onclick="toggleComments(this)"><i class="fa fa-comment"></i> Comment</div>
+                    <div class="action-item" onclick="sharePost(this)"><i class="fa fa-share"></i> Share</div>
+                    <div class="action-item" onclick="messageAboutPost(this)"><i class="fa fa-paper-plane"></i> Message</div>
+                </div>
+                <div class="comment-section"></div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    function toggleCareerDropdown() {
-    const dropdown = document.getElementById("careerDropdown");
-    dropdown.classList.toggle("show");
-}
-    window.onload = function() {
-        const storedName = localStorage.getItem("username");
-        if (storedName) {
-            
-            const topName = document.getElementById("displayUserName");
-            if(topName) topName.innerText = storedName;
-        }
-    };
+<div class="toast" id="toast"></div>
 
-    function toggleSidebar() {
-        document.getElementById("sidebar").classList.toggle("active");
-        document.getElementById("mainContent").classList.toggle("shifted");
+<script>
+// ==================== INIT ====================
+const currentUser = {
+    name: "{{ user_name if user_name else 'Guest' }}",
+    id: null
+};
+
+window.onload = function() {
+    // Set profile pic from localStorage if available
+    const savedPic = localStorage.getItem("profilePic");
+    if (savedPic) {
+        document.getElementById("topProfilePic").src = savedPic;
+        document.getElementById("postBoxAvatar").src = savedPic;
+    }
+    loadFeedFromStorage();
+    connectDashboard();
+};
+
+// ==================== SIDEBAR ====================
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("active");
+    document.getElementById("mainContent").classList.toggle("shifted");
+}
+
+function toggleCareerDropdown() {
+    const dd = document.getElementById("careerDropdown");
+    const icon = document.getElementById("careerIcon");
+    dd.classList.toggle("show");
+    icon.style.transform = dd.classList.contains("show") ? "rotate(180deg)" : "rotate(0)";
+}
+
+// ==================== IMAGE PREVIEW ====================
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("previewImg").src = e.target.result;
+            document.getElementById("imagePreview").style.display = "block";
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function removeImage() {
+    document.getElementById("imageUpload").value = "";
+    document.getElementById("imagePreview").style.display = "none";
+    document.getElementById("previewImg").src = "";
+}
+
+// ==================== CREATE POST ====================
+function addNewPost() {
+    const text = document.getElementById("postInput").value.trim();
+    const imgSrc = document.getElementById("previewImg").src;
+    const hasImage = document.getElementById("imagePreview").style.display === "block";
+
+    if (!text && !hasImage) {
+        showToast("Write something or add a photo!");
+        return;
     }
 
-    function addNewPost() {
-        const text = document.getElementById("postInput").value.trim();
-        if(!text) return;
+    const userName = currentUser.name;
+    const userPic = localStorage.getItem("profilePic") || "icons/profile.png";
+    const postId = "post-" + Date.now();
+    const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
-        const currentUserName = localStorage.getItem("userName") || "Guest User";
-        
-        const postHTML = `
+    const imageHTML = hasImage ? `<img class="post-image" src="${imgSrc}" alt="Post Image">` : "";
+
+    const postHTML = `
+        <div class="post-card" data-post-id="${postId}">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <img src="${userPic}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
+                    <div><b>${escapeHtml(userName)}</b><br><small style="color:gray;">${now}</small></div>
+                </div>
+                <div style="position:relative;">
+                    <i class="fa fa-ellipsis-v three-dot" onclick="toggleDropdown(this)"></i>
+                    <div class="dropdown-menu">
+                        <div onclick="editPost(this)"><i class="fa fa-pen"></i> Edit</div>
+                        <div onclick="deletePost(this)"><i class="fa fa-trash"></i> Delete</div>
+                    </div>
+                </div>
+            </div>
+            <div class="post-text">${escapeHtml(text)}</div>
+            ${imageHTML}
+            <div class="post-card-actions">
+                <div class="action-item" onclick="toggleComments(this)"><i class="fa fa-comment"></i> Comment</div>
+                <div class="action-item" onclick="sharePost(this)"><i class="fa fa-share"></i> Share</div>
+                <div class="action-item" onclick="messageAboutPost(this)"><i class="fa fa-paper-plane"></i> Message</div>
+            </div>
+            <div class="comment-section"></div>
+        </div>`;
+
+    document.getElementById("feed").insertAdjacentHTML("afterbegin", postHTML);
+    document.getElementById("postInput").value = "";
+    removeImage();
+
+    // Save to backend
+    savePostToServer({ user: userName, text, image: hasImage ? imgSrc : null, time: now });
+    showToast("Post shared! ✅");
+}
+
+function editPost(el) {
+    const card = el.closest(".post-card");
+    const textDiv = card.querySelector(".post-text");
+    const newText = prompt("Edit your post:", textDiv.innerText);
+    if (newText !== null && newText.trim()) textDiv.innerText = newText;
+    closeAllDropdowns();
+}
+
+function deletePost(el) {
+    if (confirm("Delete this post?")) {
+        el.closest(".post-card").remove();
+        showToast("Post deleted.");
+    }
+    closeAllDropdowns();
+}
+
+// ==================== SAVE POST ====================
+function savePost(el) {
+    const card = el.closest(".post-card");
+    const author = card.querySelector("b").innerText;
+    const text = card.querySelector(".post-text").innerText;
+    const time = card.querySelector("small").innerText;
+    const imgEl = card.querySelector(".post-image");
+
+    let saved = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+    if (saved.some(p => p.text === text && p.author === author)) {
+        showToast("Already saved!");
+        return;
+    }
+    saved.push({ author, text, time, image: imgEl ? imgEl.src : null });
+    localStorage.setItem("pathfinder_saved", JSON.stringify(saved));
+    showToast("Post saved! 🔖");
+    closeAllDropdowns();
+}
+
+// ==================== COMMENTS ====================
+function toggleComments(btn) {
+    const card = btn.closest(".post-card");
+    const section = card.querySelector(".comment-section");
+
+    if (!section.innerHTML.trim()) {
+        // Build comment UI
+        section.innerHTML = `
+            <div class="comments-list"></div>
+            <div class="comment-input-row">
+                <input type="text" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') submitComment(this)">
+                <button class="comment-send-btn" onclick="submitComment(this.previousElementSibling)">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
+            </div>`;
+    }
+
+    section.style.display = section.style.display === "block" ? "none" : "block";
+}
+
+function submitComment(input) {
+    const val = input.value.trim();
+    if (!val) return;
+    const list = input.closest(".comment-section").querySelector(".comments-list");
+    const userName = currentUser.name;
+    const initials = userName.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2);
+
+    list.insertAdjacentHTML("beforeend", `
+        <div class="comment-item">
+            <div class="comment-avatar">${initials}</div>
+            <div class="comment-bubble">
+                <b>${escapeHtml(userName)}</b>
+                <p>${escapeHtml(val)}</p>
+            </div>
+        </div>`);
+    input.value = "";
+
+    // Save comment as inbox message
+    saveInboxMessage({
+        type: "comment",
+        from: userName,
+        content: val,
+        postRef: input.closest(".post-card").querySelector(".post-text").innerText.substring(0,40) + "...",
+        time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+    });
+}
+
+// ==================== SHARE ====================
+async function sharePost(btn) {
+    const card = btn.closest(".post-card");
+    const text = card.querySelector(".post-text").innerText;
+    const shareData = { title: "Pathfinder Post", text: text, url: window.location.href };
+
+    if (navigator.share) {
+        try { await navigator.share(shareData); showToast("Shared! 🔗"); } catch(e) {}
+    } else {
+        navigator.clipboard.writeText(window.location.href).then(() => showToast("Link copied! 📋"));
+    }
+
+    saveInboxMessage({
+        type: "share",
+        from: currentUser.name,
+        content: "Shared a post: " + text.substring(0,40) + "...",
+        time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+    });
+}
+
+// ==================== MESSAGE ABOUT POST ====================
+function messageAboutPost(btn) {
+    const card = btn.closest(".post-card");
+    const author = card.querySelector("b").innerText;
+    const postText = card.querySelector(".post-text").innerText;
+
+    const msg = prompt(`Send a message to ${author} about this post:`);
+    if (!msg || !msg.trim()) return;
+
+    // Save to server inbox
+    fetch("/api/messages/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            sender_name: currentUser.name,
+            receiver_name: author,
+            content: msg,
+            post_ref: postText.substring(0, 50)
+        })
+    }).catch(() => {
+        // Fallback to localStorage
+        saveInboxMessage({
+            type: "message",
+            from: currentUser.name,
+            to: author,
+            content: msg,
+            postRef: postText.substring(0,40) + "...",
+            time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+        });
+    });
+
+    showToast(`Message sent to ${author}! 💬`);
+}
+
+// ==================== INBOX LOCAL STORAGE ====================
+function saveInboxMessage(msgObj) {
+    let inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
+    inbox.unshift(msgObj);
+    if (inbox.length > 100) inbox = inbox.slice(0, 100);
+    localStorage.setItem("pathfinder_inbox", JSON.stringify(inbox));
+}
+
+// ==================== FEED PERSISTENCE (localStorage) ====================
+function savePostToServer(postData) {
+    let posts = JSON.parse(localStorage.getItem("pathfinder_posts")) || [];
+    posts.unshift(postData);
+    if (posts.length > 50) posts = posts.slice(0, 50);
+    localStorage.setItem("pathfinder_posts", JSON.stringify(posts));
+}
+
+function loadFeedFromStorage() {
+    const posts = JSON.parse(localStorage.getItem("pathfinder_posts")) || [];
+    posts.forEach(p => {
+        const userPic = localStorage.getItem("profilePic") || "icons/profile.png";
+        const imageHTML = p.image ? `<img class="post-image" src="${p.image}" alt="Post">` : "";
+        const html = `
             <div class="post-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <div style="display:flex; gap:12px; align-items:center;">
-                        <img src="icons/profile.png" style="width:40px; height:40px; border-radius:50%;">
-                        <div><b>${currentUserName}</b><br><small style="color:gray">Just now</small></div>
+                        <img src="${userPic}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
+                        <div><b>${escapeHtml(p.user)}</b><br><small style="color:gray;">${p.time}</small></div>
                     </div>
                     <div style="position:relative;">
-                        <i class="fa fa-ellipsis-v three-dot" onclick="this.nextElementSibling.classList.toggle('active')"></i>
-                        <div class="dropdown">
-                            <div onclick="editPost(this)">Edit</div>
-                            <div onclick="this.closest('.post-card').remove()">Delete</div>
+                        <i class="fa fa-ellipsis-v three-dot" onclick="toggleDropdown(this)"></i>
+                        <div class="dropdown-menu">
+                            <div onclick="editPost(this)"><i class="fa fa-pen"></i> Edit</div>
+                            <div onclick="deletePost(this)"><i class="fa fa-trash"></i> Delete</div>
                         </div>
                     </div>
                 </div>
-                <div class="post-text">${text}</div>
+                <div class="post-text">${escapeHtml(p.text || "")}</div>
+                ${imageHTML}
                 <div class="post-card-actions">
-                    <div class="action-item"><i class="fa fa-comment"></i> Comment</div>
-                    <div class="action-item"><i class="fa fa-share"></i> Share</div>
-                    <div class="action-item"><i class="fa fa-paper-plane"></i> Message</div>
+                    <div class="action-item" onclick="toggleComments(this)"><i class="fa fa-comment"></i> Comment</div>
+                    <div class="action-item" onclick="sharePost(this)"><i class="fa fa-share"></i> Share</div>
+                    <div class="action-item" onclick="messageAboutPost(this)"><i class="fa fa-paper-plane"></i> Message</div>
                 </div>
-            </div>
-        `;
-        document.getElementById("feed").insertAdjacentHTML('afterbegin', postHTML);
-        document.getElementById("postInput").value = "";
-    }
-
-    function editPost(el) {
-        const postCard = el.closest('.post-card');
-        const textDiv = postCard.querySelector('.post-text');
-        const newText = prompt("Edit your post:", textDiv.innerText);
-        if (newText !== null && newText.trim() !== "") {
-            textDiv.innerText = newText;
-        }
-        el.parentElement.classList.remove('active');
-    }
-    function openChatbot(btn) {
-    const postCard = btn.closest('.post-card');
-    const authorName = postCard.querySelector('b').innerText; 
-    const postText = postCard.querySelector('.post-text').innerText;
-    
-    const userMsg = prompt(`Send a message to ${authorName} about this post:`);
-    
-    if (userMsg) {
-       
-        const newMessage = {
-            to: authorName,
-            from: localStorage.getItem("userName") || "Guest User",
-            content: userMsg,
-            referencePost: postText.substring(0, 30) + "...",
-            time: new Date().toLocaleTimeString()
-        };
-
-        let inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
-        inbox.push(newMessage);
-        localStorage.setItem("pathfinder_inbox", JSON.stringify(inbox));
-
-        alert(`Message sent to ${authorName}'s inbox!`);
-    }
-}
-   function toggleCommentSection(btn) {
-    const postCard = btn.closest('.post-card');
-    let commentBox = postCard.querySelector('.comment-box-container');
-    
-    if (!commentBox) {
-        const html = `
-            <div class="comment-box-container" style="padding: 15px; border-top: 1px solid #eee; background: #f9f9f9;">
-                <div class="comments-list" style="margin-bottom: 10px; max-height: 150px; overflow-y: auto;">
-                    <p style="font-size: 13px; color: #555;"><b>Admin:</b> Great resources!</p> 
-                </div>
-                <div style="display:flex; gap:5px;">
-                    <input type="text" class="comm-input" placeholder="Write a comment..." style="flex:1; padding: 8px; border-radius: 20px; border: 1px solid #ddd; outline:none;">
-                    <button onclick="addComment(this)" style="background:var(--sidebar-green); color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer;"><i class="fa fa-paper-plane"></i></button>
-                </div>
+                <div class="comment-section"></div>
             </div>`;
-        postCard.insertAdjacentHTML('beforeend', html);
-    } else {
-        commentBox.style.display = commentBox.style.display === 'none' ? 'block' : 'none';
-    }
-}
-
-function addComment(btn) {
-    const input = btn.previousElementSibling;
-    const list = btn.parentElement.previousElementSibling;
-    const userName = localStorage.getItem("userName") || "User";
-    
-    if (input.value.trim() !== "") {
-        const newComment = `<p style="font-size: 13px; margin: 5px 0;"><b>${userName}:</b> ${input.value}</p>`;
-        list.innerHTML += newComment;
-        input.value = "";
-    }
-}
-async function sharePost(text) {
-    if (navigator.share) {
-        try {
-            await navigator.share({
-                title: 'PathFinder Post',
-                text: text,
-                url: window.location.href
-            });
-        } catch (err) {
-            console.log("Error sharing:", err);
-        }
-    } else {
-        navigator.clipboard.writeText(window.location.href);
-        alert("Link copied to clipboard!");
-    }
-}
-   function savePost(btn) {
-    const postCard = btn.closest('.post-card');
-    const author = postCard.querySelector('b').innerText;
-    const text = postCard.querySelector('.post-text').innerText;
-    const time = postCard.querySelector('small').innerText;
-
-    let savedPosts = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
-
-    const isAlreadySaved = savedPosts.some(p => p.text === text && p.author === author);
-    
-    if (!isAlreadySaved) {
-        savedPosts.push({ author, text, time });
-        localStorage.setItem("pathfinder_saved", JSON.stringify(savedPosts));
-        alert("Post saved successfully!");
-    } else {
-        alert("This post is already in your saved list.");
-    }
-}
-window.onload = function() {
-    const inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
-    const chatList = document.getElementById("chatList"); 
-
-    inbox.forEach(msg => {
-        chatList.innerHTML += `
-            <div class="msg-item">
-                <strong>To: ${msg.to}</strong>
-                <p>${msg.content}</p>
-                <small>Ref: ${msg.referencePost} | ${msg.time}</small>
-            </div>`;
+        document.getElementById("feed").insertAdjacentHTML("beforeend", html);
     });
 }
-    window.onclick = function(e) {
-        if (!e.target.matches('.three-dot')) {
-            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
-        }
-    }
-    // ==================== MESSAGE FUNCTIONS ====================
 
+// ==================== DROPDOWN ====================
+function toggleDropdown(icon) {
+    closeAllDropdowns();
+    icon.nextElementSibling.classList.toggle("active");
+}
+function closeAllDropdowns() {
+    document.querySelectorAll(".dropdown-menu.active").forEach(d => d.classList.remove("active"));
+}
+window.onclick = function(e) {
+    if (!e.target.matches(".three-dot") && !e.target.closest(".dropdown-menu")) closeAllDropdowns();
+};
+
+// ==================== NOTIFICATIONS ====================
 function toggleNotif() {
-    const dropdown = document.getElementById('notif-dropdown');
-    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-        dropdown.style.display = 'block';
-    } else {
-        dropdown.style.display = 'none';
-    }
+    const dd = document.getElementById("notif-dropdown");
+    dd.style.display = dd.style.display === "block" ? "none" : "block";
 }
-function connectDashboard() {
-    fetch('/api/dashboard_updates')
-    .then(res => res.json())
-    .then(data => {
-        // নোটিফিকেশন ব্যাজ আপডেট
-        const nBadge = document.getElementById('notification-count');
-        if(nBadge) {
-            nBadge.innerText = data.unread_notif_count;
-            nBadge.style.display = data.unread_notif_count > 0 ? 'block' : 'none';
-        }
-
-        // মেসেজ ব্যাজ আপডেট
-        const mBadge = document.getElementById('message-count'); 
-        if(mBadge) {
-            mBadge.innerText = data.unread_msg_count;
-            mBadge.style.display = data.unread_msg_count > 0 ? 'block' : 'none';
-        }
-
-        // ড্রপডাউন কন্টেন্ট আপডেট
-        const notifContent = document.getElementById('notif-content');
-        if(notifContent && data.notifications.length > 0) {
-            let html = '';
-            data.notifications.forEach(n => {
-                html += `<div style="padding:10px; border-bottom:1px solid #eee; font-size:12px; cursor:pointer;" onmouseover="this.style.background='#f9f9f9'" onmouseout="this.style.background='white'">
-                            ${n.message} <br> <small style="color:green;">${n.time_ago}</small>
-                         </div>`;
-            });
-            notifContent.innerHTML = html;
-        }
-    })
-    .catch(err => console.log("Waiting for server..."));
-}
-
-// ড্রপডাউনের বাইরে ক্লিক করলে যেন বন্ধ হয়ে যায়
-window.addEventListener('click', function(e) {
-    const dropdown = document.getElementById('notif-dropdown');
-    const btn = document.querySelector('.fa-bell');
-    if (dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.style.display = 'none';
-    }
+window.addEventListener("click", function(e) {
+    const dd = document.getElementById("notif-dropdown");
+    const btn = document.getElementById("notifBtn");
+    if (dd && !btn.contains(e.target)) dd.style.display = "none";
 });
 
-setInterval(connectDashboard, 20000);
-window.addEventListener('load', connectDashboard);
-</script>
+function connectDashboard() {
+    fetch("/api/dashboard_updates")
+        .then(r => r.json())
+        .then(data => {
+            const nBadge = document.getElementById("notification-count");
+            if (nBadge) {
+                nBadge.innerText = data.unread_notif_count;
+                nBadge.style.display = data.unread_notif_count > 0 ? "block" : "none";
+            }
+            const mBadge = document.getElementById("message-count");
+            if (mBadge) {
+                mBadge.innerText = data.unread_msg_count;
+                mBadge.style.display = data.unread_msg_count > 0 ? "block" : "none";
+            }
+            const content = document.getElementById("notif-content");
+            if (content && data.notifications && data.notifications.length > 0) {
+                content.innerHTML = data.notifications.map(n => `
+                    <div class="notif-item">${n.message}<small>${n.time_ago}</small></div>`).join("");
+            }
+        })
+        .catch(() => {});
+}
 
+setInterval(connectDashboard, 20000);
+
+// ==================== LOGOUT ====================
+function logout() {
+    if (confirm("Log out of Pathfinder?")) {
+        fetch("/logout", { method: "POST" })
+            .then(() => window.location.href = "/login")
+            .catch(() => window.location.href = "/login");
+    }
+}
+
+// ==================== UTILS ====================
+function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.innerText = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 3000);
+}
+</script>
 </body>
 </html>
