@@ -6,458 +6,438 @@
 <title>PATHFINDER | Messages</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; height: 100vh; overflow: hidden; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; height: 100vh; overflow: hidden; }
 
-  .topbar {
-    height: 56px; background: #1f4e3b;
-    display: flex; align-items: center; padding: 0 20px; gap: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  .topbar .title-text { color: white; font-size: 18px; font-weight: 700; letter-spacing: 1px; flex: 1; }
-  .topbar a { color: #a0c4a0; font-size: 13px; text-decoration: none; display: flex; align-items: center; gap: 6px; }
-  .topbar a:hover { color: white; }
+.topbar { height: 56px; background: #1f4e3b; display: flex; align-items: center; padding: 0 20px; gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+.topbar .brand { color: white; font-size: 18px; font-weight: 700; flex: 1; }
+.topbar a { color: #a8d5b5; font-size: 13px; text-decoration: none; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; transition: .2s; }
+.topbar a:hover { background: rgba(255,255,255,.15); color: white; }
 
-  .inbox-wrap { display: flex; height: calc(100vh - 56px); position: relative; }
+.wrap { display: flex; height: calc(100vh - 56px); }
 
-  /* SIDEBAR */
-  .conv-sidebar {
-    width: 320px; background: white; border-right: 1px solid #e4e6ea;
-    display: flex; flex-direction: column; flex-shrink: 0;
-    transition: transform 0.3s ease;
-  }
-  .sidebar-head { padding: 16px 20px; border-bottom: 1px solid #e4e6ea; display: flex; align-items: center; justify-content: space-between; }
-  .sidebar-head h2 { font-size: 18px; font-weight: 700; color: #1a2e1a; }
-  .new-chat-btn { background: #1f4e3b; color: white; border: none; border-radius: 20px; padding: 6px 14px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-  .new-chat-btn:hover { background: #163a2c; }
+/* ── LEFT: conversation list ── */
+.left-panel { width: 310px; background: white; border-right: 1px solid #e4e6ea; display: flex; flex-direction: column; flex-shrink: 0; transition: transform .3s; }
+.left-head { padding: 14px 16px; border-bottom: 1px solid #e4e6ea; display: flex; align-items: center; justify-content: space-between; }
+.left-head h2 { font-size: 17px; font-weight: 700; color: #1a2e1a; }
+.new-btn { background: #1f4e3b; color: white; border: none; border-radius: 18px; padding: 6px 14px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.new-btn:hover { background: #163a2c; }
+.search-row { padding: 10px 14px; border-bottom: 1px solid #e4e6ea; }
+.search-row input { width: 100%; padding: 8px 13px; border: 1px solid #ddd; border-radius: 20px; font-size: 13px; background: #f5f5f5; outline: none; }
+.search-row input:focus { border-color: #1f4e3b; background: white; }
+.conv-list { flex: 1; overflow-y: auto; }
 
-  .search-box { padding: 10px 16px; border-bottom: 1px solid #e4e6ea; }
-  .search-box input {
-    width: 100%; padding: 8px 14px; border: 1px solid #e4e6ea;
-    border-radius: 20px; font-size: 13px; background: #f0f2f5; outline: none;
-  }
-  .search-box input:focus { border-color: #1f4e3b; background: white; }
+.conv-item { display: flex; align-items: center; gap: 11px; padding: 11px 14px; cursor: pointer; border-bottom: 1px solid #f5f5f5; position: relative; transition: background .15s; }
+.conv-item:hover { background: #f7f7f7; }
+.conv-item.active { background: #e8f2e8; border-left: 3px solid #1f4e3b; }
+.c-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: white; flex-shrink: 0; }
+.c-info { flex: 1; min-width: 0; }
+.c-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.c-preview { font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.c-time { font-size: 11px; color: #bbb; margin-top: 2px; }
+.c-badge { position: absolute; right: 12px; top: 10px; background: #1f4e3b; color: white; font-size: 11px; font-weight: 700; border-radius: 10px; padding: 2px 7px; }
 
-  .conv-list { overflow-y: auto; flex: 1; }
-  .conv-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f5f5f5;
-    transition: background 0.15s; position: relative;
-  }
-  .conv-item:hover { background: #f5f5f5; }
-  .conv-item.active { background: #e8f2e8; border-left: 3px solid #1f4e3b; }
-  .conv-item .unread { background: #1f4e3b; color: white; font-size: 11px; font-weight: 700; border-radius: 10px; padding: 2px 7px; position: absolute; right: 12px; top: 12px; }
+.empty-list { padding: 40px 20px; text-align: center; color: #aaa; }
+.empty-list i { font-size: 36px; margin-bottom: 10px; display: block; }
 
-  .avatar {
-    width: 46px; height: 46px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 700; color: white; flex-shrink: 0;
-  }
-  .conv-info { flex: 1; min-width: 0; }
-  .conv-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
-  .conv-preview { font-size: 12px; color: #65676b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; max-width: 200px; }
-  .conv-time { font-size: 11px; color: #999; margin-top: 2px; }
+/* ── RIGHT: chat area ── */
+.right-panel { flex: 1; display: flex; flex-direction: column; background: #f0f2f5; min-width: 0; }
+.no-chat-msg { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #888; }
+.no-chat-msg i { font-size: 60px; color: #ccc; }
+.no-chat-msg h3 { font-size: 18px; color: #555; }
 
-  /* CHAT AREA */
-  .chat-area { flex: 1; display: flex; flex-direction: column; background: #f0f2f5; min-width: 0; }
-  .chat-header {
-    padding: 12px 20px; background: white; border-bottom: 1px solid #e4e6ea;
-    display: flex; align-items: center; gap: 12px;
-  }
-  .chat-header .back-btn { display: none; font-size: 20px; cursor: pointer; color: #1f4e3b; padding: 4px 8px; }
-  .chat-header .info .name { font-size: 15px; font-weight: 700; color: #1a1a1a; }
-  .chat-header .info .status { font-size: 12px; color: #10b981; }
+.chat-head { padding: 12px 18px; background: white; border-bottom: 1px solid #e4e6ea; display: flex; align-items: center; gap: 12px; }
+.chat-head .back-btn { display: none; font-size: 18px; cursor: pointer; color: #1f4e3b; padding: 4px 8px; border-radius: 6px; }
+.chat-head .ch-name { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+.chat-head .ch-status { font-size: 12px; color: #10b981; }
 
-  .messages-wrap { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 4px; }
-  .date-divider { text-align: center; margin: 12px 0; }
-  .date-divider span { background: #e4e6ea; padding: 4px 12px; border-radius: 12px; font-size: 12px; color: #65676b; }
+.msgs { flex: 1; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 3px; }
+.day-label { text-align: center; margin: 10px 0; }
+.day-label span { background: #dde1e7; padding: 3px 12px; border-radius: 12px; font-size: 12px; color: #666; }
 
-  .msg-group { display: flex; flex-direction: column; gap: 2px; margin-bottom: 4px; }
-  .msg-group.out { align-items: flex-end; }
-  .msg-group.in { align-items: flex-start; }
-  .msg-group .sender-name { font-size: 11px; color: #888; padding: 0 4px; margin-bottom: 2px; }
+.bubble-row { display: flex; flex-direction: column; margin-bottom: 3px; }
+.bubble-row.out { align-items: flex-end; }
+.bubble-row.in { align-items: flex-start; }
+.bubble { max-width: 65%; padding: 9px 14px; font-size: 14px; line-height: 1.5; word-break: break-word; }
+.bubble-row.in .bubble { background: white; color: #1a1a1a; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.bubble-row.out .bubble { background: #1f4e3b; color: white; border-radius: 18px 18px 4px 18px; }
+.bubble .ref { font-size: 11px; opacity: .7; border-top: 1px solid rgba(255,255,255,.3); margin-top: 5px; padding-top: 4px; }
+.btime { font-size: 11px; color: #bbb; padding: 0 4px; margin-top: 1px; }
 
-  .msg {
-    max-width: 68%; padding: 9px 14px; font-size: 14px; line-height: 1.5;
-    word-break: break-word; position: relative;
-  }
-  .msg-group.in .msg { background: white; color: #1a1a1a; border-radius: 18px 18px 18px 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-  .msg-group.out .msg { background: #1f4e3b; color: white; border-radius: 18px 18px 4px 18px; }
-  .msg .post-ref { font-size: 11px; opacity: 0.75; border-top: 1px solid rgba(255,255,255,0.3); margin-top: 6px; padding-top: 4px; }
-  .msg-time { font-size: 11px; color: #aaa; padding: 0 4px; }
+.input-row { padding: 11px 18px; background: white; border-top: 1px solid #e4e6ea; display: flex; gap: 9px; align-items: center; }
+.input-row input { flex: 1; padding: 10px 15px; border: 1.5px solid #e4e6ea; border-radius: 22px; font-size: 14px; outline: none; background: #f5f5f5; }
+.input-row input:focus { border-color: #1f4e3b; background: white; }
+.send-btn { width: 40px; height: 40px; border-radius: 50%; background: #1f4e3b; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: .2s; }
+.send-btn:hover { background: #163a2c; }
+.send-btn i { color: white; font-size: 14px; }
 
-  .no-chat {
-    flex: 1; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; gap: 12px; color: #65676b;
-  }
-  .no-chat i { font-size: 64px; color: #c8c8c8; }
-  .no-chat h3 { font-size: 20px; color: #444; font-weight: 600; }
+/* new chat modal */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 999; align-items: center; justify-content: center; }
+.overlay.show { display: flex; }
+.modal { background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+.modal h3 { color: #1f4e3b; margin-bottom: 14px; font-size: 16px; }
+.modal input { width: 100%; padding: 10px 13px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 10px; }
+.modal input:focus { border-color: #1f4e3b; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+.modal-btns button { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px; }
+.btn-cancel { background: #f0f2f5; color: #555; }
+.btn-send { background: #1f4e3b; color: white; }
 
-  /* INPUT */
-  .chat-input-area {
-    padding: 12px 20px; background: white; border-top: 1px solid #e4e6ea;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .chat-input-area input {
-    flex: 1; padding: 10px 16px; border: 1px solid #e4e6ea;
-    border-radius: 22px; font-size: 14px; background: #f0f2f5; outline: none;
-  }
-  .chat-input-area input:focus { border-color: #1f4e3b; background: white; }
-  .send-btn {
-    width: 42px; height: 42px; border-radius: 50%; background: #1f4e3b;
-    border: none; cursor: pointer; display: flex; align-items: center;
-    justify-content: center; flex-shrink: 0; transition: 0.2s;
-  }
-  .send-btn:hover { background: #163a2c; transform: scale(1.05); }
-  .send-btn i { color: white; font-size: 15px; }
-
-  /* NEW CHAT MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; }
-  .modal-overlay.show { display: flex; }
-  .modal-box { background: white; border-radius: 12px; padding: 24px; width: 90%; max-width: 360px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-  .modal-box h3 { margin-bottom: 16px; color: #1f4e3b; }
-  .modal-box input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; outline: none; margin-bottom: 12px; }
-  .modal-box input:focus { border-color: #1f4e3b; }
-  .modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
-  .modal-btns button { padding: 8px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
-  .modal-btns .cancel-btn { background: #f0f2f5; color: #555; }
-  .modal-btns .start-btn { background: #1f4e3b; color: white; }
-
-  /* RESPONSIVE */
-  @media (max-width: 640px) {
-    .conv-sidebar { position: absolute; width: 100%; z-index: 10; left: 0; top: 0; height: 100%; }
-    .conv-sidebar.hidden-mobile { transform: translateX(-100%); }
-    .chat-area { width: 100%; }
-    .chat-header .back-btn { display: block; }
-  }
-
-  .loading { text-align: center; padding: 24px; color: #888; font-size: 13px; }
-  .empty-inbox { padding: 32px 20px; text-align: center; color: #888; }
-  .empty-inbox i { font-size: 40px; color: #ddd; margin-bottom: 12px; display: block; }
+@media (max-width: 640px) {
+  .left-panel { position: absolute; width: 100%; height: 100%; z-index: 10; }
+  .left-panel.hide { transform: translateX(-100%); }
+  .chat-head .back-btn { display: block; }
+}
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <span class="title-text">Pathfinder Messages</span>
+  <span class="brand">Pathfinder Messages</span>
   <a href="/main"><i class="fa fa-arrow-left"></i> Back to Feed</a>
 </div>
 
-<div class="inbox-wrap">
-  <!-- CONVERSATION SIDEBAR -->
-  <div class="conv-sidebar" id="convSidebar">
-    <div class="sidebar-head">
+<div class="wrap">
+
+  <!-- LEFT -->
+  <div class="left-panel" id="leftPanel">
+    <div class="left-head">
       <h2>Messages</h2>
-      <button class="new-chat-btn" onclick="showNewChatModal()">
-        <i class="fa fa-plus"></i> New
-      </button>
+      <button class="new-btn" onclick="openNewModal()"><i class="fa fa-plus"></i> New</button>
     </div>
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search conversations..." oninput="filterConvs()">
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="Search…" oninput="filterList()">
     </div>
     <div class="conv-list" id="convList">
-      <div class="loading"><i class="fa fa-spinner fa-spin"></i> Loading...</div>
+      <div class="empty-list"><i class="fa fa-spinner fa-spin"></i><p>Loading…</p></div>
     </div>
   </div>
 
-  <!-- CHAT AREA -->
-  <div class="chat-area" id="chatArea">
-    <div class="no-chat" id="noChatMsg">
+  <!-- RIGHT -->
+  <div class="right-panel" id="rightPanel">
+    <div class="no-chat-msg" id="noChatMsg">
       <i class="fa fa-comments"></i>
-      <h3>Select a Conversation</h3>
-      <p>Choose from the left or start a new chat</p>
+      <h3>Your Messages</h3>
+      <p>Select a conversation or start a new one</p>
     </div>
   </div>
+
 </div>
 
 <!-- NEW CHAT MODAL -->
-<div class="modal-overlay" id="newChatModal">
-  <div class="modal-box">
+<div class="overlay" id="newModal">
+  <div class="modal">
     <h3><i class="fa fa-comment-dots"></i> New Message</h3>
-    <input type="text" id="newChatRecipient" placeholder="Recipient name...">
-    <input type="text" id="newChatMessage" placeholder="Type your message..." onkeydown="if(event.key==='Enter') startNewChat()">
+    <input type="text" id="mTo" placeholder="Recipient name…">
+    <input type="text" id="mMsg" placeholder="Your message…" onkeydown="if(event.key==='Enter')doNewChat()">
     <div class="modal-btns">
-      <button class="cancel-btn" onclick="hideNewChatModal()">Cancel</button>
-      <button class="start-btn" onclick="startNewChat()"><i class="fa fa-paper-plane"></i> Send</button>
+      <button class="btn-cancel" onclick="closeNewModal()">Cancel</button>
+      <button class="btn-send" onclick="doNewChat()"><i class="fa fa-paper-plane"></i> Send</button>
     </div>
   </div>
 </div>
 
 <script>
-// ==================== STATE ====================
-// Get current user — NO redirect to login. If session not available, use localStorage fallback.
-const currentUserName = "{{ session.get('user_name', '') }}" || localStorage.getItem("username") || "Me";
-const currentUserId = parseInt("{{ session.get('user_id', 0) }}") || parseInt(localStorage.getItem("user_id")) || 0;
-
-let allConversations = [];
-let activeConv = null;
-let useBackend = false; // Will try backend, fallback to localStorage
-
-const COLORS = ["#e74c3c","#3498db","#9b59b6","#e67e22","#1abc9c","#16a085","#8e44ad","#d35400"];
-const getColor = id => COLORS[(typeof id === "number" ? id : id.charCodeAt(0)) % COLORS.length];
-const getInitials = name => (name || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2);
-const timeAgo = dateStr => {
-  if (!dateStr) return "Now";
-  const d = new Date(dateStr), now = new Date();
-  const diff = Math.floor((now - d) / 1000);
+// ── CONFIG ──
+const STORAGE_KEY = "pf_inbox";          // same key used in main.html
+const COLORS = ["#e74c3c","#3498db","#9b59b6","#e67e22","#1abc9c","#16a085","#8e44ad"];
+const col = id => COLORS[String(id).charCodeAt(0) % COLORS.length];
+const ini = name => (name || "?").split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
+const fmt = t => {
+  if (!t) return "";
+  if (/^\d{1,2}:\d{2}/.test(t)) return t; // already "HH:MM"
+  const d = new Date(t), now = new Date(), diff = (now-d)/1000;
   if (diff < 60) return "Just now";
-  if (diff < 3600) return Math.floor(diff / 60) + "m ago";
-  if (diff < 86400) return d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
-  return d.toLocaleDateString([], {month:"short", day:"numeric"});
+  if (diff < 3600) return Math.floor(diff/60)+"m ago";
+  if (diff < 86400) return d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+  return d.toLocaleDateString([],{month:"short",day:"numeric"});
 };
 
-// ==================== LOAD CONVERSATIONS ====================
-async function loadConversations() {
-  // Try backend first
-  if (currentUserId > 0) {
-    try {
-      const res = await fetch(`/api/messages/inbox/${currentUserId}`);
-      if (res.ok) {
-        const data = await res.json();
-        useBackend = true;
-        buildConversationsFromMessages(data.messages || []);
-        return;
-      }
-    } catch(e) {}
-  }
+// ── STATE ──
+let ME = "";
+let convMap = {};
+let activeName = null;
+let lastCount = 0;
 
-  // Fallback: load from localStorage inbox
-  loadFromLocalStorage();
-}
-
-function buildConversationsFromMessages(msgs) {
-  const map = {};
-  msgs.forEach(m => {
-    const isOut = (m.sender_id === currentUserId || m.sender_name === currentUserName);
-    const otherId = isOut ? (m.receiver_id || m.receiver_name) : (m.sender_id || m.sender_name);
-    const otherName = isOut ? (m.receiver_name || "Unknown") : (m.sender_name || "Unknown");
-    const key = String(otherId || otherName);
-
-    if (!map[key] || new Date(m.created_at) > new Date(map[key].latestTime)) {
-      map[key] = {
-        id: key,
-        name: otherName,
-        latestMsg: m.content,
-        latestTime: m.created_at,
-        unread: !m.is_read && !isOut ? 1 : 0,
-        messages: []
-      };
+// ── BOOT ──
+async function boot() {
+  // Try server first (most reliable)
+  try {
+    const r = await fetch("/api/me");
+    const me = await r.json();
+    if (me && me.user_name) {
+      ME = me.user_name.trim();
+      localStorage.setItem("pf_username", ME);
     }
-  });
+  } catch(_) {}
 
-  // Attach messages per conversation
-  msgs.forEach(m => {
-    const isOut = (m.sender_id === currentUserId || m.sender_name === currentUserName);
-    const otherId = isOut ? (m.receiver_id || m.receiver_name) : (m.sender_id || m.sender_name);
-    const otherName = isOut ? (m.receiver_name || "Unknown") : (m.sender_name || "Unknown");
-    const key = String(otherId || otherName);
-    if (map[key]) {
-      map[key].messages.push({
-        isOut,
-        content: m.content,
-        time: m.created_at,
-        postRef: m.post_ref || null
-      });
-    }
-  });
+  // Fallback to any localStorage key that might have the name
+  if (!ME) ME = (localStorage.getItem("pf_username") || localStorage.getItem("username") || "").trim();
 
-  allConversations = Object.values(map).sort((a,b) => new Date(b.latestTime) - new Date(a.latestTime));
-  renderConvList(allConversations);
-}
+  console.log("Inbox ME =", ME); // debug — check browser console if messages not showing
 
-function loadFromLocalStorage() {
-  const inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
-
-  // Group by "to" or "from"
-  const map = {};
-  inbox.forEach(item => {
-    const other = item.to || item.from || "Unknown";
-    if (other === currentUserName) return;
-    if (!map[other]) {
-      map[other] = { id: other, name: other, latestMsg: "", latestTime: new Date().toISOString(), unread: 0, messages: [] };
-    }
-    const isOut = (item.from === currentUserName);
-    map[other].latestMsg = item.content;
-    map[other].messages.push({
-      isOut,
-      content: item.content,
-      time: item.time || "Now",
-      postRef: item.postRef || null,
-      type: item.type
-    });
-    if (!isOut) map[other].unread++;
-  });
-
-  allConversations = Object.values(map);
-  renderConvList(allConversations);
-}
-
-function renderConvList(list) {
-  const el = document.getElementById("convList");
-  if (list.length === 0) {
-    el.innerHTML = `<div class="empty-inbox"><i class="fa fa-inbox"></i><p>No messages yet.<br>Click <b>New</b> to start chatting!</p></div>`;
+  if (!ME) {
+    // Still no name — show warning in list
+    document.getElementById("convList").innerHTML =
+      `<div class="empty-list"><i class="fa fa-exclamation-circle" style="color:#e74c3c;"></i><p>Could not identify user.<br>Please <a href="/login" style="color:#1f4e3b;">log in again</a>.</p></div>`;
     return;
   }
-  el.innerHTML = list.map(c => `
-    <div class="conv-item ${activeConv && activeConv.id === c.id ? 'active' : ''}" onclick="openConv('${c.id}')">
-      <div class="avatar" style="background:${getColor(c.id)}">${getInitials(c.name)}</div>
-      <div class="conv-info">
-        <div class="conv-name">${c.name}</div>
-        <div class="conv-preview">${c.latestMsg}</div>
-        <div class="conv-time">${timeAgo(c.latestTime)}</div>
-      </div>
-      ${c.unread > 0 ? `<span class="unread">${c.unread}</span>` : ""}
-    </div>`).join("");
+
+  rebuildConvs();
+  lastCount = getInbox().length;
+  setInterval(poll, 1500);
 }
 
-function filterConvs() {
-  const q = document.getElementById("searchInput").value.toLowerCase();
-  renderConvList(allConversations.filter(c => c.name.toLowerCase().includes(q)));
+// ── READ INBOX ──
+function getInbox() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 }
 
-// ==================== OPEN CONVERSATION ====================
-function openConv(convId) {
-  activeConv = allConversations.find(c => c.id === convId);
-  if (!activeConv) return;
+// ── BUILD CONVERSATIONS from pf_inbox ──
+function rebuildConvs() {
+  const inbox = getInbox();
+  convMap = {};
 
-  // Reset unread
-  activeConv.unread = 0;
-  renderConvList(allConversations);
+  // inbox may be newest-first (from main.html unshift) or mixed
+  // Process in reverse so oldest messages come first in each conv's messages array
+  const ordered = [...inbox].reverse();
 
-  // Mobile: hide sidebar
-  const sidebar = document.getElementById("convSidebar");
-  if (window.innerWidth <= 640) sidebar.classList.add("hidden-mobile");
+  ordered.forEach(item => {
+    // Determine who the "other" person is
+    const from = item.from || "";
+    const to   = item.to   || "";
+    const isMine = (from === ME);
 
-  const chat = document.getElementById("chatArea");
-  chat.innerHTML = `
-    <div class="chat-header">
-      <button class="back-btn" onclick="goBack()"><i class="fa fa-arrow-left"></i></button>
-      <div class="avatar" style="background:${getColor(activeConv.id)}; width:40px; height:40px; font-size:14px; flex-shrink:0;">${getInitials(activeConv.name)}</div>
-      <div class="info">
-        <div class="name">${activeConv.name}</div>
-        <div class="status">Pathfinder Member</div>
+    let other = isMine ? to : from;
+    if (!other || other === ME) return;
+
+    if (!convMap[other]) {
+      convMap[other] = { name: other, messages: [], unread: 0 };
+    }
+
+    convMap[other].messages.push({
+      mine: isMine,
+      text: item.content || "",
+      time: item.time || "",
+      ref:  item.postRef || null
+    });
+
+    if (!isMine) convMap[other].unread++;
+  });
+
+  renderList();
+}
+
+// ── RENDER LEFT LIST ──
+function renderList(filter) {
+  const el = document.getElementById("convList");
+  let entries = Object.values(convMap);
+  if (filter) entries = entries.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
+
+  if (entries.length === 0) {
+    el.innerHTML = `<div class="empty-list"><i class="fa fa-inbox"></i><p>No messages yet.<br>Click <b>New</b> to start chatting!</p></div>`;
+    return;
+  }
+
+  el.innerHTML = entries.map(c => {
+    const last = c.messages.length ? c.messages[c.messages.length - 1] : null;
+    const preview = last ? last.text.slice(0, 40) + (last.text.length > 40 ? "…" : "") : "";
+    const time    = last ? fmt(last.time) : "";
+    const isActive = activeName === c.name;
+
+    return `<div class="conv-item ${isActive ? 'active' : ''}" onclick="openConv('${esc(c.name)}')">
+      <div class="c-avatar" style="background:${col(c.name)}">${ini(c.name)}</div>
+      <div class="c-info">
+        <div class="c-name">${esc(c.name)}</div>
+        <div class="c-preview">${esc(preview)}</div>
+        <div class="c-time">${time}</div>
+      </div>
+      ${c.unread > 0 ? `<span class="c-badge">${c.unread}</span>` : ""}
+    </div>`;
+  }).join("");
+}
+
+function filterList() {
+  const q = document.getElementById("searchInput").value;
+  renderList(q);
+}
+
+// ── OPEN CONVERSATION ──
+function openConv(name) {
+  // Decode in case of HTML entities
+  name = name.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"');
+
+  if (!convMap[name]) {
+    convMap[name] = { name, messages: [], unread: 0 };
+  }
+  activeName = name;
+  convMap[name].unread = 0;
+  renderList();
+
+  // Mobile: hide left panel
+  if (window.innerWidth <= 640) document.getElementById("leftPanel").classList.add("hide");
+
+  const right = document.getElementById("rightPanel");
+  right.innerHTML = `
+    <div class="chat-head">
+      <span class="back-btn" onclick="goBack()"><i class="fa fa-arrow-left"></i></span>
+      <div class="c-avatar" style="background:${col(name)};width:38px;height:38px;font-size:13px;flex-shrink:0;">${ini(name)}</div>
+      <div>
+        <div class="ch-name">${esc(name)}</div>
+        <div class="ch-status">Pathfinder Member</div>
       </div>
     </div>
-    <div class="messages-wrap" id="msgWrap">
-      <div class="date-divider"><span>Today</span></div>
+    <div class="msgs" id="msgBox">
+      <div class="day-label"><span>Today</span></div>
     </div>
-    <div class="chat-input-area">
-      <input type="text" id="replyInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendReply()">
+    <div class="input-row">
+      <input type="text" id="replyBox" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendReply()">
       <button class="send-btn" onclick="sendReply()"><i class="fa fa-paper-plane"></i></button>
     </div>`;
 
-  // Render existing messages
-  renderMessages(activeConv.messages);
+  convMap[name].messages.forEach(m => addBubble(m.mine, m.text, m.time, m.ref));
+  scrollBottom();
 }
 
-function renderMessages(msgs) {
-  const wrap = document.getElementById("msgWrap");
-  if (!wrap) return;
-  msgs.forEach(m => appendMsgBubble(m.isOut, m.content, m.time, m.postRef));
-  wrap.scrollTop = wrap.scrollHeight;
-}
-
-function appendMsgBubble(isOut, content, time, postRef) {
-  const wrap = document.getElementById("msgWrap");
-  if (!wrap) return;
-  const refHTML = postRef ? `<div class="post-ref">📌 Re: ${postRef}</div>` : "";
-  wrap.insertAdjacentHTML("beforeend", `
-    <div class="msg-group ${isOut ? 'out' : 'in'}">
-      ${!isOut ? `<div class="sender-name">${activeConv ? activeConv.name : ""}</div>` : ""}
-      <div class="msg">${escapeHtml(content)}${refHTML}</div>
-      <div class="msg-time">${time}</div>
+// ── ADD A BUBBLE ──
+function addBubble(mine, text, time, ref) {
+  const box = document.getElementById("msgBox");
+  if (!box) return;
+  const refHTML = ref ? `<div class="ref">📌 ${esc(ref)}</div>` : "";
+  box.insertAdjacentHTML("beforeend", `
+    <div class="bubble-row ${mine ? 'out' : 'in'}">
+      <div class="bubble">${esc(text)}${refHTML}</div>
+      <div class="btime">${fmt(time)}</div>
     </div>`);
-  wrap.scrollTop = wrap.scrollHeight;
+  scrollBottom();
 }
 
-// ==================== SEND REPLY ====================
+function scrollBottom() {
+  const b = document.getElementById("msgBox");
+  if (b) b.scrollTop = b.scrollHeight;
+}
+
+// ── SEND REPLY ──
 async function sendReply() {
-  const input = document.getElementById("replyInput");
-  if (!input) return;
-  const content = input.value.trim();
-  if (!content || !activeConv) return;
+  const input = document.getElementById("replyBox");
+  if (!input || !activeName) return;
+  const text = input.value.trim();
+  if (!text) return;
   input.value = "";
 
-  const now = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
-  appendMsgBubble(true, content, now, null);
+  const now = new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
 
-  // Add to local messages
-  if (!activeConv.messages) activeConv.messages = [];
-  activeConv.messages.push({ isOut: true, content, time: now });
-  activeConv.latestMsg = content;
+  // 1. Show bubble immediately
+  addBubble(true, text, now, null);
 
-  // Try backend
-  if (useBackend && currentUserId > 0) {
-    try {
-      await fetch("/api/messages/send", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ sender_id: currentUserId, receiver_name: activeConv.name, content })
-      });
-    } catch(e) {}
-  }
+  // 2. Update local state
+  if (!convMap[activeName]) convMap[activeName] = { name: activeName, messages: [], unread: 0 };
+  convMap[activeName].messages.push({ mine: true, text, time: now, ref: null });
+  convMap[activeName].unread = 0;
+  renderList();
 
-  // Save to localStorage
-  saveLocalMsg({ from: currentUserName, to: activeConv.name, content, time: now, type: "reply" });
+  // 3. Save to localStorage with unshift (newest first, same as main.html)
+  //    Mark with _sent:true so poll skips it
+  const inbox = getInbox();
+  inbox.unshift({ from: ME, to: activeName, content: text, time: now, type: "reply", _sent: true });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(inbox));
+  lastCount = inbox.length; // update baseline so poll ignores this
+
+  // 4. Try backend (non-blocking)
+  try {
+    await fetch("/api/messages/send", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ sender_name: ME, receiver_name: activeName, content: text })
+    });
+  } catch(_) {}
 }
 
-function saveLocalMsg(msg) {
-  let inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
-  inbox.unshift(msg);
-  localStorage.setItem("pathfinder_inbox", JSON.stringify(inbox));
+// ── POLLING — check for new messages added by main.html / other tabs ──
+function poll() {
+  const inbox = getInbox();
+  const currentCount = inbox.length;
+  if (currentCount <= lastCount) return;
+
+  // All new items are prepended (unshift), so they're at the front
+  const newItems = inbox.slice(0, currentCount - lastCount);
+  lastCount = currentCount;
+
+  newItems.forEach(item => {
+    if (item._sent) return; // skip our own sent messages (already shown as bubble)
+
+    const from = item.from || "";
+    const to   = item.to   || "";
+    const isMine = (from === ME);
+    const other = isMine ? to : from;
+
+    if (!other || other === ME) return;
+    if (!convMap[other]) convMap[other] = { name: other, messages: [], unread: 0 };
+
+    const msg = { mine: isMine, text: item.content || "", time: item.time || "", ref: item.postRef || null };
+    convMap[other].messages.push(msg);
+
+    if (!isMine) {
+      convMap[other].unread++;
+      // If this conversation is currently open → show bubble right away
+      if (activeName === other) {
+        addBubble(false, msg.text, msg.time, msg.ref);
+        convMap[other].unread = 0;
+      }
+    }
+  });
+
+  renderList();
 }
 
-// ==================== NEW CHAT ====================
-function showNewChatModal() { document.getElementById("newChatModal").classList.add("show"); }
-function hideNewChatModal() {
-  document.getElementById("newChatModal").classList.remove("show");
-  document.getElementById("newChatRecipient").value = "";
-  document.getElementById("newChatMessage").value = "";
+// ── NEW CHAT MODAL ──
+function openNewModal() {
+  document.getElementById("mTo").value = "";
+  document.getElementById("mMsg").value = "";
+  document.getElementById("newModal").classList.add("show");
+  setTimeout(() => document.getElementById("mTo").focus(), 100);
 }
+function closeNewModal() { document.getElementById("newModal").classList.remove("show"); }
 
-function startNewChat() {
-  const to = document.getElementById("newChatRecipient").value.trim();
-  const msg = document.getElementById("newChatMessage").value.trim();
-  if (!to || !msg) { alert("Please fill in both fields."); return; }
+function doNewChat() {
+  const to  = document.getElementById("mTo").value.trim();
+  const msg = document.getElementById("mMsg").value.trim();
+  if (!to || !msg) { alert("Please fill both fields."); return; }
+  closeNewModal();
 
-  hideNewChatModal();
+  // Create conv if not exists
+  if (!convMap[to]) convMap[to] = { name: to, messages: [], unread: 0 };
 
-  // Check if conv exists
-  let conv = allConversations.find(c => c.name.toLowerCase() === to.toLowerCase());
-  if (!conv) {
-    conv = { id: to, name: to, latestMsg: msg, latestTime: new Date().toISOString(), unread: 0, messages: [] };
-    allConversations.unshift(conv);
-  }
+  activeName = to;
+  openConv(to);
 
-  activeConv = conv;
-  renderConvList(allConversations);
-  openConv(conv.id);
-
+  // Pre-fill input and send
   setTimeout(() => {
-    const input = document.getElementById("replyInput");
-    if (input) { input.value = msg; sendReply(); }
-  }, 100);
+    const inp = document.getElementById("replyBox");
+    if (inp) { inp.value = msg; sendReply(); }
+  }, 80);
 }
 
-// ==================== BACK (MOBILE) ====================
+// ── BACK (mobile) ──
 function goBack() {
-  document.getElementById("convSidebar").classList.remove("hidden-mobile");
-  document.getElementById("chatArea").innerHTML = `
-    <div class="no-chat" id="noChatMsg">
+  document.getElementById("leftPanel").classList.remove("hide");
+  activeName = null;
+  document.getElementById("rightPanel").innerHTML = `
+    <div class="no-chat-msg" id="noChatMsg">
       <i class="fa fa-comments"></i>
-      <h3>Select a Conversation</h3>
-      <p>Choose from the left or start a new chat</p>
+      <h3>Your Messages</h3>
+      <p>Select a conversation or start a new one</p>
     </div>`;
 }
 
-// ==================== UTILS ====================
-function escapeHtml(str) {
-  if (!str) return "";
-  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+// ── ESCAPE HTML ──
+function esc(s) {
+  if (!s) return "";
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-// ==================== START ====================
-loadConversations();
+// ── START ──
+boot();
 </script>
 </body>
 </html>

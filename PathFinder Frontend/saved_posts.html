@@ -1,72 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>PathFinder | Saved Posts</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; }
-        .container { max-width: 600px; margin: auto; }
-        .post-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #ddd; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .no-data { text-align: center; color: gray; margin-top: 50px; }
-        .back-btn { cursor: pointer; color: #1f4e3b; text-decoration: none; font-weight: bold; }
-        .remove-btn { color: #ff4d4d; border: 1px solid #ff4d4d; background: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        .remove-btn:hover { background: #ff4d4d; color: white; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PATHFINDER | Saved Posts</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+:root {
+    --green: #1f4e3b;
+    --accent: #10b981;
+    --bg: #f0f2f5;
+    --white: #ffffff;
+    --border: #dde1e7;
+    --gray: #65676b;
+    --hover: #e4e6eb;
+    --red: #e74c3c;
+}
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); }
+
+.topbar {
+    background: var(--white); height: 60px; padding: 0 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: fixed; width: 100%; top: 0; z-index: 1100;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.menu-icon { font-size: 20px; cursor: pointer; color: #444; padding: 8px; border-radius: 50%; transition: .2s; }
+.menu-icon:hover { background: var(--hover); color: var(--green); }
+.brand { font-size: 22px; font-weight: 700; color: var(--green); }
+.back-link { display: flex; align-items: center; gap: 8px; color: var(--green); font-weight: 600; font-size: 14px; cursor: pointer; padding: 7px 14px; border-radius: 20px; background: #e8f5ee; transition: .2s; text-decoration: none; }
+.back-link:hover { background: #d4eee0; }
+
+/* SIDEBAR */
+.sidebar { width: 270px; background: var(--green); height: 100vh; position: fixed; top: 0; left: -270px; z-index: 1000; padding-top: 70px; transition: left .3s ease; }
+.sidebar.open { left: 0; }
+.sidebar ul { list-style: none; padding: 0; margin: 0; }
+.sidebar ul li { padding: 14px 24px; cursor: pointer; display: flex; align-items: center; gap: 14px; color: #ddd; font-size: 15px; transition: .2s; }
+.sidebar ul li:hover { background: rgba(255,255,255,.1); padding-left: 32px; color: var(--accent); }
+.sidebar-sub { display: none; background: rgba(0,0,0,.2); padding: 0; }
+.sidebar-sub li { padding: 10px 24px 10px 56px !important; font-size: 13px; }
+.sidebar-sub.open { display: block; }
+.active-li { background: rgba(255,255,255,.1) !important; color: var(--accent) !important; }
+.logout-li { color: #fc8686 !important; }
+.logout-li:hover { background: rgba(252,100,100,.1) !important; color: #ff5555 !important; }
+
+/* CONTENT */
+.content { padding-top: 80px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: margin-left .3s; padding-bottom: 40px; }
+.content.shifted { margin-left: 270px; }
+.page-wrap { width: 95%; max-width: 680px; }
+
+/* PAGE HEADER */
+.page-header { background: white; border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.page-header h2 { font-size: 20px; color: var(--green); margin: 0; display: flex; align-items: center; gap: 10px; }
+.clear-btn { background: #fee2e2; color: var(--red); border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: .2s; }
+.clear-btn:hover { background: #fecaca; }
+
+/* POST CARD */
+.post-card { background: white; border-radius: 12px; padding: 18px 20px; border: 1px solid var(--border); margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.06); transition: box-shadow .2s; position: relative; }
+.post-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.09); }
+.post-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.post-author { display: flex; gap: 10px; align-items: center; }
+.author-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--green); color: white; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; flex-shrink: 0; }
+.author-info b { font-size: 14px; color: #1a1a1a; display: block; }
+.author-info small { font-size: 12px; color: var(--gray); }
+.post-text { font-size: 15px; color: #1a1a1a; line-height: 1.55; word-break: break-word; margin-bottom: 10px; }
+.post-img { width: 100%; max-height: 360px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+.remove-btn { background: #fee2e2; color: var(--red); border: none; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: .2s; }
+.remove-btn:hover { background: #fecaca; }
+.saved-badge { position: absolute; top: 14px; right: 14px; background: #e8f5ee; color: var(--green); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
+/* EMPTY STATE */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--gray); }
+.empty-state i { font-size: 56px; color: #ccc; margin-bottom: 16px; display: block; }
+.empty-state h3 { font-size: 18px; color: #555; margin-bottom: 8px; }
+.empty-state p { font-size: 14px; margin-bottom: 20px; }
+.empty-state a { background: var(--green); color: white; padding: 10px 24px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 14px; transition: .2s; }
+.empty-state a:hover { background: #163a2c; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #1a1a2e; color: white; padding: 11px 24px; border-radius: 24px; font-size: 14px; font-weight: 600; z-index: 9999; box-shadow: 0 4px 16px rgba(0,0,0,.22); opacity: 0; transition: opacity .3s; pointer-events: none; }
+.toast.show { opacity: 1; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <a href="main.html" class="back-btn"><i class="fa fa-arrow-left"></i> Back to Home</a>
-            <h2>Saved Resources</h2>
-        </div>
-        <div id="savedContainer"></div>
+
+<header class="topbar">
+    <div class="topbar-left">
+        <i class="fa fa-bars menu-icon" onclick="toggleSidebar()"></i>
+        <span class="brand">Pathfinder</span>
     </div>
+    <a class="back-link" href="/main"><i class="fa fa-arrow-left"></i> Back to Feed</a>
+</header>
 
-    <script>
-        // পেজ লোড হওয়ার সময় পোস্টগুলো দেখাবে
-        function renderSavedPosts() {
-            const savedContainer = document.getElementById("savedContainer");
-            const savedPosts = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li onclick="location.href='/main'"><i class="fa fa-home"></i> Home</li>
+        <li onclick="toggleCareer()">
+            <i class="fa fa-graduation-cap"></i> Career Path
+            <i class="fa fa-chevron-down" id="careerIcon" style="font-size:10px;margin-left:auto;transition:.2s;"></i>
+        </li>
+        <ul class="sidebar-sub" id="careerSub">
+            <li onclick="location.href='/technical'"><i class="fa fa-code"></i> Technical</li>
+            <li onclick="location.href='/non-technical'"><i class="fa fa-briefcase"></i> Non-Technical</li>
+        </ul>
+        <li onclick="location.href='/settings'"><i class="fa fa-cog"></i> Settings</li>
+        <li class="active-li"><i class="fa fa-bookmark"></i> Saved Posts</li>
+        <li onclick="doLogout()" class="logout-li"><i class="fa fa-sign-out-alt"></i> Logout</li>
+    </ul>
+</div>
 
-            if (savedPosts.length === 0) {
-                savedContainer.innerHTML = '<div class="no-data"><i class="fa fa-bookmark-o fa-3x"></i><p>No saved posts yet!</p></div>';
-                return;
-            }
+<div class="content" id="content">
+    <div class="page-wrap">
+        <div class="page-header">
+            <h2><i class="fa fa-bookmark"></i> Saved Posts</h2>
+            <button class="clear-btn" onclick="clearAll()"><i class="fa fa-trash"></i> Clear All</button>
+        </div>
+        <div id="savedFeed"></div>
+    </div>
+</div>
 
-            // কন্টেইনার খালি করে নতুন করে ডাটা ঢোকানো
-            savedContainer.innerHTML = ""; 
-            savedPosts.forEach((post, index) => {
-                savedContainer.innerHTML += `
-                    <div class="post-card">
-                        <div style="display:flex; justify-content:space-between;">
-                            <b>${post.author}</b>
-                            <small style="color:gray">${post.time}</small>
-                        </div>
-                        <p>${post.text}</p>
-                        <button class="remove-btn" onclick="removeSaved(${index})">
-                            <i class="fa fa-trash"></i> Remove
-                        </button>
-                    </div>`;
-            });
-        }
+<div class="toast" id="toast"></div>
 
-        // রিমুভ করার ফাংশন
-        function removeSaved(index) {
-            let savedPosts = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
-            
-            // নির্দিষ্ট ইনডেক্স ডিলিট করা
-            savedPosts.splice(index, 1);
-            
-            // আপডেট করা লিস্ট আবার localStorage এ সেভ করা
-            localStorage.setItem("pathfinder_saved", JSON.stringify(savedPosts));
-            
-            // পেজ রিফ্রেশ না করে সরাসরি ফাংশন কল করে লিস্ট আপডেট করা
-            renderSavedPosts();
-        }
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("content").classList.toggle("shifted");
+}
+function toggleCareer() {
+    const sub = document.getElementById("careerSub");
+    const icon = document.getElementById("careerIcon");
+    sub.classList.toggle("open");
+    icon.style.transform = sub.classList.contains("open") ? "rotate(180deg)" : "rotate(0)";
+}
+function doLogout() {
+    if (!confirm("Log out?")) return;
+    fetch("/logout", { method: "POST" }).finally(() => location.href = "/login");
+}
 
-        // শুরুতে রান হবে
-        window.onload = renderSavedPosts;
-    </script>
+function loadSaved() {
+    const saved = JSON.parse(localStorage.getItem("pf_saved") || "[]");
+    const feed = document.getElementById("savedFeed");
+
+    if (saved.length === 0) {
+        feed.innerHTML = `
+            <div class="empty-state">
+                <i class="fa fa-bookmark"></i>
+                <h3>No saved posts yet</h3>
+                <p>Save posts from your feed to find them here later.</p>
+                <a href="/main">Go to Feed</a>
+            </div>`;
+        return;
+    }
+
+    feed.innerHTML = saved.map((p, i) => {
+        const initials = (p.author || "?").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+        const imgHTML = p.img ? `<img class="post-img" src="${p.img}" alt="Post image">` : "";
+        return `
+        <div class="post-card" data-index="${i}">
+            <span class="saved-badge"><i class="fa fa-bookmark"></i> Saved</span>
+            <div class="post-head">
+                <div class="post-author">
+                    <div class="author-avatar">${initials}</div>
+                    <div class="author-info">
+                        <b>${esc(p.author || "Unknown")}</b>
+                        <small>${esc(p.time || "")}</small>
+                    </div>
+                </div>
+            </div>
+            <div class="post-text">${esc(p.text || "")}</div>
+            ${imgHTML}
+            <button class="remove-btn" onclick="removePost(${i})">
+                <i class="fa fa-trash"></i> Remove
+            </button>
+        </div>`;
+    }).join("");
+}
+
+function removePost(index) {
+    let saved = JSON.parse(localStorage.getItem("pf_saved") || "[]");
+    saved.splice(index, 1);
+    localStorage.setItem("pf_saved", JSON.stringify(saved));
+    toast("Removed from saved.");
+    loadSaved();
+}
+
+function clearAll() {
+    if (!confirm("Remove all saved posts?")) return;
+    localStorage.removeItem("pf_saved");
+    toast("All saved posts cleared.");
+    loadSaved();
+}
+
+function esc(s) {
+    if (!s) return "";
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function toast(msg) {
+    const t = document.getElementById("toast");
+    t.innerText = msg;
+    t.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+window.addEventListener("load", loadSaved);
+</script>
 </body>
 </html>

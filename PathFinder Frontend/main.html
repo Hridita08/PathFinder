@@ -6,593 +6,533 @@
 <title>PATHFINDER | Home</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
-    :root {
-        --sidebar-green: #1f4e3b;
-        --accent-green: #10b981;
-        --page-bg: #f0f2f5;
-        --topbar-bg: #ffffff;
-        --hover-light: #e4e6eb;
-        --danger-red: #fc8686e4;
-    }
+:root {
+    --green: #1f4e3b;
+    --accent: #10b981;
+    --bg: #f0f2f5;
+    --white: #ffffff;
+    --border: #dde1e7;
+    --gray: #65676b;
+    --hover: #e4e6eb;
+    --red: #e74c3c;
+}
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); overflow-x: hidden; }
 
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); overflow-x: hidden; }
+/* TOPBAR */
+.topbar {
+    background: var(--white); height: 60px; padding: 0 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: fixed; width: 100%; top: 0; z-index: 1100;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.menu-icon { font-size: 20px; cursor: pointer; color: #444; padding: 8px; border-radius: 50%; transition: .2s; }
+.menu-icon:hover { background: var(--hover); color: var(--green); }
+.brand { font-size: 22px; font-weight: 700; color: var(--green); }
 
-    .career-dropdown { display: none; background: rgba(0,0,0,0.2); list-style: none; padding: 0; margin: 0; }
-    .career-dropdown li { padding: 10px 25px 10px 60px !important; font-size: 14px; color: #ccc; transition: 0.3s; }
-    .career-dropdown li:hover { color: var(--accent-green) !important; background: transparent !important; }
-    .career-dropdown.show { display: block; }
+.search-form { display: flex; gap: 6px; }
+.search-form input { padding: 8px 16px; border: 1.5px solid var(--border); border-radius: 20px; outline: none; font-size: 14px; width: 240px; background: var(--bg); transition: .2s; }
+.search-form input:focus { background: var(--white); border-color: var(--green); }
+.search-form button { background: var(--green); color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; transition: .2s; }
+.search-form button:hover { background: #163a2c; }
 
-    .topbar {
-        background: var(--topbar-bg); height: 60px; padding: 0 20px;
-        display: flex; justify-content: space-between; align-items: center;
-        position: fixed; width: 100%; top: 0; z-index: 1100;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08); box-sizing: border-box;
-    }
-    .menu-section { display: flex; align-items: center; gap: 15px; }
-    .menu-icon { font-size: 20px; cursor: pointer; color: #333; padding: 8px; border-radius: 50%; transition: 0.3s; }
-    .menu-icon:hover { background: var(--hover-light); color: var(--sidebar-green); }
-    .title-text { font-size: 22px; font-weight: bold; color: var(--sidebar-green); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.icon-btn { position: relative; font-size: 17px; color: #555; background: var(--hover); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: .2s; flex-shrink: 0; }
+.icon-btn:hover { background: var(--green); color: white; }
+.badge { position: absolute; top: -3px; right: -3px; background: var(--red); color: white; font-size: 10px; font-weight: 700; padding: 1px 5px; border-radius: 10px; display: none; }
+.user-greeting { display: flex; flex-direction: column; line-height: 1.3; }
+.user-greeting small { font-size: 10px; color: var(--gray); }
+.user-greeting span { font-size: 14px; font-weight: 600; color: #333; }
+.top-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); cursor: pointer; transition: .2s; }
+.top-avatar:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
 
-    .search-form { display: flex; gap: 5px; }
-    .search-form input { padding: 8px 14px; border: 1px solid #ddd; border-radius: 20px; outline: none; font-size: 14px; width: 260px; background: #f0f2f5; transition: 0.3s; }
-    .search-form input:focus { background: #fff; border-color: var(--sidebar-green); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .search-form button { background: var(--sidebar-green); color: white; padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.3s; }
-    .search-form button:hover { background: #163a2c; }
+/* NOTIF DROPDOWN */
+.notif-dd { display: none; position: absolute; right: 0; top: 48px; width: 300px; background: white; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.12); z-index: 2000; overflow: hidden; }
+.notif-dd-head { padding: 14px 16px; font-weight: 700; font-size: 15px; border-bottom: 1px solid var(--border); }
+.notif-item { padding: 11px 16px; font-size: 13px; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
+.notif-item:hover { background: #f9f9f9; }
+.notif-item small { color: var(--accent); display: block; margin-top: 2px; font-size: 11px; }
 
-    .top-right { display: flex; align-items: center; gap: 15px; }
-    .icon-btn {
-        position: relative; cursor: pointer; font-size: 18px; color: #4b4f56;
-        background: #e4e6eb; width: 40px; height: 40px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center; transition: 0.3s;
-    }
-    .icon-btn:hover { background: var(--sidebar-green); color: white; transform: scale(1.1); }
-    .badge { position: absolute; top: -2px; right: -2px; background: #e41e3f; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; display: none; }
+/* SIDEBAR */
+.sidebar { width: 270px; background: var(--green); height: 100vh; position: fixed; top: 0; left: -270px; z-index: 1000; padding-top: 70px; transition: left .3s ease; }
+.sidebar.open { left: 0; }
+.sidebar ul { list-style: none; padding: 0; margin: 0; }
+.sidebar ul li { padding: 14px 24px; cursor: pointer; display: flex; align-items: center; gap: 14px; color: #ddd; font-size: 15px; transition: .2s; }
+.sidebar ul li:hover { background: rgba(255,255,255,.1); padding-left: 32px; color: var(--accent); }
+.sidebar-sub { display: none; background: rgba(0,0,0,.2); padding: 0; }
+.sidebar-sub li { padding: 10px 24px 10px 56px !important; font-size: 13px; }
+.sidebar-sub.open { display: block; }
+.logout-li { color: #fc8686 !important; }
+.logout-li:hover { background: rgba(252,100,100,.1) !important; color: #ff5555 !important; }
 
-    .profile-img {
-        width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
-        transition: 0.3s; border: 2px solid var(--sidebar-green); object-fit: cover;
-    }
-    .profile-img:hover { border-color: #299b51; box-shadow: 0 0 12px rgba(27,92,34,0.6); transform: scale(1.05); }
-    .user-display-name { font-weight: 600; color: #333; font-size: 14px; }
+/* CONTENT */
+.content { padding-top: 76px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; transition: margin-left .3s; }
+.content.shifted { margin-left: 270px; }
+.feed-wrap { width: 95%; max-width: 680px; padding-bottom: 40px; }
 
-    .sidebar {
-        width: 280px; background: var(--sidebar-green); color: white; height: 100vh;
-        position: fixed; top: 0; left: -280px; transition: 0.3s ease; padding-top: 80px; z-index: 1000;
-    }
-    .sidebar.active { left: 0; }
-    .sidebar ul { list-style: none; padding: 0; }
-    .sidebar ul li { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; }
-    .sidebar ul li:hover { background: rgba(255,255,255,0.1); padding-left: 35px; color: var(--accent-green); }
-    .logout-btn { color: #fc8686e4 !important; }
-    .logout-btn:hover { color: #ff4d4d !important; padding-left: 35px !important; background: rgba(252,134,134,0.1) !important; }
+/* CREATE POST BOX */
+.post-box { background: white; border-radius: 12px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.08); border: 1px solid var(--border); margin-bottom: 18px; }
+.post-box-top { display: flex; gap: 12px; align-items: flex-start; }
+#postInput { flex: 1; border: none; background: var(--bg); border-radius: 22px; padding: 11px 16px; font-size: 15px; font-family: inherit; resize: none; outline: none; min-height: 44px; transition: .2s; }
+#postInput:focus { background: #e8eaed; }
+.post-box-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.add-photo-lbl { display: flex; align-items: center; gap: 7px; cursor: pointer; color: var(--gray); font-weight: 600; font-size: 14px; padding: 6px 10px; border-radius: 8px; transition: .2s; }
+.add-photo-lbl:hover { background: var(--bg); color: #45bd62; }
+.post-btn { background: var(--green); color: white; border: none; padding: 9px 28px; border-radius: 20px; font-weight: 700; font-size: 14px; cursor: pointer; transition: .2s; }
+.post-btn:hover { background: #163a2c; }
+#imgPreviewBox { display: none; margin-top: 10px; position: relative; }
+#imgPreviewBox img { width: 100%; max-height: 280px; object-fit: cover; border-radius: 10px; }
+#removeImgBtn { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,.55); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
 
-    .content-wrapper { transition: margin-left 0.3s ease; display: flex; flex-direction: column; align-items: center; padding-top: 80px; width: 100%; }
-    .content-wrapper.shifted { margin-left: 280px; width: calc(100% - 280px); }
-    .post-container { width: 95%; max-width: 700px; }
+/* POST CARD */
+.post-card { background: white; border-radius: 12px; padding: 18px 20px; border: 1px solid var(--border); margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06); transition: box-shadow .2s; }
+.post-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.09); }
+.post-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.post-author { display: flex; gap: 11px; align-items: center; }
+.post-author img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+.post-author b { font-size: 15px; color: #1a1a1a; display: block; }
+.post-author small { font-size: 12px; color: var(--gray); }
+.post-menu { position: relative; }
+.dots-btn { cursor: pointer; color: var(--gray); padding: 6px 10px; border-radius: 6px; font-size: 17px; transition: .2s; }
+.dots-btn:hover { background: var(--bg); color: var(--red); }
+.post-dropdown { display: none; position: absolute; right: 0; top: 34px; background: white; border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,.12); min-width: 140px; z-index: 200; overflow: hidden; }
+.post-dropdown.show { display: block; }
+.post-dropdown div { padding: 10px 15px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 9px; transition: .15s; }
+.post-dropdown div:hover { background: #f8f9fa; color: var(--green); }
+.post-dropdown div.danger:hover { color: var(--red); }
+.post-img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 10px; margin: 10px 0; }
+.post-text { font-size: 15px; color: #1a1a1a; line-height: 1.55; word-break: break-word; }
+.post-actions { display: flex; border-top: 1px solid var(--border); margin-top: 14px; padding-top: 4px; }
+.act-btn { flex: 1; padding: 9px 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--gray); font-weight: 600; font-size: 14px; border-radius: 8px; transition: .2s; }
+.act-btn:hover { background: var(--bg); color: var(--green); }
 
-    /* POST BOX */
-    .post-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 20px; border: 1px solid #ddd; }
-    #postInput { width: 100%; border: none; border-radius: 8px; padding: 12px; resize: none; min-height: 60px; outline: none; background: #f0f2f5; font-size: 16px; font-family: inherit; box-sizing: border-box; }
-    .post-btn { background: var(--sidebar-green); color: white; border: none; padding: 8px 30px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-    .post-btn:hover { background: #163a2c; transform: translateY(-2px); }
+/* COMMENTS */
+.comment-section { display: none; border-top: 1px solid #eee; padding-top: 12px; margin-top: 10px; }
+.comment-row { display: flex; gap: 9px; margin-bottom: 9px; }
+.c-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.c-bubble { background: var(--bg); border-radius: 12px; padding: 8px 13px; flex: 1; }
+.c-bubble b { font-size: 13px; display: block; margin-bottom: 2px; }
+.c-bubble p { font-size: 13px; color: #444; margin: 0; }
+.c-input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.c-input-row input { flex: 1; padding: 9px 14px; border: 1.5px solid var(--border); border-radius: 22px; font-size: 13px; outline: none; background: var(--bg); }
+.c-input-row input:focus { background: white; border-color: var(--green); }
+.c-send { background: var(--green); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-    /* IMAGE PREVIEW */
-    #imagePreview { display: none; margin-top: 10px; position: relative; }
-    #imagePreview img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; }
-    #removeImg { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
-
-    /* POST CARD */
-    .post-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #ddd; transition: 0.3s; position: relative; }
-    .post-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    .three-dot { cursor: pointer; color: #65676b; padding: 8px; border-radius: 50%; transition: 0.3s; }
-    .three-dot:hover { color: var(--danger-red); background: #f2f2f2; }
-
-    .dropdown-menu { display: none; position: absolute; right: 10px; top: 45px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; z-index: 100; min-width: 130px; border: 1px solid #eee; }
-    .dropdown-menu.active { display: block; }
-    .dropdown-menu div { padding: 10px 15px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; }
-    .dropdown-menu div:last-child { border-bottom: none; }
-    .dropdown-menu div:hover { background: #f8fafc; color: var(--sidebar-green); }
-
-    .post-image { width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin: 10px 0; }
-
-    .post-card-actions { border-top: 1px solid #e4e6eb; padding-top: 10px; display: flex; margin-top: 15px; }
-    .action-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; border-radius: 8px; color: #65676b; font-weight: 600; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; }
-    .action-item:hover { background: #f2f2f2; color: var(--sidebar-green); }
-
-    /* COMMENT SECTION */
-    .comment-section { border-top: 1px solid #eee; padding: 12px 0 0; margin-top: 10px; display: none; }
-    .comment-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: flex-start; }
-    .comment-item .comment-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--sidebar-green); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; }
-    .comment-bubble { background: #f0f2f5; border-radius: 12px; padding: 8px 12px; flex: 1; }
-    .comment-bubble b { font-size: 13px; color: #333; }
-    .comment-bubble p { font-size: 13px; color: #555; margin: 2px 0 0; }
-    .comment-input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
-    .comment-input-row input { flex: 1; padding: 8px 14px; border-radius: 20px; border: 1px solid #ddd; outline: none; font-size: 13px; background: #f0f2f5; }
-    .comment-input-row input:focus { background: white; border-color: var(--sidebar-green); }
-    .comment-send-btn { background: var(--sidebar-green); color: white; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
-    /* NOTIFICATION DROPDOWN */
-    #notif-dropdown { display: none; position: absolute; right: 0; top: 45px; width: 290px; background: white; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); z-index: 2000; color: #333; }
-    .notif-header { padding: 12px 16px; font-weight: bold; border-bottom: 1px solid #eee; font-size: 15px; }
-    .notif-item { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
-    .notif-item:hover { background: #f9f9f9; }
-    .notif-item small { color: var(--accent-green); display: block; margin-top: 2px; }
-
-    /* TOAST */
-    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1f4e3b; color: white; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 600; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-    .toast.show { opacity: 1; }
+/* TOAST */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #1a1a2e; color: white; padding: 11px 24px; border-radius: 24px; font-size: 14px; font-weight: 600; z-index: 9999; box-shadow: 0 4px 16px rgba(0,0,0,.22); opacity: 0; transition: opacity .3s; pointer-events: none; }
+.toast.show { opacity: 1; }
 </style>
 </head>
 <body>
 
+<!-- TOPBAR -->
 <header class="topbar">
-    <div class="menu-section">
+    <div class="topbar-left">
         <i class="fa fa-bars menu-icon" onclick="toggleSidebar()"></i>
-        <span class="title-text">Pathfinder</span>
+        <span class="brand">Pathfinder</span>
     </div>
-
     <form class="search-form" action="/search" method="GET">
         <input type="text" name="query" placeholder="Search resources...">
         <button type="submit"><i class="fa fa-search"></i></button>
     </form>
-
-    <div class="top-right">
-        <!-- NOTIFICATION -->
-        <div class="icon-btn" id="notifBtn" onclick="toggleNotif()" style="position:relative;">
+    <div class="topbar-right">
+        <div class="icon-btn" id="notifBtn" style="position:relative;" onclick="toggleNotif(event)">
             <i class="fa fa-bell"></i>
-            <span id="notification-count" class="badge">0</span>
-            <div id="notif-dropdown">
-                <div class="notif-header">Notifications</div>
-                <div id="notif-content">
-                    <div class="notif-item" style="color:#888;">No new notifications</div>
-                </div>
+            <span class="badge" id="notifBadge">0</span>
+            <div class="notif-dd" id="notifDD">
+                <div class="notif-dd-head">Notifications</div>
+                <div id="notifContent"><div class="notif-item" style="color:#999;">No notifications yet</div></div>
             </div>
         </div>
-
-        <!-- INBOX — FIX: href to Flask route, not inbox.html -->
-        <div class="icon-btn" onclick="location.href='/inbox'" style="position:relative;">
+        <div class="icon-btn" onclick="location.href='/inbox'" title="Messages" style="position:relative;">
             <i class="fa fa-envelope"></i>
-            <span id="message-count" class="badge">0</span>
+            <span class="badge" id="msgBadge">0</span>
         </div>
-
-        <div style="display:flex; flex-direction:column; line-height:1.2;">
-            <small style="font-size:10px; color:gray;">Welcome,</small>
-            <span class="user-display-name" id="displayUserName">{{ user_name if user_name else 'Guest' }}</span>
+        <div class="user-greeting">
+            <small>Welcome,</small>
+            <span id="displayName">...</span>
         </div>
-
-        <img src="icons/profile.png" id="topProfilePic" class="profile-img" onclick="location.href='/profile'" title="My Profile">
+        <img src="icons/profile.png" id="topAvatar" class="top-avatar"
+             onclick="location.href='/profile'" title="My Profile">
     </div>
 </header>
 
+<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
     <ul>
         <li onclick="location.href='/main'"><i class="fa fa-home"></i> Home</li>
-        <li onclick="toggleCareerDropdown()">
+        <li onclick="toggleCareer()">
             <i class="fa fa-graduation-cap"></i> Career Path
-            <i class="fa fa-chevron-down" style="font-size:10px; margin-left:auto;" id="careerIcon"></i>
+            <i class="fa fa-chevron-down" id="careerIcon" style="font-size:10px;margin-left:auto;transition:.2s;"></i>
         </li>
-        <ul class="career-dropdown" id="careerDropdown">
+        <ul class="sidebar-sub" id="careerSub">
             <li onclick="location.href='/technical'"><i class="fa fa-code"></i> Technical</li>
             <li onclick="location.href='/non-technical'"><i class="fa fa-briefcase"></i> Non-Technical</li>
         </ul>
         <li onclick="location.href='/settings'"><i class="fa fa-cog"></i> Settings</li>
         <li onclick="location.href='/saved-posts'"><i class="fa fa-bookmark"></i> Saved Posts</li>
-        <li onclick="logout()" class="logout-btn"><i class="fa fa-sign-out-alt"></i> Logout</li>
+        <li onclick="doLogout()" class="logout-li"><i class="fa fa-sign-out-alt"></i> Logout</li>
     </ul>
 </div>
 
-<div class="content-wrapper" id="mainContent">
-    <div class="post-container">
+<!-- CONTENT -->
+<div class="content" id="content">
+    <div class="feed-wrap">
 
-        <!-- CREATE POST BOX -->
+        <!-- Create Post -->
         <div class="post-box">
-            <div style="display:flex; gap:12px; margin-bottom:15px; align-items:flex-start;">
-                <img src="icons/profile.png" id="postBoxAvatar" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
-                <textarea id="postInput" placeholder="What's on your mind?"></textarea>
+            <div class="post-box-top">
+                <img src="icons/profile.png" id="postAvatar"
+                     style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                <textarea id="postInput" placeholder="What's on your mind?" rows="1"
+                    oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
             </div>
-
-            <!-- IMAGE PREVIEW AREA -->
-            <div id="imagePreview">
-                <img id="previewImg" src="" alt="Preview">
-                <button id="removeImg" onclick="removeImage()" title="Remove"><i class="fa fa-times"></i></button>
+            <div id="imgPreviewBox">
+                <img id="previewImg" src="" alt="">
+                <button id="removeImgBtn" onclick="clearImage()" title="Remove">
+                    <i class="fa fa-times"></i>
+                </button>
             </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                <label style="color:#65676b; cursor:pointer; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px;">
-                    <i class="fa fa-image" style="color:#45bd62; font-size:18px;"></i> Add Photo
-                    <input type="file" id="imageUpload" style="display:none;" accept="image/*" onchange="previewImage(this)">
+            <div class="post-box-bottom">
+                <label class="add-photo-lbl">
+                    <i class="fa fa-image" style="color:#45bd62;font-size:18px;"></i> Add Photo
+                    <input type="file" id="imgPicker" accept="image/*" style="display:none;"
+                           onchange="onImagePicked(this)">
                 </label>
-                <button class="post-btn" onclick="addNewPost()"><i class="fa fa-paper-plane"></i> Post</button>
+                <button class="post-btn" onclick="submitPost()">
+                    <i class="fa fa-paper-plane"></i> Post
+                </button>
             </div>
         </div>
 
-        <!-- FEED -->
+        <!-- Feed -->
         <div id="feed">
-            <!-- Default admin post -->
-            <div class="post-card" data-post-id="admin-1">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <img src="icons/profile.png" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
-                        <div>
-                            <b>System Admin</b><br>
-                            <small style="color:gray;">Just now</small>
-                        </div>
+            <div class="post-card">
+                <div class="post-head">
+                    <div class="post-author">
+                        <img src="icons/profile.png" alt="">
+                        <div><b>System Admin</b><small>Welcome post</small></div>
                     </div>
-                    <div style="position:relative;">
-                        <i class="fa fa-ellipsis-v three-dot" onclick="toggleDropdown(this)"></i>
-                        <div class="dropdown-menu">
+                    <div class="post-menu">
+                        <span class="dots-btn" onclick="toggleDots(this)"><i class="fa fa-ellipsis-v"></i></span>
+                        <div class="post-dropdown">
                             <div onclick="savePost(this)"><i class="fa fa-bookmark"></i> Save Post</div>
                         </div>
                     </div>
                 </div>
-                <div class="post-text">Welcome to Pathfinder! Guidelines are here for your career success. Explore career paths, connect with guides, and grow your network. 🎯</div>
-                <div class="post-card-actions">
-                    <div class="action-item" onclick="toggleComments(this)"><i class="fa fa-comment"></i> Comment</div>
-                    <div class="action-item" onclick="sharePost(this)"><i class="fa fa-share"></i> Share</div>
-                    <div class="action-item" onclick="messageAboutPost(this)"><i class="fa fa-paper-plane"></i> Message</div>
+                <div class="post-text">Welcome to Pathfinder! 🎯 Explore career paths, connect with mentors, and grow your network.</div>
+                <div class="post-actions">
+                    <div class="act-btn" onclick="toggleComments(this)"><i class="fa fa-comment"></i> Comment</div>
+                    <div class="act-btn" onclick="sharePost(this)"><i class="fa fa-share"></i> Share</div>
+                    <div class="act-btn" onclick="msgAboutPost(this)"><i class="fa fa-paper-plane"></i> Message</div>
                 </div>
                 <div class="comment-section"></div>
             </div>
         </div>
+
     </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ==================== INIT ====================
-const currentUser = {
-    name: "{{ user_name if user_name else 'Guest' }}",
-    id: null
-};
+// ── STATE ──
+const ME = { name: "Guest", id: null };
 
-window.onload = function() {
-    // Set profile pic from localStorage if available
-    const savedPic = localStorage.getItem("profilePic");
-    if (savedPic) {
-        document.getElementById("topProfilePic").src = savedPic;
-        document.getElementById("postBoxAvatar").src = savedPic;
+// ── INIT ──
+window.addEventListener("load", async function () {
+    // Show name immediately from Jinja (works on first load) or localStorage
+    const jinjaName = "{{ user_name|default('') }}";
+    ME.name = jinjaName || localStorage.getItem("pf_username") || "Guest";
+    document.getElementById("displayName").innerText = ME.name;
+
+    // Verify from server (keeps name fresh after page navigation)
+    try {
+        const r = await fetch("/api/me");
+        const me = await r.json();
+        if (me && me.user_name) {
+            ME.name = me.user_name;
+            ME.id = me.user_id || null;
+            localStorage.setItem("pf_username", me.user_name);
+            if (me.user_id) localStorage.setItem("pf_uid", me.user_id);
+            document.getElementById("displayName").innerText = me.user_name;
+        }
+    } catch (_) {}
+
+    // Profile pic
+    const pic = localStorage.getItem("pf_pic");
+    if (pic) {
+        document.getElementById("topAvatar").src = pic;
+        document.getElementById("postAvatar").src = pic;
     }
-    loadFeedFromStorage();
-    connectDashboard();
-};
 
-// ==================== SIDEBAR ====================
+    // Load persisted posts
+    renderSavedPosts();
+
+    // Notifications (non-blocking, won't break page if DB offline)
+    fetchDashboard();
+});
+
+// ── SIDEBAR ──
 function toggleSidebar() {
-    document.getElementById("sidebar").classList.toggle("active");
-    document.getElementById("mainContent").classList.toggle("shifted");
+    document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("content").classList.toggle("shifted");
 }
-
-function toggleCareerDropdown() {
-    const dd = document.getElementById("careerDropdown");
+function toggleCareer() {
+    const sub = document.getElementById("careerSub");
     const icon = document.getElementById("careerIcon");
-    dd.classList.toggle("show");
-    icon.style.transform = dd.classList.contains("show") ? "rotate(180deg)" : "rotate(0)";
+    sub.classList.toggle("open");
+    icon.style.transform = sub.classList.contains("open") ? "rotate(180deg)" : "rotate(0)";
 }
 
-// ==================== IMAGE PREVIEW ====================
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById("previewImg").src = e.target.result;
-            document.getElementById("imagePreview").style.display = "block";
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
+// ── IMAGE ──
+function onImagePicked(input) {
+    if (!input.files || !input.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        document.getElementById("previewImg").src = e.target.result;
+        document.getElementById("imgPreviewBox").style.display = "block";
+    };
+    reader.readAsDataURL(input.files[0]);
 }
-
-function removeImage() {
-    document.getElementById("imageUpload").value = "";
-    document.getElementById("imagePreview").style.display = "none";
+function clearImage() {
+    document.getElementById("imgPicker").value = "";
     document.getElementById("previewImg").src = "";
+    document.getElementById("imgPreviewBox").style.display = "none";
 }
 
-// ==================== CREATE POST ====================
-function addNewPost() {
+// ── CREATE POST ──
+function submitPost() {
     const text = document.getElementById("postInput").value.trim();
+    const hasImg = document.getElementById("imgPreviewBox").style.display === "block";
     const imgSrc = document.getElementById("previewImg").src;
-    const hasImage = document.getElementById("imagePreview").style.display === "block";
+    if (!text && !hasImg) { toast("Write something or add a photo!"); return; }
 
-    if (!text && !hasImage) {
-        showToast("Write something or add a photo!");
-        return;
-    }
+    const pic = localStorage.getItem("pf_pic") || "icons/profile.png";
+    const now = nowStr();
+    const imgHTML = hasImg ? `<img class="post-img" src="${imgSrc}" alt="">` : "";
 
-    const userName = currentUser.name;
-    const userPic = localStorage.getItem("profilePic") || "icons/profile.png";
-    const postId = "post-" + Date.now();
-    const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    document.getElementById("feed").insertAdjacentHTML("afterbegin",
+        makeCard({ author: ME.name, pic, time: now, text, imgHTML, isOwn: true })
+    );
 
-    const imageHTML = hasImage ? `<img class="post-image" src="${imgSrc}" alt="Post Image">` : "";
+    // Persist
+    const posts = JSON.parse(localStorage.getItem("pf_posts") || "[]");
+    posts.unshift({ author: ME.name, text, time: now, img: hasImg ? imgSrc : null });
+    if (posts.length > 60) posts.length = 60;
+    localStorage.setItem("pf_posts", JSON.stringify(posts));
 
-    const postHTML = `
-        <div class="post-card" data-post-id="${postId}">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <img src="${userPic}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
-                    <div><b>${escapeHtml(userName)}</b><br><small style="color:gray;">${now}</small></div>
-                </div>
-                <div style="position:relative;">
-                    <i class="fa fa-ellipsis-v three-dot" onclick="toggleDropdown(this)"></i>
-                    <div class="dropdown-menu">
-                        <div onclick="editPost(this)"><i class="fa fa-pen"></i> Edit</div>
-                        <div onclick="deletePost(this)"><i class="fa fa-trash"></i> Delete</div>
-                    </div>
-                </div>
-            </div>
-            <div class="post-text">${escapeHtml(text)}</div>
-            ${imageHTML}
-            <div class="post-card-actions">
-                <div class="action-item" onclick="toggleComments(this)"><i class="fa fa-comment"></i> Comment</div>
-                <div class="action-item" onclick="sharePost(this)"><i class="fa fa-share"></i> Share</div>
-                <div class="action-item" onclick="messageAboutPost(this)"><i class="fa fa-paper-plane"></i> Message</div>
-            </div>
-            <div class="comment-section"></div>
-        </div>`;
-
-    document.getElementById("feed").insertAdjacentHTML("afterbegin", postHTML);
     document.getElementById("postInput").value = "";
-    removeImage();
-
-    // Save to backend
-    savePostToServer({ user: userName, text, image: hasImage ? imgSrc : null, time: now });
-    showToast("Post shared! ✅");
+    document.getElementById("postInput").style.height = "auto";
+    clearImage();
+    toast("Posted! ✅");
 }
 
+function makeCard({ author, pic, time, text, imgHTML, isOwn }) {
+    const menu = isOwn
+        ? `<div onclick="editPost(this)"><i class="fa fa-pen"></i> Edit</div>
+           <div class="danger" onclick="deletePost(this)"><i class="fa fa-trash"></i> Delete</div>`
+        : `<div onclick="savePost(this)"><i class="fa fa-bookmark"></i> Save Post</div>`;
+    return `
+    <div class="post-card">
+      <div class="post-head">
+        <div class="post-author">
+          <img src="${pic}" alt="">
+          <div><b>${esc(author)}</b><small>${time}</small></div>
+        </div>
+        <div class="post-menu">
+          <span class="dots-btn" onclick="toggleDots(this)"><i class="fa fa-ellipsis-v"></i></span>
+          <div class="post-dropdown">${menu}</div>
+        </div>
+      </div>
+      <div class="post-text">${esc(text)}</div>
+      ${imgHTML}
+      <div class="post-actions">
+        <div class="act-btn" onclick="toggleComments(this)"><i class="fa fa-comment"></i> Comment</div>
+        <div class="act-btn" onclick="sharePost(this)"><i class="fa fa-share"></i> Share</div>
+        <div class="act-btn" onclick="msgAboutPost(this)"><i class="fa fa-paper-plane"></i> Message</div>
+      </div>
+      <div class="comment-section"></div>
+    </div>`;
+}
+
+function renderSavedPosts() {
+    const posts = JSON.parse(localStorage.getItem("pf_posts") || "[]");
+    const feed = document.getElementById("feed");
+    posts.forEach(p => {
+        const pic = localStorage.getItem("pf_pic") || "icons/profile.png";
+        feed.insertAdjacentHTML("beforeend",
+            makeCard({ author: p.author, pic, time: p.time, text: p.text, imgHTML: p.img ? `<img class="post-img" src="${p.img}" alt="">` : "", isOwn: true })
+        );
+    });
+}
+
+// ── EDIT / DELETE ──
 function editPost(el) {
     const card = el.closest(".post-card");
-    const textDiv = card.querySelector(".post-text");
-    const newText = prompt("Edit your post:", textDiv.innerText);
-    if (newText !== null && newText.trim()) textDiv.innerText = newText;
-    closeAllDropdowns();
+    const t = card.querySelector(".post-text");
+    const v = prompt("Edit post:", t.innerText);
+    if (v !== null && v.trim()) t.innerText = v.trim();
+    closeDots();
 }
-
 function deletePost(el) {
-    if (confirm("Delete this post?")) {
-        el.closest(".post-card").remove();
-        showToast("Post deleted.");
-    }
-    closeAllDropdowns();
+    if (!confirm("Delete this post?")) return;
+    el.closest(".post-card").remove();
+    toast("Deleted.");
+    closeDots();
 }
 
-// ==================== SAVE POST ====================
+// ── SAVE POST ──
 function savePost(el) {
     const card = el.closest(".post-card");
     const author = card.querySelector("b").innerText;
     const text = card.querySelector(".post-text").innerText;
     const time = card.querySelector("small").innerText;
-    const imgEl = card.querySelector(".post-image");
-
-    let saved = JSON.parse(localStorage.getItem("pathfinder_saved")) || [];
-    if (saved.some(p => p.text === text && p.author === author)) {
-        showToast("Already saved!");
-        return;
+    const imgEl = card.querySelector(".post-img");
+    let saved = JSON.parse(localStorage.getItem("pf_saved") || "[]");
+    if (saved.some(s => s.text === text && s.author === author)) {
+        toast("Already saved!"); closeDots(); return;
     }
-    saved.push({ author, text, time, image: imgEl ? imgEl.src : null });
-    localStorage.setItem("pathfinder_saved", JSON.stringify(saved));
-    showToast("Post saved! 🔖");
-    closeAllDropdowns();
+    saved.push({ author, text, time, img: imgEl ? imgEl.src : null });
+    localStorage.setItem("pf_saved", JSON.stringify(saved));
+    toast("Saved! 🔖");
+    closeDots();
 }
 
-// ==================== COMMENTS ====================
+// ── COMMENTS ──
 function toggleComments(btn) {
     const card = btn.closest(".post-card");
-    const section = card.querySelector(".comment-section");
-
-    if (!section.innerHTML.trim()) {
-        // Build comment UI
-        section.innerHTML = `
-            <div class="comments-list"></div>
-            <div class="comment-input-row">
-                <input type="text" placeholder="Write a comment..." onkeydown="if(event.key==='Enter') submitComment(this)">
-                <button class="comment-send-btn" onclick="submitComment(this.previousElementSibling)">
-                    <i class="fa fa-paper-plane"></i>
-                </button>
-            </div>`;
+    const sec = card.querySelector(".comment-section");
+    if (!sec.innerHTML.trim()) {
+        sec.innerHTML = `
+          <div class="c-list"></div>
+          <div class="c-input-row">
+            <input type="text" placeholder="Write a comment…"
+                   onkeydown="if(event.key==='Enter')postComment(this)">
+            <button class="c-send" onclick="postComment(this.previousElementSibling)">
+              <i class="fa fa-paper-plane"></i>
+            </button>
+          </div>`;
     }
-
-    section.style.display = section.style.display === "block" ? "none" : "block";
+    sec.style.display = sec.style.display === "block" ? "none" : "block";
 }
-
-function submitComment(input) {
+function postComment(input) {
     const val = input.value.trim();
     if (!val) return;
-    const list = input.closest(".comment-section").querySelector(".comments-list");
-    const userName = currentUser.name;
-    const initials = userName.split(" ").map(w => w[0]).join("").toUpperCase().slice(0,2);
-
+    const list = input.closest(".comment-section").querySelector(".c-list");
+    const init = ME.name.split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2) || "U";
     list.insertAdjacentHTML("beforeend", `
-        <div class="comment-item">
-            <div class="comment-avatar">${initials}</div>
-            <div class="comment-bubble">
-                <b>${escapeHtml(userName)}</b>
-                <p>${escapeHtml(val)}</p>
-            </div>
-        </div>`);
+      <div class="comment-row">
+        <div class="c-avatar">${init}</div>
+        <div class="c-bubble"><b>${esc(ME.name)}</b><p>${esc(val)}</p></div>
+      </div>`);
     input.value = "";
-
-    // Save comment as inbox message
-    saveInboxMessage({
-        type: "comment",
-        from: userName,
-        content: val,
-        postRef: input.closest(".post-card").querySelector(".post-text").innerText.substring(0,40) + "...",
-        time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
-    });
+    pushInbox({ type: "comment", from: ME.name, content: val, time: nowStr() });
 }
 
-// ==================== SHARE ====================
+// ── SHARE ──
 async function sharePost(btn) {
-    const card = btn.closest(".post-card");
-    const text = card.querySelector(".post-text").innerText;
-    const shareData = { title: "Pathfinder Post", text: text, url: window.location.href };
-
+    const text = btn.closest(".post-card").querySelector(".post-text").innerText;
     if (navigator.share) {
-        try { await navigator.share(shareData); showToast("Shared! 🔗"); } catch(e) {}
+        try { await navigator.share({ title: "Pathfinder", text, url: location.href }); } catch (_) {}
     } else {
-        navigator.clipboard.writeText(window.location.href).then(() => showToast("Link copied! 📋"));
+        navigator.clipboard.writeText(location.href).then(() => toast("Link copied! 📋"));
     }
-
-    saveInboxMessage({
-        type: "share",
-        from: currentUser.name,
-        content: "Shared a post: " + text.substring(0,40) + "...",
-        time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
-    });
 }
 
-// ==================== MESSAGE ABOUT POST ====================
-function messageAboutPost(btn) {
+// ── MESSAGE ABOUT POST ──
+function msgAboutPost(btn) {
     const card = btn.closest(".post-card");
     const author = card.querySelector("b").innerText;
-    const postText = card.querySelector(".post-text").innerText;
-
-    const msg = prompt(`Send a message to ${author} about this post:`);
+    const snippet = card.querySelector(".post-text").innerText.slice(0, 50);
+    const msg = prompt(`Send a message to ${author}:`);
     if (!msg || !msg.trim()) return;
 
-    // Save to server inbox
+    pushInbox({ type: "message", from: ME.name, to: author, content: msg.trim(), postRef: snippet + "…", time: nowStr() });
+
     fetch("/api/messages/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            sender_name: currentUser.name,
-            receiver_name: author,
-            content: msg,
-            post_ref: postText.substring(0, 50)
-        })
-    }).catch(() => {
-        // Fallback to localStorage
-        saveInboxMessage({
-            type: "message",
-            from: currentUser.name,
-            to: author,
-            content: msg,
-            postRef: postText.substring(0,40) + "...",
-            time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
-        });
-    });
+        body: JSON.stringify({ sender_name: ME.name, receiver_name: author, content: msg.trim(), post_ref: snippet })
+    }).catch(() => {});
 
-    showToast(`Message sent to ${author}! 💬`);
+    toast(`Message sent to ${author}! 💬`);
 }
 
-// ==================== INBOX LOCAL STORAGE ====================
-function saveInboxMessage(msgObj) {
-    let inbox = JSON.parse(localStorage.getItem("pathfinder_inbox")) || [];
-    inbox.unshift(msgObj);
-    if (inbox.length > 100) inbox = inbox.slice(0, 100);
-    localStorage.setItem("pathfinder_inbox", JSON.stringify(inbox));
+// ── INBOX HELPER ──
+function pushInbox(item) {
+    const inbox = JSON.parse(localStorage.getItem("pf_inbox") || "[]");
+    inbox.unshift(item);
+    if (inbox.length > 200) inbox.length = 200;
+    localStorage.setItem("pf_inbox", JSON.stringify(inbox));
 }
 
-// ==================== FEED PERSISTENCE (localStorage) ====================
-function savePostToServer(postData) {
-    let posts = JSON.parse(localStorage.getItem("pathfinder_posts")) || [];
-    posts.unshift(postData);
-    if (posts.length > 50) posts = posts.slice(0, 50);
-    localStorage.setItem("pathfinder_posts", JSON.stringify(posts));
+// ── 3-DOT MENU ──
+function toggleDots(btn) {
+    const dd = btn.nextElementSibling;
+    const was = dd.classList.contains("show");
+    closeDots();
+    if (!was) dd.classList.add("show");
 }
-
-function loadFeedFromStorage() {
-    const posts = JSON.parse(localStorage.getItem("pathfinder_posts")) || [];
-    posts.forEach(p => {
-        const userPic = localStorage.getItem("profilePic") || "icons/profile.png";
-        const imageHTML = p.image ? `<img class="post-image" src="${p.image}" alt="Post">` : "";
-        const html = `
-            <div class="post-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        <img src="${userPic}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;">
-                        <div><b>${escapeHtml(p.user)}</b><br><small style="color:gray;">${p.time}</small></div>
-                    </div>
-                    <div style="position:relative;">
-                        <i class="fa fa-ellipsis-v three-dot" onclick="toggleDropdown(this)"></i>
-                        <div class="dropdown-menu">
-                            <div onclick="editPost(this)"><i class="fa fa-pen"></i> Edit</div>
-                            <div onclick="deletePost(this)"><i class="fa fa-trash"></i> Delete</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="post-text">${escapeHtml(p.text || "")}</div>
-                ${imageHTML}
-                <div class="post-card-actions">
-                    <div class="action-item" onclick="toggleComments(this)"><i class="fa fa-comment"></i> Comment</div>
-                    <div class="action-item" onclick="sharePost(this)"><i class="fa fa-share"></i> Share</div>
-                    <div class="action-item" onclick="messageAboutPost(this)"><i class="fa fa-paper-plane"></i> Message</div>
-                </div>
-                <div class="comment-section"></div>
-            </div>`;
-        document.getElementById("feed").insertAdjacentHTML("beforeend", html);
-    });
+function closeDots() {
+    document.querySelectorAll(".post-dropdown.show").forEach(d => d.classList.remove("show"));
 }
-
-// ==================== DROPDOWN ====================
-function toggleDropdown(icon) {
-    closeAllDropdowns();
-    icon.nextElementSibling.classList.toggle("active");
-}
-function closeAllDropdowns() {
-    document.querySelectorAll(".dropdown-menu.active").forEach(d => d.classList.remove("active"));
-}
-window.onclick = function(e) {
-    if (!e.target.matches(".three-dot") && !e.target.closest(".dropdown-menu")) closeAllDropdowns();
-};
-
-// ==================== NOTIFICATIONS ====================
-function toggleNotif() {
-    const dd = document.getElementById("notif-dropdown");
-    dd.style.display = dd.style.display === "block" ? "none" : "block";
-}
-window.addEventListener("click", function(e) {
-    const dd = document.getElementById("notif-dropdown");
-    const btn = document.getElementById("notifBtn");
-    if (dd && !btn.contains(e.target)) dd.style.display = "none";
+document.addEventListener("click", e => {
+    if (!e.target.closest(".post-menu")) closeDots();
 });
 
-function connectDashboard() {
-    fetch("/api/dashboard_updates")
-        .then(r => r.json())
-        .then(data => {
-            const nBadge = document.getElementById("notification-count");
-            if (nBadge) {
-                nBadge.innerText = data.unread_notif_count;
-                nBadge.style.display = data.unread_notif_count > 0 ? "block" : "none";
-            }
-            const mBadge = document.getElementById("message-count");
-            if (mBadge) {
-                mBadge.innerText = data.unread_msg_count;
-                mBadge.style.display = data.unread_msg_count > 0 ? "block" : "none";
-            }
-            const content = document.getElementById("notif-content");
-            if (content && data.notifications && data.notifications.length > 0) {
-                content.innerHTML = data.notifications.map(n => `
-                    <div class="notif-item">${n.message}<small>${n.time_ago}</small></div>`).join("");
-            }
-        })
-        .catch(() => {});
+// ── NOTIFICATIONS ──
+function toggleNotif(e) {
+    e.stopPropagation();
+    const dd = document.getElementById("notifDD");
+    dd.style.display = dd.style.display === "block" ? "none" : "block";
 }
-
-setInterval(connectDashboard, 20000);
-
-// ==================== LOGOUT ====================
-function logout() {
-    if (confirm("Log out of Pathfinder?")) {
-        fetch("/logout", { method: "POST" })
-            .then(() => window.location.href = "/login")
-            .catch(() => window.location.href = "/login");
+document.addEventListener("click", e => {
+    if (!e.target.closest("#notifBtn")) {
+        const dd = document.getElementById("notifDD");
+        if (dd) dd.style.display = "none";
     }
+});
+async function fetchDashboard() {
+    try {
+        const r = await fetch("/api/dashboard_updates");
+        if (!r.ok) return;
+        const d = await r.json();
+        const nb = document.getElementById("notifBadge");
+        nb.innerText = d.unread_notif_count || 0;
+        nb.style.display = (d.unread_notif_count > 0) ? "block" : "none";
+        const mb = document.getElementById("msgBadge");
+        mb.innerText = d.unread_msg_count || 0;
+        mb.style.display = (d.unread_msg_count > 0) ? "block" : "none";
+        if (d.notifications && d.notifications.length) {
+            document.getElementById("notifContent").innerHTML =
+                d.notifications.map(n => `<div class="notif-item">${n.message}<small>${n.time_ago}</small></div>`).join("");
+        }
+    } catch (_) {}
+}
+setInterval(fetchDashboard, 30000);
+
+// ── LOGOUT ──
+function doLogout() {
+    if (!confirm("Log out?")) return;
+    fetch("/logout", { method: "POST" }).finally(() => location.href = "/login");
 }
 
-// ==================== UTILS ====================
-function escapeHtml(str) {
-    if (!str) return "";
-    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+// ── UTILS ──
+function esc(s) {
+    if (!s) return "";
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
-
-function showToast(msg) {
+function nowStr() {
+    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+function toast(msg) {
     const t = document.getElementById("toast");
     t.innerText = msg;
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 3000);
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove("show"), 3000);
 }
 </script>
 </body>

@@ -49,6 +49,8 @@ def settings_page():
 
 @app.route('/saved-posts')
 def saved_posts_page():
+    if 'user_name' not in session:
+        return redirect(url_for('login_page'))
     return render_template('saved_posts.html')
 
 @app.route('/technical')
@@ -83,9 +85,76 @@ def create_profile():
     conn.close()
     return redirect(url_for('login_page'))
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login_page():
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+
+    # POST: handle login
+    email = request.form.get('email', '').strip()
+    password = request.form.get('password', '').strip()
+
+    if not email or not password:
+        return render_template('login.html', error='Please enter email and password')
+
+    try:
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        user = None
+        user_type = None
+
+        try:
+            cursor.execute("SELECT * FROM students WHERE email=%s AND password=%s", (email, password))
+            user = cursor.fetchone()
+            if user:
+                user_type = 'student'
+        except Exception as e:
+            print(f'Students login error: {e}')
+
+        if not user:
+            try:
+                cursor.execute("SELECT * FROM guides WHERE email=%s AND password=%s", (email, password))
+                user = cursor.fetchone()
+                if user:
+                    user_type = 'guide'
+            except Exception as e:
+                print(f'Guides login error: {e}')
+
+        cursor.close()
+        db.close()
+
+        if user:
+            user_name = (
+                user.get('name') or user.get('full_name') or
+                user.get('username') or email.split('@')[0]
+            )
+            session['user_id'] = user.get('id')
+            session['user_name'] = user_name
+            session['user_email'] = user.get('email', email)
+            session['user_type'] = user_type
+            print(f'Login OK: {user_name} id={user.get("id")} type={user_type}')
+            return redirect(url_for('main_dashboard'))
+
+        # Better error message
+        try:
+            db2 = get_db_connection()
+            c2 = db2.cursor(dictionary=True)
+            c2.execute("SELECT id FROM students WHERE email=%s", (email,))
+            exists = c2.fetchone()
+            if not exists:
+                c2.execute("SELECT id FROM guides WHERE email=%s", (email,))
+                exists = c2.fetchone()
+            c2.close()
+            db2.close()
+            error = 'Incorrect password. Please try again.' if exists else 'No account found with this email.'
+        except Exception:
+            error = 'Invalid email or password.'
+
+        return render_template('login.html', error=error)
+
+    except Exception as e:
+        print(f'Login exception: {e}')
+        return render_template('login.html', error=f'Server error: {str(e)}')
 
 @app.route('/create-guide-profile', methods=['POST'])
 def create_guide_profile():
@@ -106,32 +175,7 @@ def create_guide_profile():
     conn.close()
     return redirect(url_for('login_page'))
 
-@app.route('/login', methods=['POST'])
-def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
-
-    db = get_db_connection()
-    cursor = db.cursor(dictionary=True)
-
-    cursor.execute("SELECT * FROM students WHERE email=%s AND password=%s", (email, password))
-    user = cursor.fetchone()
-
-    if not user:
-        cursor.execute("SELECT * FROM guides WHERE email=%s AND password=%s", (email, password))
-        user = cursor.fetchone()
-
-    cursor.close()
-    db.close()
-
-    if user:
-        session['user_id'] = user.get('id')
-        session['user_name'] = user.get('name')  # FIX: Store name in session
-        # Also store email for reference
-        session['user_email'] = user.get('email')
-        return redirect(url_for('main_dashboard'))
-
-    return render_template('login.html', error="Invalid Email or Password")
+# (POST login handled above in login_page)
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
@@ -216,36 +260,77 @@ def search():
 @app.route('/get_profile_data', methods=['GET'])
 def get_data():
     user_id = session.get('user_id')
+
+    # No session — return what we know from session (no 401, just minimal data)
     if not user_id:
-        return jsonify({"error": "Not logged in"}), 401
+        return jsonify({
+            "full_name": session.get('user_name', ''),
+            "email": session.get('user_email', ''),
+            "student_id": None,
+            "department": None,
+            "profile_pic": None
+        })
 
     db = get_db_connection()
     cursor = db.cursor(dictionary=True)
+    user = None
 
-    # Try students first
-    cursor.execute("SELECT name as full_name, email, student_id, department, NULL as profile_pic FROM students WHERE id=%s", (user_id,))
-    user = cursor.fetchone()
-
-    if not user:
-        cursor.execute("SELECT name as full_name, email, NULL as student_id, expertise as department, NULL as profile_pic FROM guides WHERE id=%s", (user_id,))
+    # Try students table
+    try:
+        cursor.execute(
+            "SELECT name AS full_name, email, student_id, department FROM students WHERE id=%s",
+            (user_id,)
+        )
         user = cursor.fetchone()
+    except Exception as e:
+        print(f"Students query error: {e}")
 
-    # Try users table as fallback
+    # Try guides table
     if not user:
-        cursor.execute("SELECT full_name, email, student_id, department, profile_pic FROM users WHERE id=%s", (user_id,))
-        user = cursor.fetchone()
-        if user and user.get('profile_pic'):
-            user['profile_pic'] = base64.b64encode(user['profile_pic']).decode('utf-8')
+        try:
+            cursor.execute(
+                "SELECT name AS full_name, email, NULL AS student_id, expertise AS department FROM guides WHERE id=%s",
+                (user_id,)
+            )
+            user = cursor.fetchone()
+        except Exception as e:
+            print(f"Guides query error: {e}")
+
+    if user:
+        user['profile_pic'] = None
+
+    # ALWAYS try to get profile_pic from users table (separate from student/guide data)
+    try:
+        cursor.execute("SELECT profile_pic FROM users WHERE id=%s", (user_id,))
+        pic_row = cursor.fetchone()
+        if pic_row and pic_row.get('profile_pic'):
+            pic_b64 = base64.b64encode(pic_row['profile_pic']).decode('utf-8')
+            if user:
+                user['profile_pic'] = pic_b64
+            else:
+                # users table has full profile
+                cursor.execute("SELECT full_name, email, student_id, department, profile_pic FROM users WHERE id=%s", (user_id,))
+                user = cursor.fetchone()
+                if user and user.get('profile_pic') and isinstance(user['profile_pic'], (bytes, bytearray)):
+                    user['profile_pic'] = base64.b64encode(user['profile_pic']).decode('utf-8')
+    except Exception as e:
+        print(f"Profile pic fetch error: {e}")
 
     cursor.close()
     db.close()
 
     if user:
-        # Also include the session name as fallback
         if not user.get('full_name'):
             user['full_name'] = session.get('user_name', 'User')
         return jsonify(user)
-    return jsonify({"full_name": session.get('user_name', 'User'), "email": session.get('user_email', '')})
+
+    return jsonify({
+        "full_name": session.get('user_name', 'User'),
+        "email": session.get('user_email', ''),
+        "student_id": None,
+        "department": None,
+        "profile_pic": None
+    })
 
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
@@ -257,38 +342,52 @@ def update_profile():
     cursor = db.cursor()
 
     name = request.form.get('name')
-    student_id = request.form.get('student_id')
+    student_id_val = request.form.get('student_id')
     email = request.form.get('email')
     dept = request.form.get('dept')
     image_file = request.files.get('image')
 
     try:
-        if image_file:
-            image_data = image_file.read()
-            cursor.execute("UPDATE students SET name=%s, student_id=%s, email=%s, department=%s WHERE id=%s",
-                           (name, student_id, email, dept, user_id))
-            # Update profile pic in users table if exists
-            try:
-                cursor.execute("UPDATE users SET profile_pic=%s WHERE id=%s", (image_data, user_id))
-            except:
-                pass
-        else:
-            cursor.execute("UPDATE students SET name=%s, student_id=%s, email=%s, department=%s WHERE id=%s",
-                           (name, student_id, email, dept, user_id))
-
-        db.commit()
-        # Update session name
+        # Update name/info in students table
         if name:
-            session['user_name'] = name
-    except Exception as e:
-        # Try guides table
-        try:
-            cursor.execute("UPDATE guides SET name=%s, email=%s WHERE id=%s", (name, email, user_id))
-            db.commit()
-            if name:
+            try:
+                cursor.execute(
+                    "UPDATE students SET name=%s, student_id=%s, email=%s, department=%s WHERE id=%s",
+                    (name, student_id_val, email, dept, user_id)
+                )
+                db.commit()
                 session['user_name'] = name
-        except Exception as e2:
-            return jsonify({"status": "error", "message": str(e2)})
+            except Exception:
+                # Try guides table
+                cursor.execute(
+                    "UPDATE guides SET name=%s, email=%s WHERE id=%s",
+                    (name, email, user_id)
+                )
+                db.commit()
+                session['user_name'] = name
+
+        # Handle profile picture upload — store in users table if it exists
+        if image_file and image_file.filename:
+            image_data = image_file.read()
+            try:
+                # Try to update existing row
+                cursor.execute("UPDATE users SET profile_pic=%s WHERE id=%s", (image_data, user_id))
+                if cursor.rowcount == 0:
+                    # Insert new row if not exists
+                    cursor.execute(
+                        "INSERT INTO users (id, profile_pic) VALUES (%s, %s) ON DUPLICATE KEY UPDATE profile_pic=%s",
+                        (user_id, image_data, image_data)
+                    )
+                db.commit()
+            except Exception as img_err:
+                print(f"Profile pic save error: {img_err}")
+                # Not fatal — frontend saves to localStorage anyway
+
+    except Exception as e:
+        cursor.close()
+        db.close()
+        print(f"Update profile error: {e}")
+        return jsonify({"status": "error", "message": str(e)})
 
     cursor.close()
     db.close()

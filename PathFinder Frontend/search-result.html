@@ -1,49 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Search Result | PathFinder</title>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 40px; }
-        .container { max-width: 900px; margin: auto; }
-        h2 { color: #1f4e3b; border-bottom: 2px solid #10b981; padding-bottom: 10px; }
-        .card { 
-            background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 8px solid #1f4e3b;
-        }
-        .card b { font-size: 20px; color: #1f4e3b; }
-        .sector { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 5px; font-size: 14px; margin-top: 5px; }
-        .desc { margin: 15px 0; color: #666; line-height: 1.6; }
-        .link-btn { 
-            text-decoration: none; background: #10b981; color: white; padding: 10px 20px; 
-            border-radius: 5px; font-weight: bold; display: inline-block; transition: 0.3s;
-        }
-        .link-btn:hover { background: #1f4e3b; }
-        .back-link { display: inline-block; margin-top: 20px; color: #1f4e3b; text-decoration: none; font-weight: bold; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PATHFINDER | Search Results</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+:root {
+    --green: #1f4e3b;
+    --accent: #10b981;
+    --bg: #f0f2f5;
+    --border: #dde1e7;
+    --gray: #65676b;
+    --hover: #e4e6eb;
+}
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); }
+
+.topbar {
+    background: #fff; height: 60px; padding: 0 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    position: fixed; width: 100%; top: 0; z-index: 100;
+    box-shadow: 0 2px 6px rgba(0,0,0,.08);
+}
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.brand { font-size: 22px; font-weight: 700; color: var(--green); }
+.back-btn {
+    display: flex; align-items: center; gap: 7px;
+    background: #e8f5ee; color: var(--green); border: none;
+    padding: 8px 16px; border-radius: 20px; font-weight: 600;
+    font-size: 14px; cursor: pointer; text-decoration: none; transition: .2s;
+}
+.back-btn:hover { background: #d4eee0; }
+
+/* search form in topbar */
+.search-form { display: flex; gap: 6px; }
+.search-form input {
+    padding: 8px 16px; border: 1.5px solid var(--border);
+    border-radius: 20px; outline: none; font-size: 14px;
+    width: 260px; background: var(--bg); transition: .2s;
+}
+.search-form input:focus { background: #fff; border-color: var(--green); }
+.search-form button {
+    background: var(--green); color: white; padding: 8px 16px;
+    border: none; border-radius: 20px; cursor: pointer; font-size: 14px;
+}
+.search-form button:hover { background: #163a2c; }
+
+.content { padding-top: 80px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding-bottom: 40px; }
+.wrap { width: 95%; max-width: 720px; }
+
+/* RESULTS HEADER */
+.results-header {
+    background: white; border-radius: 12px; padding: 18px 22px;
+    margin-bottom: 18px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.results-header h2 { font-size: 18px; color: var(--green); margin: 0; display: flex; align-items: center; gap: 9px; }
+.results-header .count { font-size: 13px; color: var(--gray); background: var(--bg); padding: 4px 12px; border-radius: 20px; }
+
+/* RESULT CARD */
+.result-card {
+    background: white; border-radius: 12px; padding: 18px 20px;
+    border: 1px solid var(--border); margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05); transition: box-shadow .2s;
+    display: flex; gap: 16px; align-items: flex-start;
+}
+.result-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.09); }
+.result-icon {
+    width: 44px; height: 44px; border-radius: 10px; background: #e8f5ee;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: var(--green); flex-shrink: 0;
+}
+.result-body { flex: 1; min-width: 0; }
+.result-name { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+.result-sector {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    background: #e8f5ee; color: var(--green); padding: 2px 10px;
+    border-radius: 20px; margin-bottom: 7px;
+}
+.result-desc { font-size: 14px; color: #555; line-height: 1.5; }
+.result-link {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+    background: var(--green); color: white; padding: 7px 16px;
+    border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 600; transition: .2s;
+}
+.result-link:hover { background: #163a2c; }
+
+/* EMPTY STATE */
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state i { font-size: 52px; color: #ccc; margin-bottom: 16px; display: block; }
+.empty-state h3 { font-size: 18px; color: #555; margin-bottom: 8px; }
+.empty-state p { color: var(--gray); font-size: 14px; margin-bottom: 20px; }
+.empty-state a {
+    background: var(--green); color: white; padding: 10px 24px;
+    border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 14px;
+}
+</style>
 </head>
 <body>
 
-<div class="container">
-    <h2><i class="fa fa-search"></i> Results for "{{ query }}"</h2>
+<header class="topbar">
+    <div class="topbar-left">
+        <span class="brand">Pathfinder</span>
+        <!-- Back always goes to /main -->
+        <a class="back-btn" href="/main"><i class="fa fa-arrow-left"></i> Back to Feed</a>
+    </div>
+    <!-- Re-search from this page -->
+    <form class="search-form" action="/search" method="GET">
+        <input type="text" name="query" placeholder="Search again…"
+               value="{{ query }}">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+</header>
 
-    {% if results %}
-        {% for item in results %}
-            <div class="card">
-                <b>{{ item.name }}</b><br>
-                <span class="sector"><i class="fa fa-tag"></i> {{ item.sector }}</span>
-                <p class="desc">{{ item.description }}</p>
-                <a href="{{ item.link }}" target="_blank" class="link-btn">
-                    <i class="fa fa-external-link-alt"></i> Access Resource
-                </a>
+<div class="content">
+    <div class="wrap">
+
+        <div class="results-header">
+            <h2>
+                <i class="fa fa-search"></i>
+                {% if query %}Results for "{{ query }}"{% else %}All Resources{% endif %}
+            </h2>
+            <span class="count">{{ results|length }} found</span>
+        </div>
+
+        {% if results %}
+            {% for r in results %}
+            <div class="result-card">
+                <div class="result-icon">
+                    {% if r.sector and ('tech' in r.sector.lower() or 'code' in r.sector.lower() or 'software' in r.sector.lower()) %}
+                        <i class="fa fa-code"></i>
+                    {% elif r.sector and ('business' in r.sector.lower() or 'manage' in r.sector.lower() or 'finance' in r.sector.lower()) %}
+                        <i class="fa fa-briefcase"></i>
+                    {% elif r.sector and ('design' in r.sector.lower() or 'art' in r.sector.lower()) %}
+                        <i class="fa fa-palette"></i>
+                    {% else %}
+                        <i class="fa fa-book"></i>
+                    {% endif %}
+                </div>
+                <div class="result-body">
+                    <div class="result-name">{{ r.name }}</div>
+                    {% if r.sector %}
+                    <span class="result-sector"><i class="fa fa-tag"></i> {{ r.sector }}</span>
+                    {% endif %}
+                    {% if r.description %}
+                    <div class="result-desc">{{ r.description }}</div>
+                    {% endif %}
+                    {% if r.link %}
+                    <a class="result-link" href="{{ r.link }}" target="_blank">
+                        <i class="fa fa-external-link-alt"></i> Visit Resource
+                    </a>
+                    {% endif %}
+                </div>
             </div>
-        {% endfor %}
-    {% else %}
-        <p style="text-align: center; padding: 50px;">No results found for <b>"{{ query }}"</b> ❌</p>
-    {% endif %}
+            {% endfor %}
 
-    <a href="/" class="back-link"><i class="fa fa-arrow-left"></i> Back to Home</a>
+        {% else %}
+            <div class="empty-state">
+                <i class="fa fa-search"></i>
+                <h3>No results found</h3>
+                <p>
+                    {% if query %}
+                        No resources matched "{{ query }}". Try a different keyword.
+                    {% else %}
+                        Enter a keyword to search resources.
+                    {% endif %}
+                </p>
+                <a href="/main">Back to Feed</a>
+            </div>
+        {% endif %}
+
+    </div>
 </div>
 
 </body>
