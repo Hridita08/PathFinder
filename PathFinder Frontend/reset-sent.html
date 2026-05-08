@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Code | PATHFINDER</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="pf-code-page">
+
+<div class="pf-login-container">
+
+<div class="pf-logo">
+<img src="logo.png">
+<span class="pf-brand">PATHFINDER</span>
+</div>
+
+<h2>Email Verification</h2>
+
+<p class="pf-description">
+Enter the 4 digit verification code sent to your email
+</p>
+
+<form id="otp-form">
+    <div class="pf-otp-box">
+        <input type="text" maxlength="1" class="otp" required>
+        <input type="text" maxlength="1" class="otp" required>
+        <input type="text" maxlength="1" class="otp" required>
+        <input type="text" maxlength="1" class="otp" required>
+    </div>
+    <button type="submit">Verify Code</button>
+    <div id="error-msg" style="color: red; margin-top: 10px; font-size: 14px;"></div>
+</form>
+</div>
+
+</div>
+
+<script>
+
+/* show animation */
+
+window.addEventListener("DOMContentLoaded", () => {
+const container = document.querySelector(".pf-login-container")
+
+setTimeout(()=>{
+container.classList.add("show")
+},100)
+
+})
+
+const inputs = document.querySelectorAll(".otp")
+
+inputs.forEach((input,index)=>{
+
+input.addEventListener("input",()=>{
+
+if(input.value.length==1 && index<3){
+inputs[index+1].focus()
+}
+
+})
+
+input.addEventListener("keydown",(e)=>{
+
+if(e.key==="Backspace" && input.value=="" && index>0){
+inputs[index-1].focus()
+}
+
+})
+
+})
+
+let time = 30
+const timer = document.getElementById("timer")
+
+setInterval(()=>{
+
+if(time>0){
+time--
+timer.textContent = time
+}
+
+},1000)
+document.getElementById('otp-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Sobgulo box er value eksathe kora
+    let otpValue = "";
+    inputs.forEach(input => {
+        otpValue += input.value;
+    });
+
+    // Proyojon: User er email-ti kothao save thakte hobe (e.g. localStorage)
+    // Jodi forgot-password page theke email pathan, tobe localStorage.getItem('user_email') use korun
+    const userEmail = localStorage.getItem('user_email'); 
+
+    fetch('/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail, otp: otpValue })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.href = data.redirect; // Success hole new password page-e jabe
+        } else {
+            document.getElementById('error-msg').textContent = data.message;
+        }
+    })
+    .catch(err => console.log("Error:", err));
+});
+</script>
+
+</body>
+</html>

@@ -1,30 +1,62 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Select Role | PATHFINDER</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PathFinder | Select Role</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
-<body class="login-body">
 
-<div class="login-container">
-    <h2>Select Your <span>Role</span></h2>
+<body>
 
-    <div class="role-buttons">
-        <button class="role-btn" onclick="goStudent()">Student</button>
-        <button class="role-btn" onclick="goGuide()">Guide</button>
+<div class="role-page">
+
+    <div class="role-container">
+
+        <p class="subtitle"><u>Choose Your Role</u></p>
+
+        <div class="role-grid">
+
+            <!-- Student -->
+            <a href="register-student.html" class="role-card">
+
+                <div class="card-img">
+                    <img src="icons/student.png">
+                </div>
+
+                <div class="role-info">
+                    <h2>Student</h2>
+                    <p>
+                        Discover the best career path based on your skills and interests.
+                    </p>
+                </div>
+
+            </a>
+
+            <!-- Guide -->
+            <a href="register-guide.html" class="role-card">
+
+                <div class="card-img">
+                    <img src="icons/teacher.jpg">
+                </div>
+
+                <div class="role-info">
+                    <h2>Guide</h2>
+                    <p>
+                        Provide career advice and help students achieve their goals.
+                    </p>
+                </div>
+
+            </a>
+
+        </div>
+
     </div>
-</div>
 
-<script>
-function goStudent() {
-    window.location.href = "register-student.html";
-}
-function goGuide() {
-    window.location.href = "register-guide.html";
-}
-</script>
+</div>
 
 </body>
 </html>

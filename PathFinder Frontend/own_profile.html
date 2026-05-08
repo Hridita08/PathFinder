@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PATHFINDER | Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --sidebar-green: #1f4e3b;
+            --accent-green: #10b981;
+            --page-bg: #f0f2f5;
+            --topbar-bg: #ffffff;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --hover-light: #e4e6eb;
+            --danger-red: #fc8686e4;
+        }
+        body.dark-theme {
+            --page-bg: #18191a; --topbar-bg: #242526;
+            --text-color: #e4e6eb; --card-bg: #242526; --hover-light: #3a3b3c;
+        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background-color: var(--page-bg); color: var(--text-color); transition: 0.3s; overflow-x: hidden; }
+
+        .topbar { background: var(--topbar-bg); height: 60px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1100; box-shadow: 0 2px 4px rgba(0,0,0,0.08); box-sizing: border-box; }
+        .menu-section { display: flex; align-items: center; gap: 15px; }
+        .menu-icon { font-size: 20px; cursor: pointer; color: var(--text-color); padding: 8px; border-radius: 50%; transition: 0.3s; }
+        .menu-icon:hover { background: var(--hover-light); color: var(--sidebar-green); }
+        .title-text { font-size: 22px; font-weight: bold; color: var(--sidebar-green); }
+
+        .top-right { display: flex; align-items: center; gap: 12px; z-index: 1200; }
+        .user-display-name { font-weight: 600; color: var(--text-color); font-size: 14px; cursor: pointer; }
+        .user-display-name:hover { color: var(--accent-green); }
+        .top-profile-img { width:38px; height:38px; border-radius:50%; cursor:pointer; transition: 0.3s; border: 2px solid var(--sidebar-green); object-fit: cover; }
+        .top-profile-img:hover { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(16,185,129,0.4); transform: scale(1.05); }
+
+        .sidebar { width: 280px; background: var(--sidebar-green); color: white; height: 100vh; position: fixed; top: 0; left: -280px; transition: 0.3s ease; padding-top: 80px; z-index: 1000; }
+        .sidebar.active { left: 0; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar ul li { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.3s; color: white; }
+        .sidebar ul li:hover { background: rgba(255,255,255,0.1); padding-left: 35px; color: var(--accent-green); }
+        .career-dropdown { display: none; background: rgba(0,0,0,0.2); list-style: none; padding: 0; }
+        .career-dropdown li { padding: 10px 25px 10px 60px !important; font-size: 14px; color: #ccc; transition: 0.3s; }
+
+        .content-wrapper { transition: margin-left 0.3s ease; display: flex; flex-direction: column; align-items: center; padding-top: 80px; width: 100%; padding-bottom: 40px; }
+        .content-wrapper.shifted { margin-left: 280px; width: calc(100% - 280px); }
+
+        .profile-container { width: 95%; max-width: 800px; background: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #ddd; }
+        .cover-photo { height: 160px; background: linear-gradient(135deg, var(--sidebar-green), var(--accent-green)); }
+
+        .profile-header-main { padding: 0 30px 20px; text-align: left; }
+        .profile-img-wrapper { position: relative; margin-top: -60px; display: inline-block; }
+        .profile-img-main { width: 130px; height: 130px; border-radius: 50%; border: 5px solid var(--card-bg); background: #f8fafc; object-fit: cover; }
+
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px 30px; }
+        .info-card { background: var(--page-bg); padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .info-card label { display: block; font-size: 11px; color: #65676b; text-transform: uppercase; margin-bottom: 5px; font-weight: bold; }
+        .info-card span { font-weight: 600; color: var(--text-color); font-size: 15px; }
+
+        .edit-btn { width: 100%; background: var(--sidebar-green); color: white; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .edit-btn:hover { background: #163a2c; }
+
+        /* LOADING STATE */
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 6px; color: transparent !important; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: var(--card-bg); margin: 10% auto; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); color: var(--text-color); }
+        .edit-group { margin-bottom: 15px; }
+        .edit-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        .edit-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: var(--card-bg); color: var(--text-color); outline: none; font-size: 14px; }
+        .edit-group input:focus { border-color: var(--sidebar-green); }
+
+        /* IMAGE UPLOAD AREA */
+        .img-upload-area { border: 2px dashed #ddd; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .img-upload-area:hover { border-color: var(--sidebar-green); background: #f0faf5; }
+        .img-upload-area i { font-size: 32px; color: #ccc; margin-bottom: 8px; }
+        .img-preview-thumb { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 10px auto; display: none; border: 3px solid var(--sidebar-green); }
+
+        .hidden { display: none; }
+
+        /* TOAST */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1f4e3b; color: white; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 600; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <div class="menu-section">
+        <i class="fa fa-bars menu-icon" onclick="toggleSidebar()"></i>
+        <span class="title-text">Pathfinder</span>
+    </div>
+    <div class="top-right">
+        <span class="user-display-name" id="topUserNameDisplay">Loading...</span>
+        <img src="icons/profile.png" id="topNavPic" class="top-profile-img" onclick="location.reload()" title="My Profile">
+    </div>
+</header>
+
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li onclick="location.href='/main'"><i class="fa fa-home"></i> Home</li>
+        <li onclick="toggleCareerDropdown()" style="justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:15px;"><i class="fa fa-graduation-cap"></i> Career Path</div>
+            <i class="fa fa-chevron-down" id="dropIcon" style="font-size:10px;"></i>
+        </li>
+        <ul class="career-dropdown" id="careerDropdown">
+            <li onclick="location.href='/technical'"><i class="fa fa-code"></i> Technical</li>
+            <li onclick="location.href='/non-technical'"><i class="fa fa-briefcase"></i> Non-Technical</li>
+        </ul>
+        <li onclick="location.href='/settings'"><i class="fa fa-cog"></i> Settings</li>
+        <li style="color:var(--danger-red)!important;" onclick="logout()"><i class="fa fa-sign-out-alt"></i> Logout</li>
+    </ul>
+</div>
+
+<div class="content-wrapper" id="mainContent">
+    <div class="profile-container">
+        <div class="cover-photo"></div>
+        <div class="profile-header-main">
+            <div class="profile-img-wrapper">
+                <img src="icons/profile.png" id="mainProfilePic" class="profile-img-main">
+                <div onclick="openModal('image')" style="position:absolute;bottom:8px;right:5px;background:var(--sidebar-green);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid var(--card-bg);cursor:pointer;" title="Change photo">
+                    <i class="fa fa-camera"></i>
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <h2 id="profileName" style="margin:0;">Loading...</h2>
+                <p id="profileDept" style="color:#65676b;font-size:14px;margin:4px 0 0;">Department | BAUET</p>
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <div class="info-card"><label>Student ID</label><span id="profileID">---</span></div>
+            <div class="info-card"><label>Email Address</label><span id="profileEmail">---</span></div>
+            <div class="info-card" style="grid-column:span 2;"><label>Institution</label><span>BAUET</span></div>
+        </div>
+
+        <div style="padding:0 30px 30px;">
+            <button class="edit-btn" onclick="openModal('info')"><i class="fa fa-pen"></i> Edit Profile Info</button>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h3 id="modalTitle" style="margin-top:0;color:var(--sidebar-green);">Update Information</h3>
+
+        <!-- IMAGE SECTION -->
+        <div id="imageSection" class="hidden">
+            <div class="img-upload-area" onclick="document.getElementById('imageInput').click()">
+                <i class="fa fa-cloud-upload-alt"></i>
+                <p style="margin:6px 0 0;font-size:13px;color:#888;">Click to choose a photo</p>
+                <img id="imgPreviewThumb" class="img-preview-thumb" src="" alt="">
+            </div>
+            <input type="file" id="imageInput" accept="image/*" style="display:none;" onchange="showImagePreview(this)">
+            <button onclick="removeProfilePic()" style="margin-top:12px;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;padding:10px;width:100%;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;">
+                <i class="fa fa-trash"></i> Remove Current Photo
+            </button>
+        </div>
+
+        <!-- INFO SECTION -->
+        <div id="infoSection" class="hidden">
+            <div class="edit-group"><label>Full Name</label><input type="text" id="editName" placeholder="Your name"></div>
+            <div class="edit-group"><label>Student ID</label><input type="text" id="editID" placeholder="e.g. 2021-1-60-001"></div>
+            <div class="edit-group"><label>Department</label><input type="text" id="editDept" placeholder="e.g. CSE"></div>
+            <div class="edit-group"><label>Email</label><input type="email" id="editEmail" placeholder="your@email.com"></div>
+        </div>
+
+        <button class="edit-btn" onclick="saveChanges()" style="margin-top:10px;"><i class="fa fa-check"></i> Save Changes</button>
+        <p onclick="closeModal()" style="text-align:center;margin-top:12px;color:#65676b;cursor:pointer;font-size:14px;">Cancel</p>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== LOAD DATA FROM SERVER ====================
+async function loadData() {
+    // Step 1: Get username from /api/me (always fresh from session)
+    let sessionName = "";
+    try {
+        const meRes = await fetch("/api/me");
+        const me = await meRes.json();
+        if (me.logged_in && me.user_name) {
+            sessionName = me.user_name;
+            localStorage.setItem("username", me.user_name);
+            localStorage.setItem("user_id", me.user_id);
+        }
+    } catch(e) {}
+
+    const fallbackName = sessionName || localStorage.getItem("username") || "User";
+
+    // Show name immediately from session (fast)
+    document.getElementById("topUserNameDisplay").innerText = fallbackName;
+    document.getElementById("profileName").innerText = fallbackName;
+
+    // Step 2: Get full profile data
+    try {
+        const res = await fetch("/get_profile_data");
+        if (res.ok) {
+            const data = await res.json();
+            if (data && !data.error) {
+                const name = data.full_name || fallbackName;
+                document.getElementById("topUserNameDisplay").innerText = name;
+                document.getElementById("profileName").innerText = name;
+                document.getElementById("profileEmail").innerText = data.email || "Not provided";
+                document.getElementById("profileID").innerText = data.student_id || "Not set";
+                document.getElementById("profileDept").innerText = (data.department || "Department") + " | BAUET";
+
+                // Profile pic
+                if (data.profile_pic) {
+                    const picSrc = "data:image/jpeg;base64," + data.profile_pic;
+                    setProfilePic(picSrc);
+                    localStorage.setItem("profilePic", picSrc);
+                } else {
+                    const saved = localStorage.getItem("profilePic");
+                    if (saved) setProfilePic(saved);
+                }
+                return;
+            }
+        }
+    } catch(e) {}
+
+    // Fallback: use localStorage
+    const savedPic = localStorage.getItem("profilePic");
+    if (savedPic) setProfilePic(savedPic);
+
+    // Apply theme
+    const theme = localStorage.getItem("appTheme") || "light";
+    if (theme === "dark") document.body.classList.add("dark-theme");
+}
+
+function setProfilePic(src) {
+    document.getElementById("mainProfilePic").src = src;
+    document.getElementById("topNavPic").src = src;
+}
+
+// ==================== MODAL ====================
+function openModal(mode) {
+    document.getElementById("editModal").style.display = "block";
+    if (mode === "image") {
+        document.getElementById("imageSection").classList.remove("hidden");
+        document.getElementById("infoSection").classList.add("hidden");
+        document.getElementById("modalTitle").innerText = "Update Profile Picture";
+        // Reset preview
+        document.getElementById("imgPreviewThumb").style.display = "none";
+        document.getElementById("imageInput").value = "";
+    } else {
+        document.getElementById("imageSection").classList.add("hidden");
+        document.getElementById("infoSection").classList.remove("hidden");
+        document.getElementById("modalTitle").innerText = "Edit Profile Info";
+        // Pre-fill current values
+        document.getElementById("editName").value = document.getElementById("profileName").innerText;
+        document.getElementById("editID").value = document.getElementById("profileID").innerText === "Not set" ? "" : document.getElementById("profileID").innerText;
+        document.getElementById("editEmail").value = document.getElementById("profileEmail").innerText === "Not provided" ? "" : document.getElementById("profileEmail").innerText;
+        document.getElementById("editDept").value = document.getElementById("profileDept").innerText.split(" | ")[0];
+    }
+}
+
+function closeModal() {
+    document.getElementById("editModal").style.display = "none";
+}
+
+function showImagePreview(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const thumb = document.getElementById("imgPreviewThumb");
+            thumb.src = e.target.result;
+            thumb.style.display = "block";
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// ==================== SAVE CHANGES ====================
+async function saveChanges() {
+    const formData = new FormData();
+    const isImageMode = !document.getElementById("imageSection").classList.contains("hidden");
+
+    if (isImageMode) {
+        const file = document.getElementById("imageInput").files[0];
+        if (!file) { showToast("Please select an image first!"); return; }
+        formData.append("image", file);
+    } else {
+        const name = document.getElementById("editName").value.trim();
+        if (!name) { showToast("Name cannot be empty!"); return; }
+        formData.append("name", name);
+        formData.append("student_id", document.getElementById("editID").value.trim());
+        formData.append("email", document.getElementById("editEmail").value.trim());
+        formData.append("dept", document.getElementById("editDept").value.trim());
+    }
+
+    try {
+        const res = await fetch("/update_profile", { method: "POST", body: formData });
+        const result = await res.json();
+        if (result.status === "success") {
+            showToast("Profile updated! ✅");
+
+            if (isImageMode) {
+                // Save pic to localStorage and update UI immediately
+                const file = document.getElementById("imageInput").files[0];
+                const reader = new FileReader();
+                reader.onload = e => {
+                    localStorage.setItem("profilePic", e.target.result);
+                    setProfilePic(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Update name in localStorage
+                const newName = document.getElementById("editName").value.trim();
+                localStorage.setItem("username", newName);
+            }
+
+            closeModal();
+            setTimeout(loadData, 500); // Refresh from server
+        } else {
+            showToast("Update failed. Try again.");
+        }
+    } catch(e) {
+        // Offline fallback — save to localStorage only
+        if (!isImageMode) {
+            const name = document.getElementById("editName").value.trim();
+            localStorage.setItem("username", name);
+            document.getElementById("profileName").innerText = name;
+            document.getElementById("topUserNameDisplay").innerText = name;
+        } else {
+            const file = document.getElementById("imageInput").files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    localStorage.setItem("profilePic", ev.target.result);
+                    setProfilePic(ev.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        showToast("Saved locally ✅");
+        closeModal();
+    }
+}
+
+// ==================== REMOVE PHOTO ====================
+async function removeProfilePic() {
+    if (!confirm("Remove your profile photo?")) return;
+    try {
+        const res = await fetch("/remove_profile_pic", { method: "POST" });
+        const result = await res.json();
+        if (result.status === "success") {
+            localStorage.removeItem("profilePic");
+            setProfilePic("icons/profile.png");
+            showToast("Photo removed!");
+            closeModal();
+        } else {
+            showToast("Could not remove. Try again.");
+        }
+    } catch(e) {
+        // Offline fallback
+        localStorage.removeItem("profilePic");
+        setProfilePic("icons/profile.png");
+        showToast("Photo removed locally.");
+        closeModal();
+    }
+}
+
+// ==================== SIDEBAR ====================
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("active");
+    document.getElementById("mainContent").classList.toggle("shifted");
+}
+function toggleCareerDropdown() {
+    const dd = document.getElementById("careerDropdown");
+    dd.style.display = dd.style.display === "block" ? "none" : "block";
+    document.getElementById("dropIcon").style.transform = dd.style.display === "block" ? "rotate(180deg)" : "rotate(0)";
+}
+
+function logout() {
+    if (confirm("Log out?")) {
+        fetch("/logout", {method:"POST"}).finally(() => window.location.href = "/login");
+    }
+}
+
+// ==================== UTILS ====================
+function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.innerText = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+// Close modal on outside click
+window.onclick = e => {
+    if (e.target === document.getElementById("editModal")) closeModal();
+};
+
+window.onload = loadData;
+</script>
+</body>
+</html>
