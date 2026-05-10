@@ -1,52 +1,70 @@
-# PathFinder - To Do List
-Intelligent Career Guidance System for BAUET
+# ✅ PathFinder — Todo List
 
-## Project Setup
-- [x] Create GitHub repository
-- [x] Connect project with VS Code
-- [x] Create project folder structure
-- [x] Add README.md-Shompa
-- [x] Add todo.md-PM
+---
 
-## Frontend (HTML, CSS, JS)
-- [x] Design logo and Name the website
-- [x] Design Splash Screen-
-- [x] Design Home Page
-- [x] Inside home page add Home,About,login and Get started button
-- [x] Create About page
-- [x] Create Login Page
-- [x] Create Registration Page
-- [-] Create Main Page and design UI
-- [x] Dynamic post box
-- [x] Student Dashboard UI
-- [X] Create profile page
-- [ ] Design Settings Page
-- [-] Career Suggestion Page
-- [ ] Make responsive design
-- [x] Make the logout button rssponsive
-## Backend (Python)
-- [ ] Setup Python environment
-- [ ] Create backend server
-- [ ] User authentication system
-- [ ] Career recommendation logic
+## 🌐 Frontend
 
-## Database (MySQL)
-- [ ] Design database schema
-- [ ] Create student table
-- [ ] Create career/skills table
-- [ ] Connect database with backend
+### Pages
+- [x] index.html
+- [x] home.html
+- [x] dashboard.html
+- [x] role.html
+- [x] login.html
+- [x] register-student.html
+- [x] register-guide.html
+- [x] profile.html
+- [x] own_profile.html
+- [x] main.html
+- [x] technical.html
+- [x] non-technical.html
+- [x] search-result.html
+- [x] saved_posts.html
+- [x] inbox.html
+- [x] notification.html
+- [x] settings.html
+- [x] forget-password.html
+- [x] new-password.html
+- [x] reset-sent.html
 
-## Integration
-- [ ] Connect frontend with backend
-- [ ] Store form data in database
-- [ ] Fetch career suggestions from database
+### Styling & Scripts
+- [x] style.css — Global styles
+- [x] script.js — Frontend logic & API calls
+- [x] Responsive design (mobile & tablet)
 
-## Testing
-- [ ] Test login and signup
-- [ ] Test career guidance system
-- [ ] Fix bugs and errors
+---
 
-## Final Work
-- [ ] Upload final code to GitHub
-- [ ] Write project documentation
-- [ ] Prepare presentation
+## ⚙️ Backend
+
+- [x] Project setup (Flask / Django)
+- [x] User authentication (register, login, logout)
+- [x] Password reset flow (email token)
+- [x] Student profile API
+- [x] Career recommendation via post
+- [x] Search functionality
+- [x] Saved posts API
+- [x] Inbox / messaging API
+- [x] Notification system
+
+---
+
+## 🗄️ Database
+
+- [x] schema.sql — Design & finalize DB schema
+- [x] Users table
+- [x] Students table
+- [x] Guides table
+- [x] Career data table
+- [x] Saved posts table
+- [x] Messages table
+- [x] Notifications table
+
+---
+
+## 🧪 Testing
+
+- [x] User registration & login testing
+- [x] Database connection testing
+- [x] Career recommendation output testing
+- [x] Responsive UI testing
+- [x] Bug fixing & UI improvements
+
