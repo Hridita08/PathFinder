@@ -5,8 +5,8 @@ Intelligent Career Guidance System for BAUET
 - [x] Create GitHub repository
 - [x] Connect project with VS Code
 - [x] Create project folder structure
-- [x] Add README.md-Shompa
-- [x] Add todo.md-PM
+- [x] Add README.md
+- [x] Add todo.md
 
 ## Frontend (HTML, CSS, JS)
 - [x] Create Login Page
