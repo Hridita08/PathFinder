@@ -1,47 +1,103 @@
-# 🚀 PathFinder
+<div align="center">
+
+<img src="PathFinder Frontend/logo.png" alt="PathFinder Logo" width="50px" />
+
+#  PathFinder
 
 ### Intelligent Career Guidance System for BAUET
-PathFinder is a web-based Intelligent Career Guidance System designed to help BAUET students choose the right career path based on their skills, interests, and academic performance.
-The system analyzes student data and provides suitable career suggestions through a simple and interactive interface.
 
+[![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 
+> **PathFinder** is a web-based Intelligent Career Guidance System designed to help **BAUET students** choose the right career path based on their skills, interests, and academic performance.
+
+</div>
+
+---
+
+## 📌 Table of Contents
+
+- [🎯 Project Objectives](#-project-objectives)
+- [✨ Features](#-features)
+- [🛠️ Technologies Used](#️-technologies-used)
+- [🏗️ System Architecture](#️-system-architecture)
+- [📂 Project Structure](#-project-structure)
+- [🧪 Testing](#-testing)
+- [🔮 Future Improvements](#-future-improvements)
+- [👥 Team](#-team)
+
+---
 
 ## 🎯 Project Objectives
 
-* Help students discover suitable career paths
-* Analyze student skills and interests
-* Provide intelligent career recommendations
-* Create an easy-to-use web platform for career guidance
+| # | Goal |
+|---|------|
+| 1 | 🎓 Help students discover the most suitable career paths |
+| 2 | 🔍 Analyze student skills, interests & academic performance |
+| 3 | 🧠 Provide intelligent, data-driven career recommendations |
+| 4 | 💻 Deliver an easy-to-use web platform for career guidance |
 
+---
+
+## ✨ Features
+
+- 🔐 **User Registration & Login** — Secure authentication for students and guides
+- 👨‍🎓 **Student Dashboard** — Personalized overview of progress and recommendations
+- 📊 **Skill & Interest Analysis** — Comprehensive assessment forms
+- 🧠 **Career Recommendation Engine** — Smart suggestions based on student data
+- 📱 **Responsive Web Design** — Works seamlessly across all screen sizes
+- 💬 **Inbox & Notifications** — Stay updated with messages and alerts
+- 🔒 **Password Recovery** — Secure forget/reset password flow
+- 🔖 **Saved Posts** — Bookmark and revisit career resources
+
+---
 
 ## 🛠️ Technologies Used
 
-### 🌐 Frontend
-
-* HTML
-* CSS
-* JavaScript
-
-### ⚙️ Backend
-
-* Python
-
-### 🗄️ Database
-
-* MySQL
-
-### 🧑‍💻 Development Tools
-
-* VS Code
-* Git & GitHub
+<table>
+  <tr>
+    <th>Layer</th>
+    <th>Technology</th>
+    <th>Purpose</th>
+  </tr>
+  <tr>
+    <td>🌐 <strong>Frontend</strong></td>
+    <td>HTML, CSS, JavaScript</td>
+    <td>UI structure, styling, and interactivity</td>
+  </tr>
+  <tr>
+    <td>⚙️ <strong>Backend</strong></td>
+    <td>Python (Flask)</td>
+    <td>Business logic & career recommendation processing</td>
+  </tr>
+  <tr>
+    <td>🗄️ <strong>Database</strong></td>
+    <td>MySQL</td>
+    <td>Storing user and career data</td>
+  </tr>
+  <tr>
+    <td>🧑‍💻 <strong>Dev Tools</strong></td>
+    <td>VS Code, Git & GitHub</td>
+    <td>Development, version control & collaboration</td>
+  </tr>
+</table>
 
 ---
 
 ## 🏗️ System Architecture
 
-User → Frontend (HTML, CSS, JS) → Backend (Python) → Database (MySQL)
-
-The frontend collects user data through forms, the backend processes the information and generates career suggestions, and the database stores user and career data.
+```
+┌─────────────┐     ┌────────────────────────┐     ┌──────────────┐     ┌──────────────┐
+│    User     │────▶│  Frontend              │────▶│   Backend    │────▶│   Database   │
+│             │     │  (HTML, CSS, JS)       │     │   (Python)   │     │   (MySQL)    │
+└─────────────┘     └────────────────────────┘     └──────────────┘     └──────────────┘
+                         Collects user data         Processes data       Stores all data
+                         through forms              & generates          persistently
+                                                    career suggestions
+```
 
 ---
 
@@ -50,8 +106,8 @@ The frontend collects user data through forms, the backend processes the informa
 ```
 PathFinder/
 │
-├── frontend/
-│   ├── pages/
+├── 🌐 frontend/
+│   ├── 📄 Pages
 │   │   ├── index.html
 │   │   ├── home.html
 │   │   ├── dashboard.html
@@ -60,20 +116,25 @@ PathFinder/
 │   │   ├── register-student.html
 │   │   ├── register-guide.html
 │   │   ├── profile.html
-│   │   ├── about.html
+│   │   ├── own_profile.html
 │   │   ├── main.html
-│   │   ├── technical.html         
-│   │   ├── non-technical.html      
-│   │   └── settings.html          
+│   │   ├── technical.html
+│   │   ├── non-technical.html
+│   │   ├── search-result.html
+│   │   ├── saved_posts.html
+│   │   ├── inbox.html
+│   │   ├── notification.html
+│   │   ├── settings.html
+│   │   ├── forget-password.html
+│   │   ├── new-password.html
+│   │   └── reset-sent.html
 │   │
-│   ├── assets/
+│   ├── 🎨 assets/
 │   │   ├── images/
-│   │   │   ├── campus.jpg
-│   │   │   ├── students.jpg
 │   │   │   ├── logo.png
-│   │   │
+│   │   │   └── students.jpg
 │   │   └── icons/
-│   │       ├── assesment.png
+│   │       ├── assessment.png
 │   │       ├── college.png
 │   │       ├── mentor.png
 │   │       ├── profile.png
@@ -81,63 +142,61 @@ PathFinder/
 │   │       ├── technology.png
 │   │       └── virtual.png
 │   │
-│   ├── css/
+│   ├── 🎨 css/
 │   │   └── style.css
 │   │
-│   └── js/
+│   └── ⚙️ js/
 │       └── script.js
 │
-├── backend/
+├── 🐍 backend/
 │   └── app.py
 │
-├── database/
+├── 🗄️ database/
 │   └── schema.sql
 │
-├── README.md
-└── todo.md
+├── 📋 README.md
 
 ```
 
----
 
-## ✨ Features
-
-* 🔐 User Registration & Login
-* 👨‍🎓 Student Dashboard
-* 📊 Skill & Interest Analysis
-* 🧠 Career Recommendation System
-* 📱 Responsive Web Design
 
 ---
 
 ## 🧪 Testing
 
-* User registration and login testing
-* Database connection testing
-* Career recommendation output testing
-* Bug fixing and UI improvements
+- ✅ User registration and login flow
+- ✅ Database connection
+- ✅ Responsive design across devices
+- ✅ Bug fixing and UI/UX improvements
 
 ---
 
-## 🚀 Future Improvements
+## 🔮 Future Improvements
 
-* AI-based career prediction
-* Admin panel for managing career data
-* More detailed skill assessment
-* Integration with job market data
+- 🤖 AI-based career prediction model
+- 🛡️ Admin panel for managing career data
+- 📝 More detailed and dynamic skill assessments
+- 📈 Integration with live job market data
+- 🌐 Multi-language support
 
 ---
 
 ## 👥 Team
 
-This project is developed by students as part of a **web development project**.
+This project is developed by students of **BAUET** as part of a web development course project.
 
 ---
 
 ## 📜 License
 
-This project is for **educational purposes**.
+This project is for **educational purposes only**.
 
 ---
 
-⭐ If you like this project, consider giving it a star on GitHub!
+<div align="center">
+
+⭐ **If you find this project helpful, please give it a star on GitHub!** ⭐
+
+*Built with ❤️ by BAUET students*
+
+</div>
